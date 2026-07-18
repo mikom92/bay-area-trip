@@ -266,6 +266,17 @@
     text-align:right;
   }
   .readout-label{font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-faint); margin-bottom:0.3rem;}
+  .readout-label-row{display:flex; align-items:center; justify-content:flex-end; gap:0.6rem; margin-bottom:0.3rem;}
+  .currency-toggle{display:inline-flex; border:1px solid var(--line); border-radius:100px; padding:2px; gap:2px;}
+  .currency-btn{
+    font-family:var(--font-mono); font-size:0.66rem; font-weight:600; letter-spacing:0.03em;
+    color:var(--text-faint); background:transparent; border:none; border-radius:100px;
+    padding:0.22rem 0.6rem; cursor:pointer;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .currency-btn.active{background:var(--amber); color:var(--bg);}
+  .currency-btn:not(.active):hover{color:var(--text);}
+  @media (prefers-reduced-motion:reduce){.currency-btn{transition:none;}}
   .readout-value{font-size:clamp(1.8rem, 5vw, 2.4rem); font-weight:600; transition:color 0.2s ease;}
   .readout-value[data-status="good"]{color:var(--green);}
   .readout-value[data-status="under"]{color:#7FB8D9;}
@@ -489,7 +500,7 @@
       </div>
     </dl>
 
-    <div class="target-chip">Budget target · 10,000–12,000 PLN</div>
+    <div class="target-chip"><span id="target-chip-text">Budget target · 10,000–12,000 PLN</span></div>
   </header>
 
   <!-- LEGEND -->
@@ -687,7 +698,13 @@
         <p class="section-sub" style="margin-bottom:0;">Drag to see how the total moves. Car, hotels, fuel and food are the levers that matter most.</p>
       </div>
       <div class="readout">
-        <div class="readout-label">Live estimate</div>
+        <div class="readout-label-row">
+          <span class="readout-label">Live estimate</span>
+          <div class="currency-toggle" role="group" aria-label="Currency">
+            <button type="button" class="currency-btn active" data-currency="PLN">PLN</button>
+            <button type="button" class="currency-btn" data-currency="USD">USD</button>
+          </div>
+        </div>
         <div class="readout-value" id="total-value" data-status="good">11,942 zł</div>
         <div class="readout-status" id="total-status">inside 10–12K target</div>
       </div>
@@ -698,10 +715,10 @@
       <div class="gauge-marker" id="gauge-marker" style="left:56.3%;"></div>
     </div>
     <div class="gauge-labels">
-      <span>8,000 zł</span>
-      <span>10,000</span>
-      <span>12,000</span>
-      <span>15,000 zł</span>
+      <span id="gauge-label-0">8,000 zł</span>
+      <span id="gauge-label-1">10,000</span>
+      <span id="gauge-label-2">12,000</span>
+      <span id="gauge-label-3">15,000 zł</span>
     </div>
 
     <div class="controls">
@@ -739,7 +756,7 @@
       <div class="breakdown-row"><span>Fuel — ~900 mi at 17 mpg</span><span id="out-fuel">1,142 zł</span></div>
       <div class="breakdown-row"><span>Food — self-paid days</span><span id="out-food">1,900 zł</span></div>
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">280 zł</span></div>
-      <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span>350 zł</span></div>
+      <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">350 zł</span></div>
       <p class="breakdown-foot">Flights and five nights in Menlo Park (Sun 20 – Thu 24) are company-covered and excluded from this total. FX assumed at ~3.75 PLN/USD.</p>
     </div>
   </section>
@@ -818,6 +835,16 @@
 
   const fmt = n => Math.round(n).toLocaleString('en-US') + ' zł';
 
+  const FX = 3.75; // PLN per USD — same rate used for the fuel conversion
+  const CURRENCY_KEY = 'bayarea-trip-currency';
+  let currency = localStorage.getItem(CURRENCY_KEY) === 'USD' ? 'USD' : 'PLN';
+  let state = {}; // latest computed PLN figures, refreshed by recalc()
+
+  function money(pln){
+    if (currency === 'PLN') return fmt(pln);
+    return '$' + Math.round(pln / FX).toLocaleString('en-US');
+  }
+
   function recalc(){
     const carDays = +carDaysEl.value;
     const sfNights = +sfNightsEl.value;
@@ -837,6 +864,8 @@
 
     const total = carCost + sfHotel + sfParking + svHotel + fuel + foodCost + attractions + tastingCost;
 
+    state = { carCost, sfHotel, sfParking, svHotel, fuel, foodCost, attractions, tastingCost, total };
+
     el('car-days-out').textContent = carDays + ' days';
     el('sf-nights-out').textContent = sfNights + ' nights';
     el('sv-nights-out').textContent = svNights + ' nights';
@@ -844,36 +873,66 @@
     el('gas-out').textContent = '$' + gas.toFixed(2) + ' / gal';
     el('tastings-out').textContent = tastings;
 
-    el('out-car').textContent = fmt(carCost);
-    el('out-sf-hotel').textContent = fmt(sfHotel);
-    el('out-sf-parking').textContent = fmt(sfParking);
-    el('out-sv-hotel').textContent = fmt(svHotel);
-    el('out-fuel').textContent = fmt(fuel);
-    el('out-food').textContent = fmt(foodCost);
-    el('out-tastings').textContent = fmt(tastingCost);
+    const min = 8000, max = 15000;
+    const pct = Math.min(100, Math.max(0, (total - min) / (max - min) * 100));
+    el('gauge-marker').style.left = pct + '%';
+
+    renderCurrency();
+  }
+
+  function renderCurrency(){
+    const { carCost, sfHotel, sfParking, svHotel, fuel, foodCost, attractions, tastingCost, total } = state;
+    if (total === undefined) return;
+
+    el('out-car').textContent = money(carCost);
+    el('out-sf-hotel').textContent = money(sfHotel);
+    el('out-sf-parking').textContent = money(sfParking);
+    el('out-sv-hotel').textContent = money(svHotel);
+    el('out-fuel').textContent = money(fuel);
+    el('out-food').textContent = money(foodCost);
+    el('out-tastings').textContent = money(tastingCost);
+    el('out-attractions').textContent = money(attractions);
 
     const totalValueEl = el('total-value');
     const totalStatusEl = el('total-status');
-    totalValueEl.textContent = fmt(total);
+    totalValueEl.textContent = money(total);
 
     let status, statusText;
     if (total < 10000){
       status = 'under';
-      statusText = fmt(10000 - total) + ' under target';
+      statusText = money(10000 - total) + ' under target';
     } else if (total <= 12000){
       status = 'good';
       statusText = 'inside 10–12K target';
     } else {
       status = 'over';
-      statusText = fmt(total - 12000) + ' over target';
+      statusText = money(total - 12000) + ' over target';
     }
     totalValueEl.dataset.status = status;
     totalStatusEl.textContent = statusText;
 
-    const min = 8000, max = 15000;
-    const pct = Math.min(100, Math.max(0, (total - min) / (max - min) * 100));
-    el('gauge-marker').style.left = pct + '%';
+    // gauge axis labels (marker position itself is currency-independent — always PLN-based)
+    el('gauge-label-0').textContent = currency === 'PLN' ? '8,000 zł' : money(8000);
+    el('gauge-label-1').textContent = currency === 'PLN' ? '10,000' : money(10000);
+    el('gauge-label-2').textContent = currency === 'PLN' ? '12,000' : money(12000);
+    el('gauge-label-3').textContent = currency === 'PLN' ? '15,000 zł' : money(15000);
+
+    el('target-chip-text').textContent = currency === 'PLN'
+      ? 'Budget target · 10,000–12,000 PLN'
+      : 'Budget target · ' + money(10000) + '–' + money(12000);
+
+    document.querySelectorAll('.currency-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.currency === currency);
+    });
   }
+
+  document.querySelectorAll('.currency-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currency = btn.dataset.currency;
+      try{ localStorage.setItem(CURRENCY_KEY, currency); }catch(e){}
+      renderCurrency();
+    });
+  });
 
   /* ---------- URL state: shareable budget scenarios ---------- */
   const urlMap = [
