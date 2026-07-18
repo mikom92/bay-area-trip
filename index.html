@@ -349,6 +349,59 @@
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;
   }
 
+  /* ---------- BOOKING CHECKLIST ---------- */
+  .checklist{margin-top:3rem;}
+  .checklist-items{display:flex; flex-direction:column; gap:0.55rem; margin-top:1.2rem;}
+  .check-item{
+    display:flex; align-items:flex-start; gap:0.8rem;
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:0.85rem 1.1rem;
+    cursor:pointer;
+    transition:border-color 0.15s ease;
+    user-select:none;
+  }
+  .check-item:hover{border-color:var(--text-faint);}
+  .check-item input{
+    appearance:none; -webkit-appearance:none;
+    width:19px; height:19px; flex:none; margin-top:0.1rem;
+    border:1.5px solid var(--text-faint); border-radius:5px;
+    background:transparent; cursor:pointer;
+    display:grid; place-content:center;
+    transition:background 0.15s ease, border-color 0.15s ease;
+  }
+  .check-item input::before{
+    content:'✓'; font-size:0.8rem; font-weight:700; color:var(--bg);
+    transform:scale(0); transition:transform 0.12s ease;
+  }
+  .check-item input:checked{background:var(--green); border-color:var(--green);}
+  .check-item input:checked::before{transform:scale(1);}
+  .check-item.done .check-text{color:var(--text-faint); text-decoration:line-through;}
+  .check-text{font-size:0.88rem; color:var(--text); line-height:1.45;}
+  .check-text a{color:var(--amber); text-decoration:none;}
+  .check-text a:hover{text-decoration:underline;}
+  .check-text small{display:block; color:var(--text-muted); font-size:0.76rem; margin-top:0.1rem;}
+  .checklist-progress{
+    font-family:var(--font-mono); font-size:0.72rem; color:var(--text-muted);
+    margin-top:0.9rem;
+  }
+  @media (prefers-reduced-motion:reduce){
+    .check-item, .check-item input, .check-item input::before{transition:none;}
+  }
+
+  /* ---------- TODAY JUMP ---------- */
+  .today-jump{
+    position:fixed; right:1.1rem; bottom:1.1rem; z-index:50;
+    display:none; align-items:center; gap:0.45rem;
+    font-family:var(--font-mono); font-size:0.78rem; font-weight:600;
+    background:var(--amber); color:var(--bg);
+    border:none; border-radius:100px;
+    padding:0.7rem 1.15rem;
+    cursor:pointer;
+    box-shadow:0 4px 18px rgba(0,0,0,0.45);
+  }
+  .today-jump.visible{display:inline-flex;}
+  .day-card.today-highlight{border-color:var(--amber); box-shadow:0 0 0 1px var(--amber-line);}
+
   @media (max-width:680px){
     .hero-top{grid-template-columns:1fr; text-align:center; gap:0.8rem;}
     .route-city.right{align-items:center; text-align:center;}
@@ -357,6 +410,31 @@
     .notes-grid{grid-template-columns:1fr;}
     .budget-top{flex-direction:column;}
     .readout{text-align:left;}
+    /* bigger touch targets on the road */
+    .map-link{padding:0.55rem 0.85rem; font-size:0.74rem;}
+    .day-flag{padding:0.55rem 0.8rem; font-size:0.74rem;}
+    .check-item{padding:1rem 1.1rem;}
+    .check-item input{width:22px; height:22px;}
+  }
+
+  /* ---------- PRINT (backup for no-signal stretches of Hwy 1) ---------- */
+  @media print{
+    :root{
+      --bg:#ffffff; --surface:#ffffff; --surface-2:#f2f2f2;
+      --line:#bbbbbb; --text:#000000; --text-muted:#333333; --text-faint:#666666;
+      --green:#2f6b4f; --green-soft:#eef4f0; --green-line:#2f6b4f;
+      --amber:#8a5a00; --amber-soft:#f7f0e2; --amber-line:#8a5a00;
+      --grey:#555555; --grey-soft:#efefef; --grey-line:#777777;
+    }
+    body{background:#fff; padding:0;}
+    .hero{background-image:none;}
+    .controls, .gauge, .gauge-labels, .today-jump, .budget .section-sub{display:none !important;}
+    .map-link{display:none;}
+    .day-flag{border-style:solid;}
+    a.day-flag::after{content:' — ' attr(href); font-size:0.62rem; color:var(--text-muted);}
+    .day-card, .note-card, .check-item{break-inside:avoid; page-break-inside:avoid;}
+    .budget{break-before:page;}
+    .day-card:hover{transform:none;}
   }
 </style>
 </head>
@@ -694,12 +772,44 @@
     </div>
   </section>
 
+  <!-- BOOKING CHECKLIST -->
+  <section class="checklist">
+    <h2 class="section-heading">Booking checklist</h2>
+    <p class="section-sub">Tick things off as you lock them in — progress is saved in this browser.</p>
+    <div class="checklist-items" id="checklist">
+      <label class="check-item"><input type="checkbox" data-key="alcatraz">
+        <span class="check-text"><a href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener">Book Alcatraz ferry</a> — morning slot, Mon 14 Sep<small>90-day window is open now; sells out weeks ahead</small></span>
+      </label>
+      <label class="check-item"><input type="checkbox" data-key="muirwoods">
+        <span class="check-text"><a href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking</a> — morning, Tue 15 Sep<small>timed entry; book alongside Alcatraz</small></span>
+      </label>
+      <label class="check-item"><input type="checkbox" data-key="sf-hotel">
+        <span class="check-text">Book Inn at Union Square — 4 nights, Sun 13 → Thu 17 Sep<small>free cancellation rate; skip the points here</small></span>
+      </label>
+      <label class="check-item"><input type="checkbox" data-key="sv-hotel">
+        <span class="check-text">Book Maple Tree Inn — Thu 17 → Sun 20 + Fri 25 Sep<small>apply the 7,043 points here (~600 zł off); free parking &amp; breakfast</small></span>
+      </label>
+      <label class="check-item"><input type="checkbox" data-key="navan">
+        <span class="check-text">Book CitizenM Menlo Park in Navan — Sun 20 → Fri 25 Sep<small>company-covered; avoid orange out-of-policy badges</small></span>
+      </label>
+      <label class="check-item"><input type="checkbox" data-key="car">
+        <span class="check-text">Confirm car rental — full-size SUV, 13 days, SFO pick-up &amp; drop-off<small>Sun 13 Sep 14:00 → Sat 26 Sep evening</small></span>
+      </label>
+      <label class="check-item"><input type="checkbox" data-key="idp">
+        <span class="check-text">Get the IDP from PZM<small>international driving permit — takes one office visit, ~50 zł</small></span>
+      </label>
+    </div>
+    <p class="checklist-progress" id="checklist-progress">0 / 7 done</p>
+  </section>
+
   <div class="footprint">
     <span>Bay Area · Sep 2026</span>
     <span>13 nights on the ground · 9 self-paid</span>
   </div>
 
 </div>
+
+<button class="today-jump" id="today-jump" type="button">📍 Today</button>
 
 <script>
   const el = id => document.getElementById(id);
@@ -765,11 +875,101 @@
     el('gauge-marker').style.left = pct + '%';
   }
 
+  /* ---------- URL state: shareable budget scenarios ---------- */
+  const urlMap = [
+    ['c', carDaysEl], ['sf', sfNightsEl], ['sv', svNightsEl],
+    ['f', foodEl], ['g', gasEl], ['t', tastingsEl]
+  ];
+
+  function loadFromURL(){
+    const params = new URLSearchParams(location.search);
+    urlMap.forEach(([key, input]) => {
+      if (!params.has(key)) return;
+      const v = parseFloat(params.get(key));
+      if (isNaN(v)) return;
+      const clamped = Math.min(+input.max, Math.max(+input.min, v));
+      input.value = clamped;
+    });
+  }
+
+  function saveToURL(){
+    const params = new URLSearchParams();
+    urlMap.forEach(([key, input]) => {
+      // only include values that differ from defaults, keeps URLs clean
+      if (input.value !== input.defaultValue) params.set(key, input.value);
+    });
+    const qs = params.toString();
+    history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+  }
+
   [carDaysEl, sfNightsEl, svNightsEl, foodEl, gasEl, tastingsEl].forEach(input => {
-    input.addEventListener('input', recalc);
+    input.addEventListener('input', () => { recalc(); saveToURL(); });
   });
 
+  loadFromURL();
   recalc();
+
+  /* ---------- Booking checklist: saved in this browser ---------- */
+  const CHECK_KEY = 'bayarea-trip-checklist';
+  const checklistEl = document.getElementById('checklist');
+  const progressEl = document.getElementById('checklist-progress');
+  const boxes = checklistEl ? [...checklistEl.querySelectorAll('input[type=checkbox]')] : [];
+
+  function loadChecklist(){
+    let saved = {};
+    try{ saved = JSON.parse(localStorage.getItem(CHECK_KEY) || '{}'); }catch(e){}
+    boxes.forEach(box => {
+      box.checked = !!saved[box.dataset.key];
+      box.closest('.check-item').classList.toggle('done', box.checked);
+    });
+    updateProgress();
+  }
+
+  function saveChecklist(){
+    const state = {};
+    boxes.forEach(box => { state[box.dataset.key] = box.checked; });
+    try{ localStorage.setItem(CHECK_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  function updateProgress(){
+    if (!progressEl) return;
+    const done = boxes.filter(b => b.checked).length;
+    progressEl.textContent = done + ' / ' + boxes.length + ' done' + (done === boxes.length ? ' — all set ✈' : '');
+  }
+
+  boxes.forEach(box => {
+    box.addEventListener('change', () => {
+      box.closest('.check-item').classList.toggle('done', box.checked);
+      saveChecklist();
+      updateProgress();
+    });
+  });
+
+  loadChecklist();
+
+  /* ---------- Today: jump to the current day while on the trip ---------- */
+  const TRIP_START = new Date(2026, 8, 13); // Sep 13 2026, local time
+  const TRIP_DAYS = 14;
+  const todayBtn = document.getElementById('today-jump');
+  const dayCards = [...document.querySelectorAll('.timeline .day')];
+
+  function tripDayIndex(){
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const diff = Math.floor((today - TRIP_START) / 86400000);
+    return (diff >= 0 && diff < TRIP_DAYS) ? diff : -1;
+  }
+
+  const idx = tripDayIndex();
+  if (todayBtn && idx >= 0 && dayCards[idx]){
+    todayBtn.classList.add('visible');
+    todayBtn.addEventListener('click', () => {
+      const card = dayCards[idx].querySelector('.day-card');
+      card.scrollIntoView({behavior:'smooth', block:'center'});
+      card.classList.add('today-highlight');
+      setTimeout(() => card.classList.remove('today-highlight'), 2600);
+    });
+  }
 </script>
 
 </body>
