@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAW ⇄ SFO — Bay Area Trip Manifest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1220;
+    --surface:#131B2B;
+    --surface-2:#1A2436;
+    --line:#28334A;
+    --text:#EDF1F5;
+    --text-muted:#8C99AF;
+    --text-faint:#5E6A80;
+    --green:#5A9077;
+    --green-soft:rgba(90,144,119,0.14);
+    --green-line:rgba(90,144,119,0.55);
+    --amber:#E3A33E;
+    --amber-soft:rgba(227,163,62,0.14);
+    --amber-line:rgba(227,163,62,0.55);
+    --grey:#66728A;
+    --grey-soft:rgba(102,114,138,0.14);
+    --grey-line:rgba(102,114,138,0.45);
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:8px;
+    --font-display:'Space Grotesk', 'Arial Narrow', sans-serif;
+    --font-body:'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono:'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(90,144,119,0.10), transparent 60%),
+      radial-gradient(ellipse 800px 500px at 105% 10%, rgba(227,163,62,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    padding:2.5rem 1.25rem 5rem;
+  }
+
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--amber); outline-offset:3px; border-radius:4px;}
+
+  .page{max-width:920px; margin:0 auto;}
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    display:flex; align-items:center; gap:0.6rem;
+  }
+  .eyebrow::before{content:''; width:16px; height:1px; background:var(--text-faint);}
+
+  /* ---------- HERO / BOARDING PASS ---------- */
+  .hero{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    margin-top:1rem;
+    overflow:hidden;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1.3px);
+    background-size:18px 18px;
+  }
+
+  .hero-top{
+    padding:2.1rem 2.2rem 1.6rem;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:1rem;
+  }
+
+  .route-city{display:flex; flex-direction:column; gap:0.2rem;}
+  .route-city.right{align-items:flex-end; text-align:right;}
+  .route-code{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2.1rem, 6vw, 3rem);
+    letter-spacing:0.02em;
+  }
+  .route-city-name{
+    font-family:var(--font-mono);
+    font-size:0.75rem;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+
+  .route-mid{display:flex; flex-direction:column; align-items:center; gap:0.35rem; color:var(--text-faint);}
+  .route-line-svg{width:min(160px, 30vw); height:20px;}
+  .route-flights{
+    font-family:var(--font-mono);
+    font-size:0.68rem;
+    color:var(--text-muted);
+    display:flex; gap:0.5rem;
+  }
+
+  .hero-perf{
+    position:relative;
+    height:1px;
+    background:var(--line);
+    margin:0 0.5rem;
+  }
+  .hero-perf::before, .hero-perf::after{
+    content:'';
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:26px; height:26px; border-radius:50%;
+    background:var(--bg);
+    box-shadow:0 0 0 1px var(--line) inset;
+  }
+  .hero-perf::before{left:-13px;}
+  .hero-perf::after{right:-13px;}
+  .hero-perf-dashes{
+    position:absolute; top:0; left:0; right:0; height:1px;
+    background-image:repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 16px);
+  }
+
+  .hero-stub{
+    padding:1.5rem 2.2rem 2rem;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1.4rem;
+  }
+  .stub-item dt{
+    font-family:var(--font-mono);
+    font-size:0.66rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--text-faint);
+    margin-bottom:0.3rem;
+  }
+  .stub-item dd{margin:0; font-family:var(--font-display); font-weight:600; font-size:1.05rem;}
+  .stub-item dd span{font-family:var(--font-body); font-weight:400; font-size:0.78rem; color:var(--text-muted); display:block; margin-top:0.15rem;}
+
+  .target-chip{
+    display:inline-flex; align-items:center; gap:0.5rem;
+    font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.03em;
+    background:var(--amber-soft); color:var(--amber);
+    border:1px solid var(--amber-line);
+    border-radius:100px; padding:0.4rem 0.9rem;
+    margin:0 2.2rem 1.9rem;
+  }
+  .target-chip::before{content:'●'; font-size:0.55rem;}
+
+  /* ---------- LEGEND ---------- */
+  .legend{
+    display:flex; flex-wrap:wrap; gap:1.6rem;
+    margin:2.6rem 0 1.6rem;
+    padding:0 0.2rem;
+  }
+  .legend-item{display:flex; align-items:center; gap:0.55rem; font-size:0.82rem; color:var(--text-muted);}
+  .legend-swatch{width:11px; height:11px; flex:none;}
+  .legend-swatch.green{background:var(--green); border-radius:50%;}
+  .legend-swatch.amber{background:var(--amber); transform:rotate(45deg);}
+  .legend-swatch.grey{background:var(--grey); border-radius:3px;}
+
+  /* ---------- TIMELINE ---------- */
+  .section-heading{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:1.5rem;
+    margin:0 0 0.3rem;
+  }
+  .section-sub{color:var(--text-muted); font-size:0.92rem; margin:0 0 1.6rem; max-width:52ch;}
+
+  .timeline{position:relative; padding-left:2.1rem;}
+  .day{
+    position:relative;
+    padding:0 0 2.1rem 1.6rem;
+    border-left:2px solid transparent;
+  }
+  .day:last-child{padding-bottom:0;}
+  .day.thread-green{border-left:2px solid var(--green-line);}
+  .day.thread-amber{border-left-width:0; background-image:repeating-linear-gradient(var(--amber-line) 0 6px, transparent 6px 12px); background-size:2px 100%; background-repeat:no-repeat;}
+  .day.thread-grey{border-left:2px dotted var(--grey-line);}
+
+  .day-node{
+    position:absolute; left:-6px; top:2px;
+    width:11px; height:11px;
+    background:var(--bg);
+  }
+  .thread-green .day-node{background:var(--green); border-radius:50%; box-shadow:0 0 0 3px var(--bg);}
+  .thread-amber .day-node{background:var(--amber); transform:rotate(45deg); box-shadow:0 0 0 3px var(--bg); left:-6.5px;}
+  .thread-grey .day-node{background:var(--grey); border-radius:3px; box-shadow:0 0 0 3px var(--bg);}
+
+  .day-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius-md);
+    padding:1.15rem 1.3rem;
+    margin-left:0.6rem;
+    transition:border-color 0.15s ease, transform 0.15s ease;
+  }
+  .day-card:hover{border-color:var(--text-faint); transform:translateX(2px);}
+  @media (prefers-reduced-motion:reduce){.day-card{transition:none;} .day-card:hover{transform:none;}}
+
+  .day-head{display:flex; align-items:baseline; justify-content:space-between; gap:0.8rem; flex-wrap:wrap; margin-bottom:0.45rem;}
+  .day-date{font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint); letter-spacing:0.05em; text-transform:uppercase;}
+  .day-tag{
+    font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.08em;
+    padding:0.18rem 0.55rem; border-radius:100px;
+  }
+  .thread-green .day-tag{background:var(--green-soft); color:var(--green);}
+  .thread-amber .day-tag{background:var(--amber-soft); color:var(--amber);}
+  .thread-grey .day-tag{background:var(--grey-soft); color:var(--grey);}
+
+  .day-title{font-family:var(--font-display); font-weight:600; font-size:1.12rem; margin:0 0 0.4rem;}
+  .day-body{font-size:0.9rem; color:var(--text-muted); margin:0;}
+
+  .day-flag{
+    display:inline-flex; align-items:center; gap:0.4rem;
+    font-family:var(--font-mono); font-size:0.7rem;
+    color:var(--amber);
+    border:1px dashed var(--amber-line);
+    border-radius:var(--radius-sm);
+    padding:0.35rem 0.6rem;
+    margin-top:0.7rem;
+    text-decoration:none;
+    transition:background 0.15s ease, border-color 0.15s ease;
+  }
+  .day-flag::before{content:'⚠'; font-size:0.75rem;}
+  a.day-flag{cursor:pointer;}
+  a.day-flag:hover{background:var(--amber-soft); border-color:var(--amber);}
+  @media (prefers-reduced-motion:reduce){.day-flag{transition:none;}}
+
+  .day-maps{display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.7rem;}
+  .map-link{
+    display:inline-flex; align-items:center; gap:0.35rem;
+    font-family:var(--font-mono); font-size:0.68rem;
+    color:var(--text-muted);
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:0.3rem 0.65rem;
+    text-decoration:none;
+    transition:border-color 0.15s ease, color 0.15s ease;
+  }
+  .map-link:hover{border-color:var(--text-faint); color:var(--text);}
+  @media (prefers-reduced-motion:reduce){.map-link{transition:none;}}
+
+  /* ---------- BUDGET CONSOLE ---------- */
+  .budget{
+    margin-top:3.2rem;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:2rem;
+  }
+
+  .budget-top{display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; margin-bottom:1.8rem;}
+
+  .readout{
+    font-family:var(--font-mono);
+    text-align:right;
+  }
+  .readout-label{font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-faint); margin-bottom:0.3rem;}
+  .readout-value{font-size:clamp(1.8rem, 5vw, 2.4rem); font-weight:600; transition:color 0.2s ease;}
+  .readout-value[data-status="good"]{color:var(--green);}
+  .readout-value[data-status="under"]{color:#7FB8D9;}
+  .readout-value[data-status="over"]{color:var(--amber);}
+  .readout-status{font-size:0.72rem; margin-top:0.3rem; color:var(--text-muted);}
+
+  .gauge{position:relative; height:10px; border-radius:100px; background:var(--surface-2); margin:0 0 2rem; overflow:visible;}
+  .gauge-band{
+    position:absolute; top:0; bottom:0;
+    left:28.6%; right:28.6%;
+    background:var(--green-soft);
+    border-left:1px dashed var(--green-line);
+    border-right:1px dashed var(--green-line);
+    border-radius:4px;
+  }
+  .gauge-marker{
+    position:absolute; top:50%; width:16px; height:16px;
+    background:var(--text);
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 0 0 4px var(--bg), 0 0 0 5px var(--line);
+    transition:left 0.15s ease;
+  }
+  @media (prefers-reduced-motion:reduce){.gauge-marker{transition:none;}}
+  .gauge-labels{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.64rem; color:var(--text-faint); margin-top:0.5rem;}
+
+  .controls{display:grid; grid-template-columns:repeat(2, 1fr); gap:1.4rem 1.8rem; margin-bottom:2rem;}
+  .control{}
+  .control-label{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:0.85rem; margin-bottom:0.55rem;
+  }
+  .control-name{color:var(--text);}
+  .control-value{font-family:var(--font-mono); color:var(--amber); font-size:0.82rem;}
+
+  input[type=range]{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:4px;
+    background:var(--surface-2);
+    border-radius:100px;
+    outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:17px; height:17px;
+    border-radius:50%;
+    background:var(--amber);
+    border:3px solid var(--bg);
+    box-shadow:0 0 0 1px var(--amber-line);
+    cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:17px; height:17px; border-radius:50%;
+    background:var(--amber); border:3px solid var(--bg);
+    box-shadow:0 0 0 1px var(--amber-line); cursor:pointer;
+  }
+
+  .breakdown{border-top:1px solid var(--line); padding-top:1.3rem;}
+  .breakdown-row{
+    display:flex; justify-content:space-between;
+    font-family:var(--font-mono); font-size:0.82rem;
+    padding:0.42rem 0; color:var(--text-muted);
+    border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+  .breakdown-row span:first-child{color:var(--text);}
+  .breakdown-row.fixed span:last-child{color:var(--text-faint);}
+  .breakdown-foot{font-size:0.72rem; color:var(--text-faint); margin-top:0.9rem;}
+
+  /* ---------- NOTES / FOOTER ---------- */
+  .notes{margin-top:3rem;}
+  .notes-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin-top:1.2rem;}
+  .note-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:1rem 1.15rem; font-size:0.85rem; color:var(--text-muted);
+  }
+  .note-card strong{display:block; color:var(--text); font-family:var(--font-display); font-weight:600; font-size:0.95rem; margin-bottom:0.3rem;}
+
+  .footprint{
+    margin-top:2.5rem; padding-top:1.4rem; border-top:1px solid var(--line);
+    font-family:var(--font-mono); font-size:0.7rem; color:var(--text-faint);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;
+  }
+
+  @media (max-width:680px){
+    .hero-top{grid-template-columns:1fr; text-align:center; gap:0.8rem;}
+    .route-city.right{align-items:center; text-align:center;}
+    .hero-stub{grid-template-columns:repeat(2,1fr);}
+    .controls{grid-template-columns:1fr;}
+    .notes-grid{grid-template-columns:1fr;}
+    .budget-top{flex-direction:column;}
+    .readout{text-align:left;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <p class="eyebrow">Trip manifest · September 2026</p>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-top">
+      <div class="route-city">
+        <div class="route-code">WAW</div>
+        <div class="route-city-name">Warsaw Chopin</div>
+      </div>
+      <div class="route-mid">
+        <svg class="route-line-svg" viewBox="0 0 160 20" fill="none">
+          <line x1="6" y1="10" x2="154" y2="10" stroke="#5E6A80" stroke-width="1.5" stroke-dasharray="1 6" stroke-linecap="round"/>
+          <path d="M148 4 L156 10 L148 16" stroke="#8C99AF" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="10" r="3" fill="#5A9077"/>
+        </svg>
+        <div class="route-flights">
+          <span>LO35 →</span><span>← LO38</span>
+        </div>
+      </div>
+      <div class="route-city right">
+        <div class="route-code">SFO</div>
+        <div class="route-city-name">San Francisco Intl</div>
+      </div>
+    </div>
+
+    <div class="hero-perf">
+      <div class="hero-perf-dashes"></div>
+    </div>
+
+    <dl class="hero-stub">
+      <div class="stub-item">
+        <dt>Outbound</dt>
+        <dd>Sun 13 Sep <span>Lands SFO 13:50</span></dd>
+      </div>
+      <div class="stub-item">
+        <dt>Return</dt>
+        <dd>Sat 26 Sep <span>Departs SFO 22:15</span></dd>
+      </div>
+      <div class="stub-item">
+        <dt>On the ground</dt>
+        <dd>13 nights <span>8 self-paid · 5 company</span></dd>
+      </div>
+      <div class="stub-item">
+        <dt>Vehicle</dt>
+        <dd>Full-size SUV <span>V8 · ~900 mi planned</span></dd>
+      </div>
+    </dl>
+
+    <div class="target-chip">Budget target · 10,000–12,000 PLN</div>
+  </header>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch green"></span>Coastal &amp; city — San Francisco</div>
+    <div class="legend-item"><span class="legend-swatch amber"></span>Silicon Valley — Sunnyvale base</div>
+    <div class="legend-item"><span class="legend-swatch grey"></span>Work block — company-covered</div>
+  </div>
+
+  <!-- TIMELINE -->
+  <section>
+    <h2 class="section-heading">Route, day by day</h2>
+    <p class="section-sub">Four nights in the city, three self-paid on the Peninsula, five company-covered around the bootcamp, one buffer night before the flight home.</p>
+
+    <div class="timeline">
+
+      <div class="day thread-green">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Sun · 13 Sep</span><span class="day-tag">Arrival</span></div>
+          <h3 class="day-title">San Francisco</h3>
+          <p class="day-body">Land at SFO 13:50 on LO35 — a rare daylight touchdown. Pick up the SUV, check into Inn at Union Square, then ease in with the Ferry Building and the Embarcadero.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJVVVVVYx3j4ARP-3NGldc8qQ" target="_blank" rel="noopener">📍 SFO</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJzdhUjY6AhYARgbhda7lLVqc" target="_blank" rel="noopener">📍 Inn At Union Square</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJWTGPjmaAhYARxz6l1hOj92w" target="_blank" rel="noopener">📍 Ferry Building</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJrUM2mWaAhYARfx6a1ZmDF3c" target="_blank" rel="noopener">📍 Embarcadero</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-green">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Mon · 14 Sep</span><span class="day-tag">City</span></div>
+          <h3 class="day-title">Alcatraz + North Beach</h3>
+          <p class="day-body">Morning ferry out to the island, then Coit Tower and North Beach in the afternoon.</p>
+          <a class="day-flag" href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener">Book Alcatraz now — the 90-day window is open ↗</a>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJmRyMs_mAhYARpViaf6JEWNE" target="_blank" rel="noopener">📍 Alcatraz Island</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJAQAAQIyAhYARRN3yIQG4hd4" target="_blank" rel="noopener">📍 Coit Tower</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJrRkHSfCAhYARBpeYSlBnwX8" target="_blank" rel="noopener">📍 North Beach</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-green">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Tue · 15 Sep</span><span class="day-tag">Coast</span></div>
+          <h3 class="day-title">Muir Woods + Point Reyes</h3>
+          <p class="day-body">Redwoods in the morning, cliffs and the lighthouse in the afternoon — the whole northern coast in a single day.</p>
+          <a class="day-flag" href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking / shuttle slot ↗</a>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJrWJnvbSRhYAR-a__aHZY_3o" target="_blank" rel="noopener">📍 Muir Woods</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJHXKUS-jbhYARPV3_2s8dToM" target="_blank" rel="noopener">📍 Point Reyes</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-green">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Wed · 16 Sep</span><span class="day-tag">Wine Country</span></div>
+          <h3 class="day-title">Napa &amp; Sonoma</h3>
+          <p class="day-body">A weekday visit — thinner crowds, calmer tasting rooms, easier parking.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJMU8qI_lPhIARfMUQoxvSFP4" target="_blank" rel="noopener">📍 Napa Valley</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJI-UCgdlShIARPnjSSZd4foM" target="_blank" rel="noopener">📍 Sonoma Valley</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-amber">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Thu · 17 Sep</span><span class="day-tag">Transfer</span></div>
+          <h3 class="day-title">Move to Sunnyvale</h3>
+          <p class="day-body">Checkout, a 45-minute drive south to Maple Tree Inn, then Stanford campus and Palo Alto in the afternoon.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJxdDAgHa2j4ARTl-zct1VP_U" target="_blank" rel="noopener">📍 Maple Tree Inn</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJneqLZyq7j4ARf2j8RBrwzSk" target="_blank" rel="noopener">📍 Stanford University</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJORy6nXuwj4ARz3b1NVL1Hw4" target="_blank" rel="noopener">📍 Palo Alto</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-amber">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Fri · 18 Sep</span><span class="day-tag">Pilgrimage</span></div>
+          <h3 class="day-title">The Silicon Valley Circuit</h3>
+          <p class="day-body">Computer History Museum, Apple Park, Googleplex — the tech thread of the trip starts here, and it's all a short drive from the hotel.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJm7NJkla3j4AR8vR-HWRxgOo" target="_blank" rel="noopener">📍 Computer History Museum</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJ_Yjh6Za1j4AR8IgGUZGDDTs" target="_blank" rel="noopener">📍 Apple Park</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJj61dQgK6j4AR4GeTYWZsKWw" target="_blank" rel="noopener">📍 Googleplex</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-amber">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Sat · 19 Sep</span><span class="day-tag">Coast</span></div>
+          <h3 class="day-title">Santa Cruz</h3>
+          <p class="day-body">Boardwalk and Natural Bridges, 40 minutes down the coast.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJUexFVhlAjoARpU8zCcm9Awk" target="_blank" rel="noopener">📍 Santa Cruz Beach Boardwalk</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJnbYDUplrjoAR8a5C9OVqpxI" target="_blank" rel="noopener">📍 Natural Bridges</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-amber">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Sun · 20 Sep</span><span class="day-tag">Drive Day</span></div>
+          <h3 class="day-title">Monterey &amp; Big Sur</h3>
+          <p class="day-body">Highway 1 south to Bixby Bridge and the cliffs — the drive you've been looking forward to. Check into CitizenM Menlo Park tonight (book via Navan) — company coverage starts today, not Tuesday.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJkfu1cFLkjYARXj1K2AlJSO4" target="_blank" rel="noopener">📍 Monterey</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJQeDYpaCUjYARtSYdrEU4DKo" target="_blank" rel="noopener">📍 Bixby Creek Bridge</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJ_7D0UY-AhYARJrdSDRYKjeg" target="_blank" rel="noopener">📍 citizenM Menlo Park</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-amber">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Mon · 21 Sep</span><span class="day-tag">Bonus Day</span></div>
+          <h3 class="day-title">Free Day, No Transfer Needed</h3>
+          <p class="day-body">You're already checked into Menlo Park — no move to make. A day to spare before the bootcamp starts: a second pass at the tech circuit, more time in Palo Alto, or just rest.</p>
+        </div>
+      </div>
+
+      <div class="day thread-grey">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Tue · 22 Sep</span><span class="day-tag">Bootcamp</span></div>
+          <h3 class="day-title">Training — Day 1</h3>
+          <p class="day-body">Company-covered hotel and days.</p>
+        </div>
+      </div>
+
+      <div class="day thread-grey">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Wed · 23 Sep</span><span class="day-tag">Bootcamp</span></div>
+          <h3 class="day-title">Training — Day 2</h3>
+        </div>
+      </div>
+
+      <div class="day thread-grey">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Thu · 24 Sep</span><span class="day-tag">Bootcamp</span></div>
+          <h3 class="day-title">Training — Day 3</h3>
+        </div>
+      </div>
+
+      <div class="day thread-amber">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Fri · 25 Sep</span><span class="day-tag">Buffer</span></div>
+          <h3 class="day-title">Decompress</h3>
+          <p class="day-body">Checkout from Menlo Park — company coverage ends here. One self-paid night left before the flight: back to Maple Tree Inn for simplicity, or up to San Francisco for a last night in the city (closer to SFO for tomorrow's departure).</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJxdDAgHa2j4ARTl-zct1VP_U" target="_blank" rel="noopener">📍 Maple Tree Inn</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-green">
+        <span class="day-node"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Sat · 26 Sep</span><span class="day-tag">Departure</span></div>
+          <h3 class="day-title">Fly Home</h3>
+          <p class="day-body">Late checkout, return the car at SFO, LO38 departs 22:15 for Warsaw.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJVVVVVYx3j4ARP-3NGldc8qQ" target="_blank" rel="noopener">📍 SFO</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BUDGET CONSOLE -->
+  <section class="budget">
+    <div class="budget-top">
+      <div>
+        <h2 class="section-heading">Budget console</h2>
+        <p class="section-sub" style="margin-bottom:0;">Drag to see how the total moves. Car, hotels, fuel and food are the levers that matter most.</p>
+      </div>
+      <div class="readout">
+        <div class="readout-label">Live estimate</div>
+        <div class="readout-value" id="total-value" data-status="good">11,942 zł</div>
+        <div class="readout-status" id="total-status">inside 10–12K target</div>
+      </div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-band"></div>
+      <div class="gauge-marker" id="gauge-marker" style="left:56.3%;"></div>
+    </div>
+    <div class="gauge-labels">
+      <span>8,000 zł</span>
+      <span>10,000</span>
+      <span>12,000</span>
+      <span>15,000 zł</span>
+    </div>
+
+    <div class="controls">
+      <div class="control">
+        <div class="control-label"><span class="control-name">Car rental</span><span class="control-value" id="car-days-out">13 days</span></div>
+        <input type="range" id="car-days" min="11" max="14" step="1" value="13">
+      </div>
+      <div class="control">
+        <div class="control-label"><span class="control-name">San Francisco — Inn at Union Square</span><span class="control-value" id="sf-nights-out">4 nights</span></div>
+        <input type="range" id="sf-nights" min="3" max="6" step="1" value="4">
+      </div>
+      <div class="control">
+        <div class="control-label"><span class="control-name">Sunnyvale — Maple Tree Inn</span><span class="control-value" id="sv-nights-out">4 nights</span></div>
+        <input type="range" id="sv-nights" min="3" max="6" step="1" value="4">
+      </div>
+      <div class="control">
+        <div class="control-label"><span class="control-name">Food, per day on your own</span><span class="control-value" id="food-out">190 zł</span></div>
+        <input type="range" id="food-rate" min="150" max="260" step="10" value="190">
+      </div>
+      <div class="control">
+        <div class="control-label"><span class="control-name">Gas price</span><span class="control-value" id="gas-out">$5.75 / gal</span></div>
+        <input type="range" id="gas-price" min="4.5" max="7" step="0.25" value="5.75">
+      </div>
+      <div class="control">
+        <div class="control-label"><span class="control-name">Wine tastings</span><span class="control-value" id="tastings-out">2</span></div>
+        <input type="range" id="tastings" min="0" max="3" step="1" value="2">
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <div class="breakdown-row"><span>Car rental + IDP</span><span id="out-car">3,650 zł</span></div>
+      <div class="breakdown-row"><span>San Francisco hotel</span><span id="out-sf-hotel">2,420 zł</span></div>
+      <div class="breakdown-row"><span>San Francisco parking</span><span id="out-sf-parking">520 zł</span></div>
+      <div class="breakdown-row"><span>Sunnyvale hotel (points top-up)</span><span id="out-sv-hotel">1,680 zł</span></div>
+      <div class="breakdown-row"><span>Fuel — ~900 mi at 17 mpg</span><span id="out-fuel">1,142 zł</span></div>
+      <div class="breakdown-row"><span>Food — self-paid days</span><span id="out-food">1,900 zł</span></div>
+      <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">280 zł</span></div>
+      <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span>350 zł</span></div>
+      <p class="breakdown-foot">Flights and five nights in Menlo Park (Sun 20 – Thu 24) are company-covered and excluded from this total. FX assumed at ~3.75 PLN/USD.</p>
+    </div>
+  </section>
+
+  <!-- NOTES -->
+  <section class="notes">
+    <h2 class="section-heading">Before you book</h2>
+    <div class="notes-grid">
+      <div class="note-card">
+        <strong>Confirmed by the team</strong>
+        Menlo Park hotel is covered Sun 20 – Thu 24 (5 nights, that bootcamp week) — not just Tue–Thu. Check-in Sunday frees up Monday as a bonus day.
+      </div>
+      <div class="note-card">
+        <strong>Reserve early</strong>
+        <a href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener" style="color:var(--amber);">Alcatraz</a> (90-day window) and
+        <a href="https://gomuirwoods.com/" target="_blank" rel="noopener" style="color:var(--amber);">Muir Woods parking</a> both sell out — lock these in first.
+      </div>
+      <div class="note-card">
+        <strong>Points lever</strong>
+        7,043 Booking points shave ~600 zł off the Sunnyvale stay — apply them there, not in San Francisco.
+      </div>
+      <div class="note-card">
+        <strong>Flight is genuinely nonstop</strong>
+        LO35 (Sun/Thu) and LO38 (Wed/Sat) are the same WAW–SFO service on a 787 Dreamliner — just different days and departure times.
+      </div>
+      <div class="note-card" style="grid-column:1 / -1;">
+        <strong>Bootcamp commute ≠ your road trip</strong>
+        Book Sun 20 – Thu 24 via Navan — CitizenM Menlo Park (1 mi, walkable) is the recommended pick. "Uber-only" is company policy for the office commute; it doesn't touch your self-paid SUV for Big Sur, Napa or Point Reyes.
+      </div>
+    </div>
+  </section>
+
+  <div class="footprint">
+    <span>Bay Area · Sep 2026</span>
+    <span>13 nights on the ground · 9 self-paid</span>
+  </div>
+
+</div>
+
+<script>
+  const el = id => document.getElementById(id);
+  const carDaysEl = el('car-days'), sfNightsEl = el('sf-nights'), svNightsEl = el('sv-nights'),
+        foodEl = el('food-rate'), gasEl = el('gas-price'), tastingsEl = el('tastings');
+
+  const fmt = n => Math.round(n).toLocaleString('en-US') + ' zł';
+
+  function recalc(){
+    const carDays = +carDaysEl.value;
+    const sfNights = +sfNightsEl.value;
+    const svNights = +svNightsEl.value;
+    const food = +foodEl.value;
+    const gas = +gasEl.value;
+    const tastings = +tastingsEl.value;
+
+    const carCost = (3650/13) * carDays;
+    const sfHotel = sfNights * 605;
+    const sfParking = sfNights * 130;
+    const svHotel = svNights * 420;
+    const fuel = (900/17) * gas * 3.75;
+    const foodCost = food * 10;
+    const attractions = 350;
+    const tastingCost = tastings * 140;
+
+    const total = carCost + sfHotel + sfParking + svHotel + fuel + foodCost + attractions + tastingCost;
+
+    el('car-days-out').textContent = carDays + ' days';
+    el('sf-nights-out').textContent = sfNights + ' nights';
+    el('sv-nights-out').textContent = svNights + ' nights';
+    el('food-out').textContent = food + ' zł';
+    el('gas-out').textContent = '$' + gas.toFixed(2) + ' / gal';
+    el('tastings-out').textContent = tastings;
+
+    el('out-car').textContent = fmt(carCost);
+    el('out-sf-hotel').textContent = fmt(sfHotel);
+    el('out-sf-parking').textContent = fmt(sfParking);
+    el('out-sv-hotel').textContent = fmt(svHotel);
+    el('out-fuel').textContent = fmt(fuel);
+    el('out-food').textContent = fmt(foodCost);
+    el('out-tastings').textContent = fmt(tastingCost);
+
+    const totalValueEl = el('total-value');
+    const totalStatusEl = el('total-status');
+    totalValueEl.textContent = fmt(total);
+
+    let status, statusText;
+    if (total < 10000){
+      status = 'under';
+      statusText = fmt(10000 - total) + ' under target';
+    } else if (total <= 12000){
+      status = 'good';
+      statusText = 'inside 10–12K target';
+    } else {
+      status = 'over';
+      statusText = fmt(total - 12000) + ' over target';
+    }
+    totalValueEl.dataset.status = status;
+    totalStatusEl.textContent = statusText;
+
+    const min = 8000, max = 15000;
+    const pct = Math.min(100, Math.max(0, (total - min) / (max - min) * 100));
+    el('gauge-marker').style.left = pct + '%';
+  }
+
+  [carDaysEl, sfNightsEl, svNightsEl, foodEl, gasEl, tastingsEl].forEach(input => {
+    input.addEventListener('input', recalc);
+  });
+
+  recalc();
+</script>
+
+</body>
+</html>
