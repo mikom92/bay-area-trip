@@ -698,14 +698,14 @@
             <button type="button" class="currency-btn" data-currency="USD">USD</button>
           </div>
         </div>
-        <div class="readout-value" id="total-value" data-status="good">10,610 zł</div>
+        <div class="readout-value" id="total-value" data-status="good">10,405 zł</div>
         <div class="readout-status" id="total-status">inside 10–12K target</div>
       </div>
     </div>
 
     <div class="gauge">
       <div class="gauge-band"></div>
-      <div class="gauge-marker" id="gauge-marker" style="left:37.3%;"></div>
+      <div class="gauge-marker" id="gauge-marker" style="left:34.4%;"></div>
     </div>
     <div class="gauge-labels">
       <span id="gauge-label-0">8,000 zł</span>
@@ -742,7 +742,7 @@
     </div>
 
     <div class="breakdown">
-      <div class="breakdown-row"><span>Car rental + IDP</span><span id="out-car">3,650 zł</span></div>
+      <div class="breakdown-row"><span>Car rental (confirmed Alamo quote) + IDP</span><span id="out-car">3,445 zł</span></div>
       <div class="breakdown-row"><span>Sunnyvale hotel (points-applied, confirmed rate)</span><span id="out-sv-hotel">2,475 zł</span></div>
       <div class="breakdown-row"><span>Buffer night — CitizenM (self-paid extension)</span><span id="out-buffer">694 zł</span></div>
       <div class="breakdown-row fixed"><span>SF day parking (1 city day)</span><span id="out-sf-parking">120 zł</span></div>
@@ -855,7 +855,7 @@
     const gas = +gasEl.value;
     const tastings = +tastingsEl.value;
 
-    const carCost = (3650/13) * carDays;
+    const carCost = (3445/13) * carDays; // confirmed via Alamo quote: $918.77 for 13 days, incl. full coverage
     const svHotel = svNights * (2475/7); // confirmed rate: 2,475 zł / 7 nights with points
     const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
     const bufferNight = bufferRate * 3.75; // one self-paid night extending the CitizenM booking
