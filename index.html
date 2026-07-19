@@ -62,6 +62,19 @@
   }
   .eyebrow::before{content:''; width:16px; height:1px; background:var(--text-faint);}
 
+  .month-toggle-row{display:flex; align-items:center; gap:0.7rem; margin-top:0.9rem;}
+  .month-toggle-label{font-family:var(--font-mono); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-faint);}
+  .month-toggle{display:inline-flex; border:1px solid var(--line); border-radius:100px; padding:3px; gap:3px; background:var(--surface);}
+  .month-btn{
+    font-family:var(--font-mono); font-size:0.72rem; font-weight:600; letter-spacing:0.02em;
+    color:var(--text-faint); background:transparent; border:none; border-radius:100px;
+    padding:0.32rem 0.8rem; cursor:pointer;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .month-btn.active{background:var(--amber); color:var(--bg);}
+  .month-btn:not(.active):hover{color:var(--text);}
+  @media (prefers-reduced-motion:reduce){.month-btn{transition:none;}}
+
   /* ---------- HERO / BOARDING PASS ---------- */
   .hero{
     position:relative;
@@ -452,7 +465,15 @@
 <body>
 <div class="page">
 
-  <p class="eyebrow">Trip manifest · September 2026</p>
+  <p class="eyebrow"><span id="eyebrow-text" data-sep="Trip manifest · September 2026" data-aug="Trip manifest · August 2026">Trip manifest · September 2026</span></p>
+
+  <div class="month-toggle-row">
+    <span class="month-toggle-label">Cohort</span>
+    <div class="month-toggle" role="group" aria-label="Bootcamp cohort">
+      <button type="button" class="month-btn active" data-month="sep">Sep 22–24</button>
+      <button type="button" class="month-btn" data-month="aug">Aug 18–20</button>
+    </div>
+  </div>
 
   <!-- HERO -->
   <header class="hero">
@@ -484,11 +505,11 @@
     <dl class="hero-stub">
       <div class="stub-item">
         <dt>Outbound</dt>
-        <dd>Sun 13 Sep <span>Lands SFO 13:50</span></dd>
+        <dd><span data-sep="Sun 13 Sep" data-aug="Sun 9 Aug">Sun 13 Sep</span> <span>Lands SFO 13:50</span></dd>
       </div>
       <div class="stub-item">
         <dt>Return</dt>
-        <dd>Sat 26 Sep <span>Departs SFO 22:15</span></dd>
+        <dd><span data-sep="Sat 26 Sep" data-aug="Sat 22 Aug">Sat 26 Sep</span> <span>Departs SFO 22:15</span></dd>
       </div>
       <div class="stub-item">
         <dt>On the ground</dt>
@@ -520,7 +541,7 @@
       <div class="day thread-amber">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Sun · 13 Sep</span><span class="day-tag">Arrival</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Sun · 13 Sep" data-aug="Sun · 9 Aug">Sun · 13 Sep</span><span class="day-tag">Arrival</span></div>
           <h3 class="day-title">Sunnyvale + Palo Alto</h3>
           <p class="day-body">Land at SFO 13:50 on LO35. Pick up the SUV, 45-minute drive south to Maple Tree Inn — this is home base for the whole week, no more packing until Sunday. Light evening: a walk through Stanford, dinner in Palo Alto.</p>
           <div class="day-maps">
@@ -534,7 +555,7 @@
       <div class="day thread-amber">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Mon · 14 Sep</span><span class="day-tag">Pilgrimage</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Mon · 14 Sep" data-aug="Mon · 10 Aug">Mon · 14 Sep</span><span class="day-tag">Pilgrimage</span></div>
           <h3 class="day-title">The Silicon Valley Circuit</h3>
           <p class="day-body">Computer History Museum, Apple Park, Googleplex — all a short drive from the hotel. The easiest day of the week, back at Maple Tree Inn by dinner.</p>
           <div class="day-maps">
@@ -548,9 +569,9 @@
       <div class="day thread-amber">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Tue · 15 Sep</span><span class="day-tag">Coast</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Tue · 15 Sep" data-aug="Tue · 11 Aug">Tue · 15 Sep</span><span class="day-tag">Coast</span></div>
           <h3 class="day-title">Santa Cruz</h3>
-          <p class="day-body">Boardwalk and Natural Bridges, 40 minutes down the coast. Dreamforce kicks off in the city today; you're nowhere near it — and it never touches your budget, since you're not booking a single SF night.</p>
+          <p class="day-body">Boardwalk and Natural Bridges, 40 minutes down the coast. <span data-sep="Dreamforce kicks off in the city today; you're nowhere near it — and it never touches your budget, since you're not booking a single SF night." data-aug="No major conference flagged for the city today — and it wouldn't matter either way, since you're not booking a single SF night.">Dreamforce kicks off in the city today; you're nowhere near it — and it never touches your budget, since you're not booking a single SF night.</span></p>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJUexFVhlAjoARpU8zCcm9Awk" target="_blank" rel="noopener">📍 Santa Cruz Beach Boardwalk</a>
             <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJnbYDUplrjoAR8a5C9OVqpxI" target="_blank" rel="noopener">📍 Natural Bridges</a>
@@ -561,7 +582,7 @@
       <div class="day thread-green">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Wed · 16 Sep</span><span class="day-tag">Wine Country</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Wed · 16 Sep" data-aug="Wed · 12 Aug">Wed · 16 Sep</span><span class="day-tag">Wine Country</span></div>
           <h3 class="day-title">Napa &amp; Sonoma</h3>
           <p class="day-body">A weekday visit — thinner crowds, calmer tasting rooms. Longest drive of the "easy" days from Sunnyvale (~3–3.5h total), so plan the day around it. Taste and spit at the tastings — you're driving back.</p>
           <div class="day-maps">
@@ -574,7 +595,7 @@
       <div class="day thread-amber">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Thu · 17 Sep</span><span class="day-tag">Drive Day</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Thu · 17 Sep" data-aug="Thu · 13 Aug">Thu · 17 Sep</span><span class="day-tag">Drive Day</span></div>
           <h3 class="day-title">Monterey &amp; Big Sur</h3>
           <p class="day-body">Highway 1 south to Bixby Bridge and the cliffs — the drive you've been looking forward to, and the big one of the week. Out-and-back from Sunnyvale.</p>
           <div class="day-maps">
@@ -587,9 +608,9 @@
       <div class="day thread-green">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Fri · 18 Sep</span><span class="day-tag">City</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Fri · 18 Sep" data-aug="Fri · 14 Aug">Fri · 18 Sep</span><span class="day-tag">City</span></div>
           <h3 class="day-title">Alcatraz + North Beach</h3>
-          <p class="day-body">Dreamforce cleared out yesterday — quietest day to be downtown all week. Drive up (~45 min), ferry to the island, Coit Tower and North Beach, drive back to Maple Tree Inn for the night.</p>
+          <p class="day-body"><span data-sep="Dreamforce cleared out yesterday — quietest day to be downtown all week." data-aug="No major conference in town — should be an easy day downtown either way.">Dreamforce cleared out yesterday — quietest day to be downtown all week.</span> Drive up (~45 min), ferry to the island, Coit Tower and North Beach, drive back to Maple Tree Inn for the night.</p>
           <a class="day-flag" href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener">Book Alcatraz now — the 90-day window is open ↗</a>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJmRyMs_mAhYARpViaf6JEWNE" target="_blank" rel="noopener">📍 Alcatraz Island</a>
@@ -602,7 +623,7 @@
       <div class="day thread-green">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Sat · 19 Sep</span><span class="day-tag">Coast</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Sat · 19 Sep" data-aug="Sat · 15 Aug">Sat · 19 Sep</span><span class="day-tag">Coast</span></div>
           <h3 class="day-title">Muir Woods + Point Reyes</h3>
           <p class="day-body">Redwoods in the morning, cliffs and the lighthouse in the afternoon — the whole northern coast in a single day, and the last night at Maple Tree Inn before the move.</p>
           <a class="day-flag" href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking / shuttle slot ↗</a>
@@ -616,7 +637,7 @@
       <div class="day thread-amber">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Sun · 20 Sep</span><span class="day-tag">Transfer</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Sun · 20 Sep" data-aug="Sun · 16 Aug">Sun · 20 Sep</span><span class="day-tag">Transfer</span></div>
           <h3 class="day-title">Move to Menlo Park</h3>
           <p class="day-body">First and only checkout of the week. Checkout from Maple Tree Inn, 15-minute drive to CitizenM Menlo Park (book via Navan) — company coverage starts today.</p>
           <div class="day-maps">
@@ -628,7 +649,7 @@
       <div class="day thread-amber">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Mon · 21 Sep</span><span class="day-tag">Bonus Day</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Mon · 21 Sep" data-aug="Mon · 17 Aug">Mon · 21 Sep</span><span class="day-tag">Bonus Day</span></div>
           <h3 class="day-title">Free Day, No Transfer Needed</h3>
           <p class="day-body">You're already checked into Menlo Park from yesterday — no move to make. A day to spare before the bootcamp starts: revisit a favorite, more time in Palo Alto, or just rest.</p>
         </div>
@@ -637,7 +658,7 @@
       <div class="day thread-grey">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Tue · 22 Sep</span><span class="day-tag">Bootcamp</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Tue · 22 Sep" data-aug="Tue · 18 Aug">Tue · 22 Sep</span><span class="day-tag">Bootcamp</span></div>
           <h3 class="day-title">Training — Day 1</h3>
           <p class="day-body">Company-covered hotel and days.</p>
         </div>
@@ -646,7 +667,7 @@
       <div class="day thread-grey">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Wed · 23 Sep</span><span class="day-tag">Bootcamp</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Wed · 23 Sep" data-aug="Wed · 19 Aug">Wed · 23 Sep</span><span class="day-tag">Bootcamp</span></div>
           <h3 class="day-title">Training — Day 2</h3>
         </div>
       </div>
@@ -654,7 +675,7 @@
       <div class="day thread-grey">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Thu · 24 Sep</span><span class="day-tag">Bootcamp</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Thu · 24 Sep" data-aug="Thu · 20 Aug">Thu · 24 Sep</span><span class="day-tag">Bootcamp</span></div>
           <h3 class="day-title">Training — Day 3</h3>
         </div>
       </div>
@@ -662,7 +683,7 @@
       <div class="day thread-amber">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Fri · 25 Sep</span><span class="day-tag">Buffer</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Fri · 25 Sep" data-aug="Fri · 21 Aug">Fri · 25 Sep</span><span class="day-tag">Buffer</span></div>
           <h3 class="day-title">Decompress</h3>
           <p class="day-body">Company coverage ends today, but you're not going anywhere — just extend the same CitizenM Menlo Park booking one more night, self-paid. Zero packing, zero driving. A fully free day before the flight.</p>
         </div>
@@ -671,7 +692,7 @@
       <div class="day thread-green">
         <span class="day-node"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Sat · 26 Sep</span><span class="day-tag">Departure</span></div>
+          <div class="day-head"><span class="day-date" data-sep="Sat · 26 Sep" data-aug="Sat · 22 Aug">Sat · 26 Sep</span><span class="day-tag">Departure</span></div>
           <h3 class="day-title">Fly Home</h3>
           <p class="day-body">Late checkout from CitizenM Menlo Park, return the car at SFO (~30 min), LO38 departs 22:15 for Warsaw.</p>
           <div class="day-maps">
@@ -742,7 +763,7 @@
     </div>
 
     <div class="breakdown">
-      <div class="breakdown-row"><span>Car rental (confirmed Alamo quote) + IDP</span><span id="out-car">3,445 zł</span></div>
+      <div class="breakdown-row"><span data-sep="Car rental (confirmed Alamo quote) + IDP" data-aug="Car rental (Sep quote used — Aug unconfirmed) + IDP">Car rental (confirmed Alamo quote) + IDP</span><span id="out-car">3,445 zł</span></div>
       <div class="breakdown-row"><span>Sunnyvale hotel (points-applied, confirmed rate)</span><span id="out-sv-hotel">2,475 zł</span></div>
       <div class="breakdown-row"><span>Buffer night — CitizenM (self-paid extension)</span><span id="out-buffer">694 zł</span></div>
       <div class="breakdown-row fixed"><span>SF day parking (1 city day)</span><span id="out-sf-parking">120 zł</span></div>
@@ -750,7 +771,7 @@
       <div class="breakdown-row"><span>Food — self-paid days</span><span id="out-food">1,900 zł</span></div>
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">280 zł</span></div>
       <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">350 zł</span></div>
-      <p class="breakdown-foot">Sunnyvale rate confirmed for the core Sun 13 → Sun 20 block (2,475 zł / 7 nights with ~7,050 points). The Fri 25 → Sat 26 night is a self-paid extension of the same CitizenM Menlo Park booking — flag the split billing at check-in. Flights and five nights in Menlo Park (Sun 20 – Thu 24) are company-covered and excluded from this total. FX assumed at ~3.75 PLN/USD.</p>
+      <p class="breakdown-foot">Sunnyvale rate confirmed for the core <span data-sep="Sun 13 → Sun 20 Sep block (2,475 zł" data-aug="Sun 9 → Sun 16 Aug block (2,957 zł">Sun 13 → Sun 20 Sep block (2,475 zł</span> / 7 nights with ~7,050 points). The <span data-sep="Fri 25 → Sat 26 Sep" data-aug="Fri 21 → Sat 22 Aug">Fri 25 → Sat 26 Sep</span> night is a self-paid extension of the same CitizenM Menlo Park booking — flag the split billing at check-in. Flights and five nights in Menlo Park <span data-sep="(Sun 20 – Thu 24)" data-aug="(Sun 16 – Thu 20)">(Sun 20 – Thu 24)</span> are company-covered and excluded from this total. FX assumed at ~3.75 PLN/USD.</p>
     </div>
   </section>
 
@@ -760,11 +781,11 @@
     <div class="notes-grid">
       <div class="note-card" style="grid-column:1 / -1;">
         <strong>One base, zero relocations</strong>
-        Every day before the bootcamp is a round-trip from Maple Tree Inn — SF, wine country, the coast, all day trips. Side effect: since you never book an SF night, Dreamforce (Sep 15–17, ~250,000 attendees at Moscone) can't touch your budget at all. Trade-off: three of the seven days run 2.5–3.5h of driving each way.
+        <span data-sep="Every day before the bootcamp is a round-trip from Maple Tree Inn — SF, wine country, the coast, all day trips. Side effect: since you never book an SF night, Dreamforce (Sep 15–17, ~250,000 attendees at Moscone) can't touch your budget at all. Trade-off: three of the seven days run 2.5–3.5h of driving each way." data-aug="Every day before the bootcamp is a round-trip from Maple Tree Inn — SF, wine country, the coast, all day trips. No Dreamforce-scale conference flagged for these dates, but the single-base structure is simply the cheapest option regardless — so it stays. Trade-off: three of the seven days run 2.5–3.5h of driving each way.">Every day before the bootcamp is a round-trip from Maple Tree Inn — SF, wine country, the coast, all day trips. Side effect: since you never book an SF night, Dreamforce (Sep 15–17, ~250,000 attendees at Moscone) can't touch your budget at all. Trade-off: three of the seven days run 2.5–3.5h of driving each way.</span>
       </div>
       <div class="note-card">
         <strong>Confirmed by the team</strong>
-        Menlo Park hotel is covered Sun 20 – Thu 24 (5 nights, that bootcamp week) — not just Tue–Thu. Check-in Sunday frees up Monday as a bonus day.
+        Menlo Park hotel is covered <span data-sep="Sun 20 – Thu 24" data-aug="Sun 16 – Thu 20">Sun 20 – Thu 24</span> (5 nights, that bootcamp week) — not just Tue–Thu. Check-in Sunday frees up Monday as a bonus day.
       </div>
       <div class="note-card">
         <strong>Reserve early</strong>
@@ -773,7 +794,7 @@
       </div>
       <div class="note-card">
         <strong>Points lever, confirmed</strong>
-        ~7,050 Booking points bring the core 7-night Maple Tree Inn stay down to a confirmed 2,475 zł (from 4,444 zł cash) — real price, not an estimate.
+        ~7,050 Booking points bring the core 7-night Maple Tree Inn stay down to a confirmed <span data-sep="2,475 zł (from 4,444 zł cash)" data-aug="2,957 zł (from 3,730 zł cash)">2,475 zł (from 4,444 zł cash)</span> — real price, not an estimate.
       </div>
       <div class="note-card">
         <strong>Flight is genuinely nonstop</strong>
@@ -785,7 +806,7 @@
       </div>
       <div class="note-card" style="grid-column:1 / -1;">
         <strong>Bootcamp commute ≠ your road trip</strong>
-        Book Sun 20 – Thu 24 via Navan — CitizenM Menlo Park (1 mi, walkable) is the recommended pick. "Uber-only" is company policy for the office commute; it doesn't touch your self-paid SUV for Big Sur, Napa or Point Reyes.
+        Book <span data-sep="Sun 20 – Thu 24" data-aug="Sun 16 – Thu 20">Sun 20 – Thu 24</span> via Navan — CitizenM Menlo Park (1 mi, walkable) is the recommended pick. "Uber-only" is company policy for the office commute; it doesn't touch your self-paid SUV for Big Sur, Napa or Point Reyes.
       </div>
     </div>
   </section>
@@ -796,22 +817,22 @@
     <p class="section-sub">Tick things off as you lock them in — progress is saved in this browser.</p>
     <div class="checklist-items" id="checklist">
       <label class="check-item"><input type="checkbox" data-key="alcatraz">
-        <span class="check-text"><a href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener">Book Alcatraz ferry</a> — Fri 18 Sep (day trip from Sunnyvale)<small>90-day window is open now; sells out weeks ahead</small></span>
+        <span class="check-text"><a href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener">Book Alcatraz ferry</a> — <span data-sep="Fri 18 Sep" data-aug="Fri 14 Aug">Fri 18 Sep</span> (day trip from Sunnyvale)<small>90-day window is open now; sells out weeks ahead</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="muirwoods">
-        <span class="check-text"><a href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking</a> — Sat 19 Sep (day trip from Sunnyvale)<small>timed entry; book alongside Alcatraz</small></span>
+        <span class="check-text"><a href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking</a> — <span data-sep="Sat 19 Sep" data-aug="Sat 15 Aug">Sat 19 Sep</span> (day trip from Sunnyvale)<small>timed entry; book alongside Alcatraz</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="sv-hotel">
-        <span class="check-text">Book Maple Tree Inn — Sun 13 → Sun 20 Sep (7 nights)<small>~7,050 points → confirmed 2,475 zł; free parking &amp; breakfast. Book the Fri 25 buffer night separately.</small></span>
+        <span class="check-text">Book Maple Tree Inn — <span data-sep="Sun 13 → Sun 20 Sep" data-aug="Sun 9 → Sun 16 Aug">Sun 13 → Sun 20 Sep</span> (7 nights)<small>~7,050 points → confirmed <span data-sep="2,475 zł" data-aug="2,957 zł">2,475 zł</span>; free parking &amp; breakfast. Book the <span data-sep="Fri 25" data-aug="Fri 21">Fri 25</span> buffer night separately.</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="buffer-night">
-        <span class="check-text">Extend the CitizenM Menlo Park booking one night, Fri 25 → Sat 26 Sep<small>self-paid on top of the corporate stay — flag the split billing at check-in or with the travel desk</small></span>
+        <span class="check-text">Extend the CitizenM Menlo Park booking one night, <span data-sep="Fri 25 → Sat 26 Sep" data-aug="Fri 21 → Sat 22 Aug">Fri 25 → Sat 26 Sep</span><small>self-paid on top of the corporate stay — flag the split billing at check-in or with the travel desk</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="navan">
-        <span class="check-text">Book CitizenM Menlo Park in Navan — Sun 20 → Fri 25 Sep<small>company-covered; avoid orange out-of-policy badges</small></span>
+        <span class="check-text">Book CitizenM Menlo Park in Navan — <span data-sep="Sun 20 → Fri 25 Sep" data-aug="Sun 16 → Fri 21 Aug">Sun 20 → Fri 25 Sep</span><small>company-covered; avoid orange out-of-policy badges</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="car">
-        <span class="check-text">Confirm car rental — full-size SUV, 13 days, SFO pick-up &amp; drop-off<small>Sun 13 Sep 14:00 → Sat 26 Sep evening</small></span>
+        <span class="check-text">Confirm car rental — full-size SUV, 13 days, SFO pick-up &amp; drop-off<small><span data-sep="Sun 13 Sep 14:00 → Sat 26 Sep evening" data-aug="Sun 9 Aug 14:00 → Sat 22 Aug evening">Sun 13 Sep 14:00 → Sat 26 Sep evening</span> — Sep rate confirmed via Alamo; re-quote if going with Aug</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="idp">
         <span class="check-text">Get the IDP from PZM<small>international driving permit — takes one office visit, ~50 zł</small></span>
@@ -821,7 +842,7 @@
   </section>
 
   <div class="footprint">
-    <span>Bay Area · Sep 2026</span>
+    <span data-sep="Bay Area · Sep 2026" data-aug="Bay Area · Aug 2026">Bay Area · Sep 2026</span>
     <span>13 nights on the ground · 8 self-paid</span>
   </div>
 
@@ -842,6 +863,11 @@
   try{ currency = localStorage.getItem(CURRENCY_KEY) === 'USD' ? 'USD' : 'PLN'; }catch(e){}
   let state = {}; // latest computed PLN figures, refreshed by recalc()
 
+  const MONTH_KEY = 'bayarea-trip-month';
+  let tripMonth = 'sep';
+  try{ tripMonth = localStorage.getItem(MONTH_KEY) === 'aug' ? 'aug' : 'sep'; }catch(e){}
+  const HOTEL_RATE = { sep: 2475/7, aug: 2957/7 }; // confirmed per-night rate, each cohort
+
   function money(pln){
     if (currency === 'PLN') return fmt(pln);
     return '$' + Math.round(pln / FX).toLocaleString('en-US');
@@ -855,8 +881,8 @@
     const gas = +gasEl.value;
     const tastings = +tastingsEl.value;
 
-    const carCost = (3445/13) * carDays; // confirmed via Alamo quote: $918.77 for 13 days, incl. full coverage
-    const svHotel = svNights * (2475/7); // confirmed rate: 2,475 zł / 7 nights with points
+    const carCost = (3445/13) * carDays; // confirmed via Alamo quote: $918.77 for 13 days, incl. full coverage (Sep — reused for Aug pending re-quote)
+    const svHotel = svNights * HOTEL_RATE[tripMonth]; // confirmed rate: 2,475 zł Sep / 2,957 zł Aug, per 7 nights
     const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
     const bufferNight = bufferRate * 3.75; // one self-paid night extending the CitizenM booking
     const fuel = (900/17) * gas * 3.75;
@@ -936,6 +962,26 @@
     });
   });
 
+  /* ---------- Month toggle: swaps every dated/priced piece of copy ---------- */
+  function applyMonth(){
+    document.querySelectorAll('[data-sep]').forEach(elx => {
+      elx.textContent = tripMonth === 'aug' ? elx.dataset.aug : elx.dataset.sep;
+    });
+    document.querySelectorAll('.month-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.month === tripMonth);
+    });
+    recalc();
+    updateTodayButton();
+  }
+
+  document.querySelectorAll('.month-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tripMonth = btn.dataset.month;
+      try{ localStorage.setItem(MONTH_KEY, tripMonth); }catch(e){}
+      applyMonth();
+    });
+  });
+
   /* ---------- URL state: shareable budget scenarios ---------- */
   const urlMap = [
     ['c', carDaysEl], ['sv', svNightsEl], ['b', bufferRateEl],
@@ -978,7 +1024,6 @@
   });
 
   loadFromURL();
-  recalc();
 
   /* ---------- Booking checklist: saved in this browser ---------- */
   const CHECK_KEY = 'bayarea-trip-checklist';
@@ -1019,7 +1064,7 @@
   loadChecklist();
 
   /* ---------- Today: jump to the current day while on the trip ---------- */
-  const TRIP_START = new Date(2026, 8, 13); // Sep 13 2026, local time
+  const TRIP_STARTS = { sep: new Date(2026, 8, 13), aug: new Date(2026, 7, 9) };
   const TRIP_DAYS = 14;
   const todayBtn = document.getElementById('today-jump');
   const dayCards = [...document.querySelectorAll('.timeline .day')];
@@ -1027,20 +1072,23 @@
   function tripDayIndex(){
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const diff = Math.floor((today - TRIP_START) / 86400000);
+    const diff = Math.floor((today - TRIP_STARTS[tripMonth]) / 86400000);
     return (diff >= 0 && diff < TRIP_DAYS) ? diff : -1;
   }
 
-  const idx = tripDayIndex();
-  if (todayBtn && idx >= 0 && dayCards[idx]){
-    todayBtn.classList.add('visible');
-    todayBtn.addEventListener('click', () => {
+  function updateTodayButton(){
+    if (!todayBtn) return;
+    const idx = tripDayIndex();
+    todayBtn.classList.toggle('visible', idx >= 0 && !!dayCards[idx]);
+    todayBtn.onclick = (idx >= 0 && dayCards[idx]) ? () => {
       const card = dayCards[idx].querySelector('.day-card');
       card.scrollIntoView({behavior:'smooth', block:'center'});
       card.classList.add('today-highlight');
       setTimeout(() => card.classList.remove('today-highlight'), 2600);
-    });
+    } : null;
   }
+
+  applyMonth();
 </script>
 
 </body>
