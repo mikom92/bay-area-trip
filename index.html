@@ -763,7 +763,7 @@
     </div>
 
     <div class="breakdown">
-      <div class="breakdown-row"><span data-sep="Car rental (confirmed Alamo quote) + IDP" data-aug="Car rental (Sep quote used — Aug unconfirmed) + IDP">Car rental (confirmed Alamo quote) + IDP</span><span id="out-car">3,445 zł</span></div>
+      <div class="breakdown-row"><span>Car rental (confirmed Alamo quote, same for both cohorts) + IDP</span><span id="out-car">3,445 zł</span></div>
       <div class="breakdown-row"><span>Sunnyvale hotel (points-applied, confirmed rate)</span><span id="out-sv-hotel">2,475 zł</span></div>
       <div class="breakdown-row"><span>Buffer night — CitizenM (self-paid extension)</span><span id="out-buffer">694 zł</span></div>
       <div class="breakdown-row fixed"><span>SF day parking (1 city day)</span><span id="out-sf-parking">120 zł</span></div>
@@ -832,7 +832,7 @@
         <span class="check-text">Book CitizenM Menlo Park in Navan — <span data-sep="Sun 20 → Fri 25 Sep" data-aug="Sun 16 → Fri 21 Aug">Sun 20 → Fri 25 Sep</span><small>company-covered; avoid orange out-of-policy badges</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="car">
-        <span class="check-text">Confirm car rental — full-size SUV, 13 days, SFO pick-up &amp; drop-off<small><span data-sep="Sun 13 Sep 14:00 → Sat 26 Sep evening" data-aug="Sun 9 Aug 14:00 → Sat 22 Aug evening">Sun 13 Sep 14:00 → Sat 26 Sep evening</span> — Sep rate confirmed via Alamo; re-quote if going with Aug</small></span>
+        <span class="check-text">Confirm car rental — full-size SUV, 13 days, SFO pick-up &amp; drop-off<small><span data-sep="Sun 13 Sep 14:00 → Sat 26 Sep evening" data-aug="Sun 9 Aug 14:00 → Sat 22 Aug evening">Sun 13 Sep 14:00 → Sat 26 Sep evening</span> — Alamo quote confirmed, same rate both cohorts</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="idp">
         <span class="check-text">Get the IDP from PZM<small>international driving permit — takes one office visit, ~50 zł</small></span>
@@ -881,7 +881,7 @@
     const gas = +gasEl.value;
     const tastings = +tastingsEl.value;
 
-    const carCost = (3445/13) * carDays; // confirmed via Alamo quote: $918.77 for 13 days, incl. full coverage (Sep — reused for Aug pending re-quote)
+    const carCost = (3445/13) * carDays; // confirmed via Alamo quote: $918.77 for 13 days, incl. full coverage — same rate confirmed for both cohorts
     const svHotel = svNights * HOTEL_RATE[tripMonth]; // confirmed rate: 2,475 zł Sep / 2,957 zł Aug, per 7 nights
     const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
     const bufferNight = bufferRate * 3.75; // one self-paid night extending the CitizenM booking
