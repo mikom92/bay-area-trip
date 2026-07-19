@@ -325,6 +325,10 @@
   .control-name{color:var(--text);}
   .control-value{font-family:var(--font-mono); color:var(--amber); font-size:0.82rem;}
 
+  .fx-status{font-family:var(--font-mono); font-size:0.66rem; color:var(--text-faint); margin-top:0.45rem;}
+  .fx-status.live{color:var(--green);}
+  .fx-status.stale{color:var(--amber);}
+
   input[type=range]{
     -webkit-appearance:none; appearance:none;
     width:100%; height:4px;
@@ -757,6 +761,11 @@
         <input type="range" id="gas-price" min="4.5" max="7" step="0.25" value="5.75">
       </div>
       <div class="control">
+        <div class="control-label"><span class="control-name">USD → PLN rate</span><span class="control-value" id="fx-rate-out">3.75</span></div>
+        <input type="range" id="fx-rate" min="3.40" max="4.20" step="0.01" value="3.75">
+        <div class="fx-status" id="fx-status">Fetching live rate…</div>
+      </div>
+      <div class="control">
         <div class="control-label"><span class="control-name">Wine tastings</span><span class="control-value" id="tastings-out">2</span></div>
         <input type="range" id="tastings" min="0" max="3" step="1" value="2">
       </div>
@@ -771,7 +780,7 @@
       <div class="breakdown-row"><span>Food — self-paid days</span><span id="out-food">1,900 zł</span></div>
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">280 zł</span></div>
       <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">350 zł</span></div>
-      <p class="breakdown-foot">Sunnyvale rate confirmed for the core <span data-sep="Sun 13 → Sun 20 Sep block (2,475 zł" data-aug="Sun 9 → Sun 16 Aug block (2,957 zł">Sun 13 → Sun 20 Sep block (2,475 zł</span> / 7 nights with ~7,050 points). The <span data-sep="Fri 25 → Sat 26 Sep" data-aug="Fri 21 → Sat 22 Aug">Fri 25 → Sat 26 Sep</span> night is a self-paid extension of the same CitizenM Menlo Park booking — flag the split billing at check-in. Flights and five nights in Menlo Park <span data-sep="(Sun 20 – Thu 24)" data-aug="(Sun 16 – Thu 20)">(Sun 20 – Thu 24)</span> are company-covered and excluded from this total. FX assumed at ~3.75 PLN/USD.</p>
+      <p class="breakdown-foot">Sunnyvale rate confirmed for the core <span data-sep="Sun 13 → Sun 20 Sep block (2,475 zł" data-aug="Sun 9 → Sun 16 Aug block (2,957 zł">Sun 13 → Sun 20 Sep block (2,475 zł</span> / 7 nights with ~7,050 points). The <span data-sep="Fri 25 → Sat 26 Sep" data-aug="Fri 21 → Sat 22 Aug">Fri 25 → Sat 26 Sep</span> night is a self-paid extension of the same CitizenM Menlo Park booking — flag the split billing at check-in. Flights and five nights in Menlo Park <span data-sep="(Sun 20 – Thu 24)" data-aug="(Sun 16 – Thu 20)">(Sun 20 – Thu 24)</span> are company-covered and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
     </div>
   </section>
 
@@ -853,15 +862,15 @@
 <script>
   const el = id => document.getElementById(id);
   const carDaysEl = el('car-days'), svNightsEl = el('sv-nights'), bufferRateEl = el('buffer-rate'),
-        foodEl = el('food-rate'), gasEl = el('gas-price'), tastingsEl = el('tastings');
+        foodEl = el('food-rate'), gasEl = el('gas-price'), tastingsEl = el('tastings'), fxRateEl = el('fx-rate');
 
   const fmt = n => Math.round(n).toLocaleString('en-US') + ' zł';
 
-  const FX = 3.75; // PLN per USD — same rate used for the fuel conversion
   const CURRENCY_KEY = 'bayarea-trip-currency';
   let currency = 'PLN';
   try{ currency = localStorage.getItem(CURRENCY_KEY) === 'USD' ? 'USD' : 'PLN'; }catch(e){}
   let state = {}; // latest computed PLN figures, refreshed by recalc()
+  let FX = 3.75; // PLN per USD — updated live each recalc() from the fx-rate slider (auto-fetched or manual)
 
   const MONTH_KEY = 'bayarea-trip-month';
   let tripMonth = 'sep';
@@ -880,12 +889,13 @@
     const food = +foodEl.value;
     const gas = +gasEl.value;
     const tastings = +tastingsEl.value;
+    FX = +fxRateEl.value;
 
-    const carCost = (3445/13) * carDays; // confirmed via Alamo quote: $918.77 for 13 days, incl. full coverage — same rate confirmed for both cohorts
+    const carCost = (918.77/13) * carDays * FX; // confirmed via Alamo quote: $918.77 for 13 days, incl. full coverage — same rate confirmed for both cohorts
     const svHotel = svNights * HOTEL_RATE[tripMonth]; // confirmed rate: 2,475 zł Sep / 2,957 zł Aug, per 7 nights
     const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
-    const bufferNight = bufferRate * 3.75; // one self-paid night extending the CitizenM booking
-    const fuel = (900/17) * gas * 3.75;
+    const bufferNight = bufferRate * FX; // one self-paid night extending the CitizenM booking
+    const fuel = (900/17) * gas * FX;
     const foodCost = food * 10;
     const attractions = 350;
     const tastingCost = tastings * 140;
@@ -900,6 +910,7 @@
     el('food-out').textContent = food + ' zł';
     el('gas-out').textContent = '$' + gas.toFixed(2) + ' / gal';
     el('tastings-out').textContent = tastings;
+    el('fx-rate-out').textContent = FX.toFixed(2);
 
     const min = 8000, max = 15000;
     const pct = Math.min(100, Math.max(0, (total - min) / (max - min) * 100));
@@ -985,7 +996,7 @@
   /* ---------- URL state: shareable budget scenarios ---------- */
   const urlMap = [
     ['c', carDaysEl], ['sv', svNightsEl], ['b', bufferRateEl],
-    ['f', foodEl], ['g', gasEl], ['t', tastingsEl]
+    ['f', foodEl], ['g', gasEl], ['t', tastingsEl], ['x', fxRateEl]
   ];
 
   function loadFromURL(){
@@ -1019,8 +1030,12 @@
     }
   }
 
-  [carDaysEl, svNightsEl, bufferRateEl, foodEl, gasEl, tastingsEl].forEach(input => {
-    input.addEventListener('input', () => { recalc(); saveToURL(); });
+  [carDaysEl, svNightsEl, bufferRateEl, foodEl, gasEl, tastingsEl, fxRateEl].forEach(input => {
+    input.addEventListener('input', () => {
+      recalc(); saveToURL();
+      const s = el('fx-status');
+      if (input === fxRateEl){ s.textContent = 'Manual override — live fetch not reapplied'; s.className = 'fx-status stale'; }
+    });
   });
 
   loadFromURL();
@@ -1088,7 +1103,33 @@
     } : null;
   }
 
+  /* ---------- Live USD→PLN rate: auto-fetched, slider is the manual override ---------- */
+  async function fetchLiveFX(){
+    const statusEl = el('fx-status');
+    try{
+      const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=PLN');
+      if (!res.ok) throw new Error('bad response');
+      const data = await res.json();
+      const rate = data && data.rates && data.rates.PLN;
+      if (!(rate > 3 && rate < 5)) throw new Error('rate outside expected bounds');
+      fxRateEl.value = Math.min(+fxRateEl.max, Math.max(+fxRateEl.min, rate)).toFixed(2);
+      statusEl.textContent = '✓ Live: ' + rate.toFixed(4) + ' (ECB via Frankfurter, ' + data.date + ')';
+      statusEl.className = 'fx-status live';
+      recalc();
+    }catch(e){
+      statusEl.textContent = '⚠ Live fetch unavailable — using ' + fxRateEl.value + ' (drag to adjust)';
+      statusEl.className = 'fx-status stale';
+    }
+  }
+
   applyMonth();
+
+  // Skip auto-fetch if a shared link already pins a specific rate — respect that choice
+  if (!new URLSearchParams(location.search).has('x')){
+    fetchLiveFX();
+  } else {
+    el('fx-status').textContent = 'Rate set from shared link';
+  }
 </script>
 
 </body>
