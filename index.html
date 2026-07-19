@@ -664,10 +664,7 @@
         <div class="day-card">
           <div class="day-head"><span class="day-date">Fri · 25 Sep</span><span class="day-tag">Buffer</span></div>
           <h3 class="day-title">Decompress</h3>
-          <p class="day-body">Checkout from Menlo Park — company coverage ends here. One self-paid night left, Fri 25 → Sat 26, before the flight: back to Maple Tree Inn for simplicity, or up to San Francisco for a last night in the city (closer to SFO for tomorrow's departure).</p>
-          <div class="day-maps">
-            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJxdDAgHa2j4ARTl-zct1VP_U" target="_blank" rel="noopener">📍 Maple Tree Inn</a>
-          </div>
+          <p class="day-body">Company coverage ends today, but you're not going anywhere — just extend the same CitizenM Menlo Park booking one more night, self-paid. Zero packing, zero driving. A fully free day before the flight.</p>
         </div>
       </div>
 
@@ -676,7 +673,7 @@
         <div class="day-card">
           <div class="day-head"><span class="day-date">Sat · 26 Sep</span><span class="day-tag">Departure</span></div>
           <h3 class="day-title">Fly Home</h3>
-          <p class="day-body">Late checkout, return the car at SFO, LO38 departs 22:15 for Warsaw.</p>
+          <p class="day-body">Late checkout from CitizenM Menlo Park, return the car at SFO (~30 min), LO38 departs 22:15 for Warsaw.</p>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJVVVVVYx3j4ARP-3NGldc8qQ" target="_blank" rel="noopener">📍 SFO</a>
           </div>
@@ -701,14 +698,14 @@
             <button type="button" class="currency-btn" data-currency="USD">USD</button>
           </div>
         </div>
-        <div class="readout-value" id="total-value" data-status="good">10,270 zł</div>
+        <div class="readout-value" id="total-value" data-status="good">10,610 zł</div>
         <div class="readout-status" id="total-status">inside 10–12K target</div>
       </div>
     </div>
 
     <div class="gauge">
       <div class="gauge-band"></div>
-      <div class="gauge-marker" id="gauge-marker" style="left:32.4%;"></div>
+      <div class="gauge-marker" id="gauge-marker" style="left:37.3%;"></div>
     </div>
     <div class="gauge-labels">
       <span id="gauge-label-0">8,000 zł</span>
@@ -723,8 +720,12 @@
         <input type="range" id="car-days" min="11" max="14" step="1" value="13">
       </div>
       <div class="control">
-        <div class="control-label"><span class="control-name">Sunnyvale — Maple Tree Inn</span><span class="control-value" id="sv-nights-out">8 nights</span></div>
-        <input type="range" id="sv-nights" min="6" max="10" step="1" value="8">
+        <div class="control-label"><span class="control-name">Sunnyvale — Maple Tree Inn</span><span class="control-value" id="sv-nights-out">7 nights</span></div>
+        <input type="range" id="sv-nights" min="5" max="9" step="1" value="7">
+      </div>
+      <div class="control">
+        <div class="control-label"><span class="control-name">Buffer night — CitizenM Menlo Park</span><span class="control-value" id="buffer-rate-out">$185 / night</span></div>
+        <input type="range" id="buffer-rate" min="150" max="350" step="10" value="185">
       </div>
       <div class="control">
         <div class="control-label"><span class="control-name">Food, per day on your own</span><span class="control-value" id="food-out">190 zł</span></div>
@@ -742,13 +743,14 @@
 
     <div class="breakdown">
       <div class="breakdown-row"><span>Car rental + IDP</span><span id="out-car">3,650 zł</span></div>
-      <div class="breakdown-row"><span>Sunnyvale hotel (points-applied, confirmed rate)</span><span id="out-sv-hotel">2,829 zł</span></div>
+      <div class="breakdown-row"><span>Sunnyvale hotel (points-applied, confirmed rate)</span><span id="out-sv-hotel">2,475 zł</span></div>
+      <div class="breakdown-row"><span>Buffer night — CitizenM (self-paid extension)</span><span id="out-buffer">694 zł</span></div>
       <div class="breakdown-row fixed"><span>SF day parking (1 city day)</span><span id="out-sf-parking">120 zł</span></div>
       <div class="breakdown-row"><span>Fuel — ~900 mi at 17 mpg</span><span id="out-fuel">1,142 zł</span></div>
       <div class="breakdown-row"><span>Food — self-paid days</span><span id="out-food">1,900 zł</span></div>
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">280 zł</span></div>
       <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">350 zł</span></div>
-      <p class="breakdown-foot">Sunnyvale rate confirmed for the core 13→20 Sep block (2,475 zł / 7 nights with ~7,050 points); the Fri 25 buffer night is booked separately, so confirm its rate on its own. Flights and five nights in Menlo Park (Sun 20 – Thu 24) are company-covered and excluded from this total. FX assumed at ~3.75 PLN/USD.</p>
+      <p class="breakdown-foot">Sunnyvale rate confirmed for the core Sun 13 → Sun 20 block (2,475 zł / 7 nights with ~7,050 points). The Fri 25 → Sat 26 night is a self-paid extension of the same CitizenM Menlo Park booking — flag the split billing at check-in. Flights and five nights in Menlo Park (Sun 20 – Thu 24) are company-covered and excluded from this total. FX assumed at ~3.75 PLN/USD.</p>
     </div>
   </section>
 
@@ -803,7 +805,7 @@
         <span class="check-text">Book Maple Tree Inn — Sun 13 → Sun 20 Sep (7 nights)<small>~7,050 points → confirmed 2,475 zł; free parking &amp; breakfast. Book the Fri 25 buffer night separately.</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="buffer-night">
-        <span class="check-text">Book the buffer night, Fri 25 → Sat 26 Sep — Maple Tree Inn again, or SF for a change of scenery<small>separate 1-night booking; check rate on its own</small></span>
+        <span class="check-text">Extend the CitizenM Menlo Park booking one night, Fri 25 → Sat 26 Sep<small>self-paid on top of the corporate stay — flag the split billing at check-in or with the travel desk</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="navan">
         <span class="check-text">Book CitizenM Menlo Park in Navan — Sun 20 → Fri 25 Sep<small>company-covered; avoid orange out-of-policy badges</small></span>
@@ -829,7 +831,7 @@
 
 <script>
   const el = id => document.getElementById(id);
-  const carDaysEl = el('car-days'), svNightsEl = el('sv-nights'),
+  const carDaysEl = el('car-days'), svNightsEl = el('sv-nights'), bufferRateEl = el('buffer-rate'),
         foodEl = el('food-rate'), gasEl = el('gas-price'), tastingsEl = el('tastings');
 
   const fmt = n => Math.round(n).toLocaleString('en-US') + ' zł';
@@ -848,6 +850,7 @@
   function recalc(){
     const carDays = +carDaysEl.value;
     const svNights = +svNightsEl.value;
+    const bufferRate = +bufferRateEl.value;
     const food = +foodEl.value;
     const gas = +gasEl.value;
     const tastings = +tastingsEl.value;
@@ -855,17 +858,19 @@
     const carCost = (3650/13) * carDays;
     const svHotel = svNights * (2475/7); // confirmed rate: 2,475 zł / 7 nights with points
     const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
+    const bufferNight = bufferRate * 3.75; // one self-paid night extending the CitizenM booking
     const fuel = (900/17) * gas * 3.75;
     const foodCost = food * 10;
     const attractions = 350;
     const tastingCost = tastings * 140;
 
-    const total = carCost + svHotel + sfDayParking + fuel + foodCost + attractions + tastingCost;
+    const total = carCost + svHotel + sfDayParking + bufferNight + fuel + foodCost + attractions + tastingCost;
 
-    state = { carCost, svHotel, sfDayParking, fuel, foodCost, attractions, tastingCost, total };
+    state = { carCost, svHotel, sfDayParking, bufferNight, fuel, foodCost, attractions, tastingCost, total };
 
     el('car-days-out').textContent = carDays + ' days';
     el('sv-nights-out').textContent = svNights + ' nights';
+    el('buffer-rate-out').textContent = '$' + bufferRate + ' / night';
     el('food-out').textContent = food + ' zł';
     el('gas-out').textContent = '$' + gas.toFixed(2) + ' / gal';
     el('tastings-out').textContent = tastings;
@@ -878,12 +883,13 @@
   }
 
   function renderCurrency(){
-    const { carCost, svHotel, sfDayParking, fuel, foodCost, attractions, tastingCost, total } = state;
+    const { carCost, svHotel, sfDayParking, bufferNight, fuel, foodCost, attractions, tastingCost, total } = state;
     if (total === undefined) return;
 
     el('out-car').textContent = money(carCost);
     el('out-sv-hotel').textContent = money(svHotel);
     el('out-sf-parking').textContent = money(sfDayParking);
+    el('out-buffer').textContent = money(bufferNight);
     el('out-fuel').textContent = money(fuel);
     el('out-food').textContent = money(foodCost);
     el('out-tastings').textContent = money(tastingCost);
@@ -932,7 +938,7 @@
 
   /* ---------- URL state: shareable budget scenarios ---------- */
   const urlMap = [
-    ['c', carDaysEl], ['sv', svNightsEl],
+    ['c', carDaysEl], ['sv', svNightsEl], ['b', bufferRateEl],
     ['f', foodEl], ['g', gasEl], ['t', tastingsEl]
   ];
 
@@ -967,7 +973,7 @@
     }
   }
 
-  [carDaysEl, svNightsEl, foodEl, gasEl, tastingsEl].forEach(input => {
+  [carDaysEl, svNightsEl, bufferRateEl, foodEl, gasEl, tastingsEl].forEach(input => {
     input.addEventListener('input', () => { recalc(); saveToURL(); });
   });
 
