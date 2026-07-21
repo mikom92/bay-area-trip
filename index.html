@@ -642,10 +642,10 @@
         <span class="day-node"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date" data-sep="Sun · 20 Sep" data-aug="Sun · 16 Aug">Sun · 20 Sep</span><span class="day-tag">Transfer</span></div>
-          <h3 class="day-title">Move to Menlo Park</h3>
-          <p class="day-body">First and only checkout of the week. Checkout from Maple Tree Inn, 15-minute drive to CitizenM Menlo Park (book via Navan) — company coverage starts today.</p>
+          <h3 class="day-title">Move to Redwood City</h3>
+          <p class="day-body">First and only checkout of the week. Checkout from Maple Tree Inn, ~25-minute drive north to Courtyard by Marriott Redwood City (book via Navan) — company coverage starts today. It's Snowflake's preferred bootcamp hotel, ~3 mi from HQ.</p>
           <div class="day-maps">
-            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJ_7D0UY-AhYARJrdSDRYKjeg" target="_blank" rel="noopener">📍 citizenM Menlo Park</a>
+            <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJ__tMNleij4ARAWERKOyaK_o" target="_blank" rel="noopener">📍 Courtyard Redwood City</a>
           </div>
         </div>
       </div>
@@ -655,7 +655,7 @@
         <div class="day-card">
           <div class="day-head"><span class="day-date" data-sep="Mon · 21 Sep" data-aug="Mon · 17 Aug">Mon · 21 Sep</span><span class="day-tag">Bonus Day</span></div>
           <h3 class="day-title">Free Day, No Transfer Needed</h3>
-          <p class="day-body">You're already checked into Menlo Park from yesterday — no move to make. A day to spare before the bootcamp starts: revisit a favorite, more time in Palo Alto, or just rest.</p>
+          <p class="day-body">You're already checked into Redwood City from yesterday — no move to make. A day to spare before the bootcamp starts: revisit a favorite, more time in Palo Alto, or just rest.</p>
         </div>
       </div>
 
@@ -689,7 +689,7 @@
         <div class="day-card">
           <div class="day-head"><span class="day-date" data-sep="Fri · 25 Sep" data-aug="Fri · 21 Aug">Fri · 25 Sep</span><span class="day-tag">Buffer</span></div>
           <h3 class="day-title">Decompress</h3>
-          <p class="day-body">Company coverage ends today, but you're not going anywhere — just extend the same CitizenM Menlo Park booking one more night, self-paid. Zero packing, zero driving. A fully free day before the flight.</p>
+          <p class="day-body">Company coverage ends today. The buffer night is self-paid — and extending Courtyard at the personal rate (~$385/night) is steep, so this one's a choice: pay to stay put, or drop back to a cheap Redwood City spot for one night. Either way you're ~20 min from SFO for tomorrow.</p>
         </div>
       </div>
 
@@ -698,7 +698,7 @@
         <div class="day-card">
           <div class="day-head"><span class="day-date" data-sep="Sat · 26 Sep" data-aug="Sat · 22 Aug">Sat · 26 Sep</span><span class="day-tag">Departure</span></div>
           <h3 class="day-title">Fly Home</h3>
-          <p class="day-body">Late checkout from CitizenM Menlo Park, return the car at SFO (~30 min), LO38 departs 22:15 for Warsaw.</p>
+          <p class="day-body">Late checkout, return the car at SFO (~20 min from Redwood City), LO38 departs 22:15 for Warsaw.</p>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/place/?q=place_id:ChIJVVVVVYx3j4ARP-3NGldc8qQ" target="_blank" rel="noopener">📍 SFO</a>
           </div>
@@ -749,8 +749,8 @@
         <input type="range" id="sv-nights" min="5" max="9" step="1" value="7">
       </div>
       <div class="control">
-        <div class="control-label"><span class="control-name">Buffer night — CitizenM Menlo Park</span><span class="control-value" id="buffer-rate-out">$185 / night</span></div>
-        <input type="range" id="buffer-rate" min="150" max="350" step="10" value="185">
+        <div class="control-label"><span class="control-name">Buffer night (Fri) — your pick</span><span class="control-value" id="buffer-rate-out">$185 / night</span></div>
+        <input type="range" id="buffer-rate" min="90" max="400" step="10" value="185">
       </div>
       <div class="control">
         <div class="control-label"><span class="control-name">Food, per day on your own</span><span class="control-value" id="food-out">190 zł</span></div>
@@ -774,13 +774,13 @@
     <div class="breakdown">
       <div class="breakdown-row"><span>Car rental (confirmed Alamo quote, same for both cohorts) + IDP</span><span id="out-car">3,445 zł</span></div>
       <div class="breakdown-row"><span>Sunnyvale hotel (points-applied, confirmed rate)</span><span id="out-sv-hotel">2,475 zł</span></div>
-      <div class="breakdown-row"><span>Buffer night — CitizenM (self-paid extension)</span><span id="out-buffer">694 zł</span></div>
+      <div class="breakdown-row"><span>Buffer night (self-paid, Fri)</span><span id="out-buffer">694 zł</span></div>
       <div class="breakdown-row fixed"><span>SF day parking (1 city day)</span><span id="out-sf-parking">120 zł</span></div>
       <div class="breakdown-row"><span>Fuel — ~900 mi at 17 mpg</span><span id="out-fuel">1,142 zł</span></div>
       <div class="breakdown-row"><span>Food — self-paid days</span><span id="out-food">1,900 zł</span></div>
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">280 zł</span></div>
       <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">350 zł</span></div>
-      <p class="breakdown-foot">Sunnyvale rate confirmed for the core <span data-sep="Sun 13 → Sun 20 Sep block (2,475 zł" data-aug="Sun 9 → Sun 16 Aug block (2,957 zł">Sun 13 → Sun 20 Sep block (2,475 zł</span> / 7 nights with ~7,050 points). The <span data-sep="Fri 25 → Sat 26 Sep" data-aug="Fri 21 → Sat 22 Aug">Fri 25 → Sat 26 Sep</span> night is a self-paid extension of the same CitizenM Menlo Park booking — flag the split billing at check-in. Flights and five nights in Menlo Park <span data-sep="(Sun 20 – Thu 24)" data-aug="(Sun 16 – Thu 20)">(Sun 20 – Thu 24)</span> are company-covered and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
+      <p class="breakdown-foot">Sunnyvale rate confirmed for the core <span data-sep="Sun 13 → Sun 20 Sep block (2,475 zł" data-aug="Sun 9 → Sun 16 Aug block (2,957 zł">Sun 13 → Sun 20 Sep block (2,475 zł</span> / 7 nights with ~7,050 points). The <span data-sep="Fri 25 → Sat 26 Sep" data-aug="Fri 21 → Sat 22 Aug">Fri 25 → Sat 26 Sep</span> buffer night is self-paid and your pick — Courtyard at the personal rate is ~$385, or drop to a cheap Redwood City spot; the slider covers both. Flights and five nights at Courtyard Redwood City <span data-sep="(Sun 20 – Thu 24)" data-aug="(Sun 16 – Thu 20)">(Sun 20 – Thu 24)</span> are company-covered and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
     </div>
   </section>
 
@@ -794,7 +794,7 @@
       </div>
       <div class="note-card">
         <strong>Confirmed by the team</strong>
-        Menlo Park hotel is covered <span data-sep="Sun 20 – Thu 24" data-aug="Sun 16 – Thu 20">Sun 20 – Thu 24</span> (5 nights, that bootcamp week) — not just Tue–Thu. Check-in Sunday frees up Monday as a bonus day.
+        Courtyard Redwood City is covered <span data-sep="Sun 20 – Thu 24" data-aug="Sun 16 – Thu 20">Sun 20 – Thu 24</span> (5 nights, that bootcamp week) — not just Tue–Thu. Check-in Sunday frees up Monday as a bonus day.
       </div>
       <div class="note-card">
         <strong>Reserve early</strong>
@@ -815,7 +815,7 @@
       </div>
       <div class="note-card" style="grid-column:1 / -1;">
         <strong>Bootcamp commute ≠ your road trip</strong>
-        Book <span data-sep="Sun 20 – Thu 24" data-aug="Sun 16 – Thu 20">Sun 20 – Thu 24</span> via Navan — CitizenM Menlo Park (1 mi, walkable) is the recommended pick. "Uber-only" is company policy for the office commute; it doesn't touch your self-paid SUV for Big Sur, Napa or Point Reyes.
+        Book <span data-sep="Sun 20 – Thu 24" data-aug="Sun 16 – Thu 20">Sun 20 – Thu 24</span> via Navan — Courtyard by Marriott Redwood City (~3 mi from HQ) is Snowflake's preferred partner and earns Bonvoy points; it replaces CitizenM, which came out over the price cap. "Uber-only" is company policy for the office commute; it doesn't touch your self-paid SUV for Big Sur, Napa or Point Reyes.
       </div>
     </div>
   </section>
@@ -835,10 +835,10 @@
         <span class="check-text">Book Maple Tree Inn — <span data-sep="Sun 13 → Sun 20 Sep" data-aug="Sun 9 → Sun 16 Aug">Sun 13 → Sun 20 Sep</span> (7 nights)<small>~7,050 points → confirmed <span data-sep="2,475 zł" data-aug="2,957 zł">2,475 zł</span>; free parking &amp; breakfast. Book the <span data-sep="Fri 25" data-aug="Fri 21">Fri 25</span> buffer night separately.</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="buffer-night">
-        <span class="check-text">Extend the CitizenM Menlo Park booking one night, <span data-sep="Fri 25 → Sat 26 Sep" data-aug="Fri 21 → Sat 22 Aug">Fri 25 → Sat 26 Sep</span><small>self-paid on top of the corporate stay — flag the split billing at check-in or with the travel desk</small></span>
+        <span class="check-text">Book the buffer night, <span data-sep="Fri 25 → Sat 26 Sep" data-aug="Fri 21 → Sat 22 Aug">Fri 25 → Sat 26 Sep</span> — Courtyard (pricey personal rate) or a cheap Redwood City spot<small>self-paid; you're ~20 min from SFO either way for the Saturday flight</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="navan">
-        <span class="check-text">Book CitizenM Menlo Park in Navan — <span data-sep="Sun 20 → Fri 25 Sep" data-aug="Sun 16 → Fri 21 Aug">Sun 20 → Fri 25 Sep</span><small>company-covered; avoid orange out-of-policy badges</small></span>
+        <span class="check-text">Book Courtyard Redwood City in Navan — <span data-sep="Sun 20 → Fri 25 Sep" data-aug="Sun 16 → Fri 21 Aug">Sun 20 → Fri 25 Sep</span><small>Snowflake-preferred, company-covered; earns Bonvoy points</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="car">
         <span class="check-text">Confirm car rental — full-size SUV, 13 days, SFO pick-up &amp; drop-off<small><span data-sep="Sun 13 Sep 14:00 → Sat 26 Sep evening" data-aug="Sun 9 Aug 14:00 → Sat 22 Aug evening">Sun 13 Sep 14:00 → Sat 26 Sep evening</span> — Alamo quote confirmed, same rate both cohorts</small></span>
@@ -894,7 +894,7 @@
     const carCost = (918.77/13) * carDays * FX; // confirmed via Alamo quote: $918.77 for 13 days, incl. full coverage — same rate confirmed for both cohorts
     const svHotel = svNights * HOTEL_RATE[tripMonth]; // confirmed rate: 2,475 zł Sep / 2,957 zł Aug, per 7 nights
     const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
-    const bufferNight = bufferRate * FX; // one self-paid night extending the CitizenM booking
+    const bufferNight = bufferRate * FX; // one self-paid buffer night (Courtyard personal rate or a cheaper Redwood City spot)
     const fuel = (900/17) * gas * FX;
     const foodCost = food * 10;
     const attractions = 350;
