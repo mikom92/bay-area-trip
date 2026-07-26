@@ -699,14 +699,14 @@
             <button type="button" class="currency-btn" data-currency="USD">USD</button>
           </div>
         </div>
-        <div class="readout-value" id="total-value" data-status="under">9,257 zł</div>
-        <div class="readout-status" id="total-status">743 zł under target</div>
+        <div class="readout-value" id="total-value" data-status="under">9,161 zł</div>
+        <div class="readout-status" id="total-status">839 zł under target</div>
       </div>
     </div>
 
     <div class="gauge">
       <div class="gauge-band"></div>
-      <div class="gauge-marker" id="gauge-marker" style="left:18.0%;"></div>
+      <div class="gauge-marker" id="gauge-marker" style="left:16.6%;"></div>
     </div>
     <div class="gauge-labels">
       <span id="gauge-label-0">8,000 zł</span>
@@ -744,14 +744,14 @@
     </div>
 
     <div class="breakdown">
-      <div class="breakdown-row"><span>Car rental (12-day estimate from confirmed 13-day Alamo quote) + IDP</span><span id="out-car">3,180 zł</span></div>
-      <div class="breakdown-row"><span>Sunnyvale hotel (points-applied, confirmed rate)</span><span id="out-sv-hotel">2,475 zł</span></div>
+      <div class="breakdown-row"><span>Car rental (confirmed Alamo booking) + IDP</span><span id="out-car">3,199 zł</span></div>
+      <div class="breakdown-row"><span>Sunnyvale hotel (booked, net of points)</span><span id="out-sv-hotel">2,361 zł</span></div>
       <div class="breakdown-row fixed"><span>SF day parking (1 city day)</span><span id="out-sf-parking">120 zł</span></div>
       <div class="breakdown-row"><span>Fuel — ~900 mi at 17 mpg</span><span id="out-fuel">1,142 zł</span></div>
       <div class="breakdown-row"><span>Food — self-paid days</span><span id="out-food">1,900 zł</span></div>
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">280 zł</span></div>
       <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">350 zł</span></div>
-      <p class="breakdown-foot">Sunnyvale rate confirmed for the core Sun 13 → Sun 20 Sep block (2,475 zł / 7 nights with ~7,050 points). No buffer night needed — the Friday flight home eliminates it entirely. Flights and five nights at Residence Inn San Carlos (Sun 20 – Thu 24) are company-covered and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
+      <p class="breakdown-foot">Both big-ticket items are booked, not estimated: Maple Tree Inn confirmed at 2,360.51 zł net for the core Sun 13 → Sun 20 block (~7,840 points applied), and the Alamo SUV at $853.14 (Sep 13 15:30 → Sep 25 13:30, Accelerated Check-In active). No buffer night needed — the Friday flight home eliminates it entirely. Flights and five nights at Residence Inn San Carlos (Sun 20 – Thu 24) are company-covered and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
     </div>
   </section>
 
@@ -774,7 +774,7 @@
       </div>
       <div class="note-card">
         <strong>Points lever, confirmed</strong>
-        ~7,050 Booking points bring the core 7-night Maple Tree Inn stay down to a confirmed 2,475 zł (from 4,444 zł cash) — real price, not an estimate.
+        ~7,840 Booking points brought the core 7-night Maple Tree Inn stay down to a booked 2,360.51 zł net — confirmed, not an estimate.
       </div>
       <div class="note-card">
         <strong>Flight is genuinely nonstop</strong>
@@ -803,13 +803,13 @@
         <span class="check-text"><a href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking</a> — Sat 19 Sep (day trip from Sunnyvale)<small>timed entry; book alongside Alcatraz</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="sv-hotel">
-        <span class="check-text">Book Maple Tree Inn — Sun 13 → Sun 20 Sep (7 nights)<small>~7,050 points → confirmed 2,475 zł; free parking &amp; breakfast. Book the Fri 25 buffer night separately.</small></span>
+        <span class="check-text">Maple Tree Inn — Sun 13 → Sun 20 Sep (7 nights) ✓ booked<small>Confirmation #9026223342380 — ~7,840 points + 2,360.51 zł net; free parking &amp; breakfast</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="navan">
         <span class="check-text">Book Residence Inn San Carlos in Navan — Sun 20 → Fri 25 Sep<small>company-covered; kitchenette + breakfast; earns Bonvoy points</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="car">
-        <span class="check-text">Confirm car rental — full-size SUV, 12 days, SFO pick-up &amp; drop-off<small>Sun 13 Sep 14:00 → Fri 25 Sep afternoon — re-quote with Alamo; the confirmed rate was for 13 days</small></span>
+        <span class="check-text">Full-size SUV, SFO pick-up &amp; drop-off ✓ booked<small>Sun 13 Sep 15:30 → Fri 25 Sep 13:30 — $853.14 confirmed, Accelerated Check-In + Skip the Counter active</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="idp">
         <span class="check-text">Get the IDP from PZM<small>international driving permit — takes one office visit, ~50 zł</small></span>
@@ -840,7 +840,7 @@
   let state = {}; // latest computed PLN figures, refreshed by recalc()
   let FX = 3.75; // PLN per USD — updated live each recalc() from the fx-rate slider (auto-fetched or manual)
 
-  const SV_HOTEL_RATE = 2475/7; // confirmed rate: 2,475 zł / 7 nights with points
+  const SV_HOTEL_RATE = 2360.51/7; // confirmed booking: 2,360.51 zł net / 7 nights (Revolut confirmation #9026223342380)
 
   function money(pln){
     if (currency === 'PLN') return fmt(pln);
@@ -855,8 +855,8 @@
     const tastings = +tastingsEl.value;
     FX = +fxRateEl.value;
 
-    const carCost = (918.77/13) * carDays * FX; // 12-day estimate extrapolated from the confirmed 13-day Alamo quote — re-quote to confirm
-    const svHotel = svNights * SV_HOTEL_RATE; // confirmed rate: 2,475 zł / 7 nights with points
+    const carCost = (carDays <= 7 ? carDays * (524.99/7) : 524.99 + (carDays-7)*65.63) * FX; // confirmed tiered Alamo rate — $853.14 for 12 days (Sep 13 15:30 → Sep 25 13:30), verified against the $918.77/13-day quote too
+    const svHotel = svNights * SV_HOTEL_RATE; // confirmed booking: 2,360.51 zł / 7 nights, net of points
     const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
     const fuel = (900/17) * gas * FX;
     const foodCost = food * 9; // one fewer self-paid day now the buffer night is gone
