@@ -726,14 +726,14 @@
             <button type="button" class="currency-btn" data-currency="USD" aria-pressed="false">USD</button>
           </div>
         </div>
-        <div class="readout-value" id="total-value" data-status="under" aria-live="polite" aria-atomic="true">9,161 zł</div>
-        <div class="readout-status" id="total-status">839 zł under target</div>
+        <div class="readout-value" id="total-value" data-status="under" aria-live="polite" aria-atomic="true">9,424 zł</div>
+        <div class="readout-status" id="total-status">576 zł under target</div>
       </div>
     </div>
 
     <div class="gauge" aria-hidden="true">
       <div class="gauge-band"></div>
-      <div class="gauge-marker" id="gauge-marker" style="left:16.6%;"></div>
+      <div class="gauge-marker" id="gauge-marker" style="left:20.3%;"></div>
     </div>
     <div class="gauge-labels" aria-hidden="true">
       <span id="gauge-label-0">8,000 zł</span>
@@ -773,12 +773,13 @@
     <div class="breakdown">
       <div class="breakdown-row"><span>Car rental (confirmed Alamo booking) + IDP</span><span id="out-car">3,199 zł</span></div>
       <div class="breakdown-row"><span>Sunnyvale hotel (booked, net of points)</span><span id="out-sv-hotel">2,361 zł</span></div>
+      <div class="breakdown-row"><span>Sunnyvale parking ($10/night, confirmed by hotel)</span><span id="out-sv-parking">263 zł</span></div>
       <div class="breakdown-row fixed"><span>SF day parking (1 city day)</span><span id="out-sf-parking">120 zł</span></div>
       <div class="breakdown-row"><span>Fuel — ~900 mi at 17 mpg</span><span id="out-fuel">1,142 zł</span></div>
       <div class="breakdown-row"><span id="out-food-label">Food — 9 self-paid days</span><span id="out-food">1,710 zł</span></div>
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">280 zł</span></div>
       <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">350 zł</span></div>
-      <p class="breakdown-foot">Both big-ticket items are booked, not estimated: Maple Tree Inn confirmed at 2,360.51 zł net for the core Sun 13 → Sun 20 block (~7,840 points applied), and the Alamo SUV at $853.14 (Sep 13 15:30 → Sep 25 13:30, Accelerated Check-In active). No buffer night needed — the Friday flight home eliminates it entirely. Flights and five nights at Residence Inn San Carlos (Sun 20 – Thu 24) are company-covered and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
+      <p class="breakdown-foot">Both big-ticket items are booked, not estimated: Maple Tree Inn confirmed at 2,360.51 zł net for the core Sun 13 → Sun 20 block (~7,840 points applied, plus $10/night parking confirmed directly with the hotel), and the Alamo SUV at $853.14 (Sep 13 15:30 → Sep 25 13:30, Accelerated Check-In active). No buffer night needed — the Friday flight home eliminates it entirely. Flights and five nights at Residence Inn San Carlos (Sun 20 – Thu 24) are company-covered and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
     </div>
   </section>
 
@@ -830,7 +831,7 @@
         <span class="check-text"><a href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking</a> — Sat 19 Sep (day trip from Sunnyvale)<small>timed entry; book alongside Alcatraz</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="sv-hotel">
-        <span class="check-text">Maple Tree Inn — Sun 13 → Sun 20 Sep (7 nights) ✓ booked<small>Confirmation #9026223342380 — ~7,840 points + 2,360.51 zł net; free parking &amp; breakfast</small></span>
+        <span class="check-text">Maple Tree Inn — Sun 13 → Sun 20 Sep (7 nights) ✓ booked<small>Confirmation #9026223342380 — ~7,840 points + 2,360.51 zł net; free breakfast, parking is $10/night (charged at check-in, confirmed by the hotel)</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="navan">
         <span class="check-text">Book Residence Inn San Carlos in Navan — Sun 20 → Fri 25 Sep<small>company-covered; kitchenette + breakfast; earns Bonvoy points</small></span>
@@ -890,6 +891,7 @@
     // verified against the $918.77/13-day quote too. Slider floor is 10 days.
     const carCost = (524.99 + (carDays-7)*65.63) * FX;
     const svHotel = svNights * SV_HOTEL_RATE; // confirmed booking: 2,360.51 zł / 7 nights, net of points
+    const svParking = svNights * 10 * FX; // confirmed by the hotel: $10/night, charged at check-in — not free after all
     const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
     const fuel = (900/17) * gas * FX;
     const foodDays = selfPaidDays(svNights);
@@ -897,9 +899,9 @@
     const attractions = 350;
     const tastingCost = tastings * 140;
 
-    const total = carCost + svHotel + sfDayParking + fuel + foodCost + attractions + tastingCost;
+    const total = carCost + svHotel + svParking + sfDayParking + fuel + foodCost + attractions + tastingCost;
 
-    state = { carCost, svHotel, sfDayParking, fuel, foodCost, attractions, tastingCost, total };
+    state = { carCost, svHotel, svParking, sfDayParking, fuel, foodCost, attractions, tastingCost, total };
 
     el('car-days-out').textContent = carDays + ' days';
     el('sv-nights-out').textContent = svNights + ' nights';
@@ -925,11 +927,12 @@
   }
 
   function renderCurrency(){
-    const { carCost, svHotel, sfDayParking, fuel, foodCost, attractions, tastingCost, total } = state;
+    const { carCost, svHotel, svParking, sfDayParking, fuel, foodCost, attractions, tastingCost, total } = state;
     if (total === undefined) return;
 
     el('out-car').textContent = money(carCost);
     el('out-sv-hotel').textContent = money(svHotel);
+    el('out-sv-parking').textContent = money(svParking);
     el('out-sf-parking').textContent = money(sfDayParking);
     el('out-fuel').textContent = money(fuel);
     el('out-food').textContent = money(foodCost);
@@ -946,7 +949,7 @@
       statusText = money(10000 - total) + ' under target';
     } else if (total <= 12000){
       status = 'good';
-      statusText = 'inside ' + money(10000) + '–' + money(12000) + ' target';
+      statusText = 'inside ' + money(10000).replace(/ zł$/, '') + '–' + money(12000) + ' target';
     } else {
       status = 'over';
       statusText = money(total - 12000) + ' over target';
