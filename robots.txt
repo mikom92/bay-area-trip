@@ -1,0 +1,4 @@
+# Cloudflare Access already blocks crawlers; this is a fallback in case the
+# site is ever served without it.
+User-agent: *
+Disallow: /
