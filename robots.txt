@@ -1,4 +1,6 @@
-# Cloudflare Access already blocks crawlers; this is a fallback in case the
-# site is ever served without it.
+# The public itinerary at / is fine to index.
+# /full is the personal version and sits behind Cloudflare Access; this is a
+# fallback in case it is ever served without it.
 User-agent: *
-Disallow: /
+Disallow: /full
+Allow: /
