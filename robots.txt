@@ -1,6 +1,2 @@
-# The public itinerary at / is fine to index.
-# /full is the personal version and sits behind Cloudflare Access; this is a
-# fallback in case it is ever served without it.
 User-agent: *
-Disallow: /full
 Allow: /
