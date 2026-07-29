@@ -403,6 +403,53 @@
     .check-item, .check-item input, .check-item input::before{transition:none;}
   }
 
+  /* ---------- PRIVATE DETAILS ---------- */
+  [data-private]{
+    font-family:var(--font-mono);
+  }
+  [data-private].locked{
+    cursor:pointer; color:var(--text-faint); letter-spacing:0.04em;
+    border-radius:4px;
+  }
+  [data-private].locked:hover{color:var(--amber);}
+
+  .auth-btn{
+    display:inline-flex; align-items:center; gap:0.4rem;
+    font-family:var(--font-mono); font-size:0.7rem;
+    background:transparent; color:var(--text-faint);
+    border:1px solid var(--line); border-radius:100px;
+    padding:0.35rem 0.75rem; cursor:pointer;
+    transition:border-color 0.15s ease, color 0.15s ease;
+  }
+  .auth-btn:hover{border-color:var(--text-faint); color:var(--text);}
+  @media (prefers-reduced-motion:reduce){.auth-btn{transition:none;}}
+
+  dialog.auth-dialog{
+    background:var(--surface); color:var(--text);
+    border:1px solid var(--line); border-radius:var(--radius-lg);
+    padding:1.6rem; max-width:360px; width:calc(100% - 2.5rem);
+    box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  }
+  dialog.auth-dialog::backdrop{background:rgba(0,0,0,0.6);}
+  dialog.auth-dialog h3{
+    font-family:var(--font-display); font-weight:600; font-size:1.1rem; margin:0 0 0.6rem;
+  }
+  dialog.auth-dialog p{font-size:0.85rem; color:var(--text-muted); margin:0 0 1rem; line-height:1.5;}
+  dialog.auth-dialog input[type=email]{
+    width:100%; font-family:var(--font-body); font-size:0.9rem; color:var(--text);
+    background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius-sm);
+    padding:0.65rem 0.8rem; margin-bottom:1rem;
+  }
+  dialog.auth-dialog input[type=email]:focus-visible{outline:2px solid var(--amber); outline-offset:1px;}
+  .auth-actions{display:flex; justify-content:flex-end; gap:0.6rem;}
+  .auth-actions button{
+    font-family:var(--font-mono); font-size:0.78rem; font-weight:600;
+    border-radius:100px; padding:0.5rem 1rem; cursor:pointer; border:1px solid transparent;
+  }
+  .auth-actions button[type=button]{background:transparent; color:var(--text-muted); border-color:var(--line);}
+  .auth-actions button[type=submit]{background:var(--amber); color:var(--bg);}
+  .auth-msg{font-size:0.78rem; color:var(--text-muted); margin:0.8rem 0 0; min-height:1.2em;}
+
   /* ---------- TODAY JUMP ---------- */
   .today-jump{
     position:fixed; right:1.1rem; bottom:1.1rem; z-index:50;
@@ -452,7 +499,7 @@
     }
     body{background:#fff; padding:0;}
     .hero{background-image:none;}
-    .controls, .gauge, .gauge-labels, .today-jump, .budget .section-sub{display:none !important;}
+    .controls, .gauge, .gauge-labels, .today-jump, .budget .section-sub, .auth-btn{display:none !important;}
     .map-link{display:none;}
     .day-flag{border-style:solid;}
     a.day-flag::after{content:' — ' attr(href); font-size:0.62rem; color:var(--text-muted);}

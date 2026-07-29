@@ -1,92 +1,113 @@
-# Hosting setup
+# Deploying this page
 
-Two versions of the same trip, one deployment:
+Static hosting, nothing to build — the whole trip is one `index.html`, plus a
+shared stylesheet, a service worker and a manifest for offline/PWA use.
 
-| Path | Contents | Who can see it |
-|---|---|---|
-| `/` | General route: days, places, map links, travel notes | Anyone |
-| `/full` | Everything — dates, flights, bookings, confirmation number, budget console, checklist | Only you, via email login |
+## Architecture
 
+The route, places and budget console are in the page and public. The hotel
+name, confirmation code, confirmed costs and the second-stay booking are
+**not in this file at all** — they live in a Supabase table (`trip_private`)
+that Row Level Security exposes only to a signed-in owner. Viewing the page
+source shows nothing private; hiding an element client-side would have shipped
+the data anyway, so the data simply is not fetched until sign-in.
+
+This trip shares its Supabase project and the `trip_private` table with the
+Costa Rica trip page — one sign-in works for both, and adding this trip's rows
+needed no new policy, since the existing owner-only policy covers every row in
+the table regardless of key prefix.
+
+## GitHub Pages
+
+1. Repo → **Settings → General** → make sure visibility is **Public**. There
+   is nothing sensitive in this repository to protect — the split described
+   above is what makes that safe.
+2. **Settings → Pages** → Source: **Deploy from a branch** → `main` / `/ (root)`.
+3. Site is live at `https://<user>.github.io/<repo>/`.
+
+## Supabase — private trip details
+
+Run once, in the Supabase SQL editor (idempotent — safe to re-run):
+
+```sql
+create table if not exists public.trip_private (
+  key   text primary key,
+  value text not null
+);
+
+alter table public.trip_private enable row level security;
+
+drop policy if exists "owner reads" on public.trip_private;
+create policy "owner reads" on public.trip_private
+  for select to authenticated
+  using (auth.email() = '<your email>');
 ```
-index.html          public itinerary
-full/index.html     personal version
-assets/style.css    shared stylesheet, both pages use it
-_headers            CSP and hardening; noindex on /full
-robots.txt          keeps /full out of search indexes
+
+There is deliberately **no insert/update/delete policy**: rows are managed in
+the Supabase table editor, so the page can never write to this table even if
+someone signs in.
+
+Seed the Bay Area rows (placeholders here — fill in the real values in the
+Supabase editor, not in this file, since this repository is public):
+
+```sql
+insert into public.trip_private (key, value) values
+  ('bay.hotel.name',           '<hotel name>'),
+  ('bay.hotel.code',           '<confirmation code>'),
+  ('bay.budget.lodgingTotal',  '<confirmed total, PLN, digits only>'),
+  ('bay.budget.lodgingNights', '<nights the total covers>'),
+  ('bay.budget.lodgingLabel',  '<hotel name>, <city> — <n> nights ✓ booked'),
+  ('bay.budget.carLabel',      '<car — confirmed cost and details>'),
+  ('bay.budget.carBase',       '<confirmed base rate, USD>'),
+  ('bay.budget.carPerDay',     '<confirmed per-extra-day rate, USD>'),
+  ('bay.stay2.detail',         '<second-stay booking sentence: who via, property, distance, rewards>')
+on conflict (key) do update set value = excluded.value;
 ```
 
-**The repository has to be private.** Cloudflare Access protects the *site*;
-it does nothing about the *repo*. If the repo stays public, everything in
-`full/index.html` is readable straight from GitHub regardless of Access.
+`bay.budget.lodgingTotal` / `lodgingNights` are stored as the confirmed total
+and its night count rather than a pre-divided rate, so the source figures stay
+auditable against the actual confirmation. `bay.budget.carBase` /
+`carPerDay` mirror the car rental's tiered rate (a base price for the first
+week, then a per-day rate beyond it) — signed out, the budget console shows
+round estimates for both instead.
 
-## 1. Take the current site down
+### Sign-in
 
-GitHub → repo → **Settings**
+Email magic link, no OAuth app to register and no password:
 
-1. **Pages** → Source → **None**. This stops `mikom92.github.io/bay-area-trip`,
-   which currently serves the full version publicly.
-2. **General** → Danger Zone → **Change visibility** → **Private**.
+1. Supabase dashboard → **Authentication → Providers → Email**, enable it.
+2. **Authentication → URL Configuration** → add this page's deployed URL to
+   the redirect allow-list (alongside the Costa Rica page's URL, if not
+   already there). Without this the link in the email will refuse to come
+   back.
 
-The old URL was public and indexed. Google may serve a cached copy for a while;
-removal can be requested at
-<https://search.google.com/search-console/remove-outdated-content>.
+Click **🔒 Private details** in the footer, or any locked `🔒` value on the
+page.
 
-## 2. Deploy to Cloudflare Pages
+### Verify RLS is actually on
 
-1. Sign up / log in at <https://dash.cloudflare.com>.
-2. **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
-3. Authorise Cloudflare for GitHub and pick `mikom92/bay-area-trip`.
-   Private repos work on the free plan.
-4. Build settings — plain static files, nothing to build:
-   - Framework preset: **None**
-   - Build command: *(leave empty)*
-   - Build output directory: `/`
-5. **Save and Deploy** → gives `https://<project>.pages.dev`.
+If RLS is left disabled, the publishable key exposes **every** table in the
+project, not just this one. Check it:
 
-Both versions are now live and **both are open to anyone with the link**. The
-next step is what closes `/full`.
+```sql
+select relname, relrowsecurity from pg_class where relname = 'trip_private';
+-- relrowsecurity must be true
+```
 
-## 3. Put a login in front of /full only
+## Offline
 
-Cloudflare dashboard → **Zero Trust** (first visit asks for a team name and a
-plan — choose **Free**, which covers up to 50 users).
+`sw.js` caches the page shell for offline use; documents are served
+network-first, so an updated itinerary is never masked by a stale cached copy.
+After changing `index.html`, bump `VERSION` in `sw.js` so returning visitors
+get the new copy instead of the cached one.
 
-1. **Access** → **Applications** → **Add an application** → **Self-hosted**.
-2. Application domain:
-   - Subdomain/domain: the `<project>.pages.dev` hostname
-   - **Path: `full`** ← this is the important part. Leave it empty and you lock
-     the public itinerary too.
-3. Add a policy:
-   - Action: **Allow**
-   - Include → **Emails** → your address (add others the same way)
-4. Identity provider: **One-time PIN** is on by default and needs no setup — it
-   emails a code at each login. Google or GitHub SSO can be added later.
-5. Save.
+## Editing the content
 
-If the dashboard will not attach Access to a `pages.dev` hostname, add a custom
-domain to the Pages project first (**Custom domains** tab) using a domain in
-your Cloudflare account, and point the Access application at that.
-
-## 4. Verify
-
-In a private window:
-
-- `https://<project>.pages.dev/` → the public itinerary loads, no login.
-- `https://<project>.pages.dev/full` → Cloudflare login prompt, **not** the page.
-
-Then log in with the emailed code and check the full version loads, the budget
-console still calculates and the map links open.
-
-## Notes
-
-- Deploys are automatic on every push to `main`.
-- `_headers` sets a strict CSP (`default-src 'none'`) allowing exactly what the
-  pages use: Google Fonts, the Frankfurter FX endpoint, inline CSS/JS, the
-  shared stylesheet and a data-URI favicon. Any new external resource needs a
-  matching entry or the browser will silently block it.
-- Both pages share `assets/style.css`, so a design change applies to both.
-  Content is deliberately not shared — the public version is a separate file so
-  personal details cannot leak into it by accident.
-- The confirmation number was publicly readable while the full version was on
-  GitHub Pages. A confirmation number cannot be rotated like a password — worth
-  knowing rather than acting on.
+- **Itinerary days** — the `.timeline .day` blocks in `index.html`.
+- **Budget console** — the `RATES` object and `recalc()` in the inline
+  `<script>`. The two booking-specific rates (car, hotel) start at round
+  estimates and are overridden by `Private.applyToBudget()` once the private
+  values load.
+- **Checklist** — the `.checklist-items` block; `data-key` values are the
+  `localStorage` keys, so reordering items is safe, but changing a `data-key`
+  resets that one tick.
