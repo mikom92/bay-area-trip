@@ -165,8 +165,8 @@
         <div class="day-card">
           <div class="day-head"><span class="day-date">Fri · 18 Sep</span><span class="day-tag">City</span></div>
           <h3 class="day-title">Alcatraz + North Beach</h3>
-          <p class="day-body">Drive up (~45 min) and take the ferry to the island from Pier 33 — Pier 39 is next door, worth a wander for the sea lions. Coit Tower and North Beach after; Frascati on Hyde St is cosy Italian with cable cars rolling past the window.</p>
-          <a class="day-flag" href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener">Alcatraz tickets open 90 days ahead and sell out ↗</a>
+          <p class="day-body">Drive up (~45 min) and spend the afternoon in North Beach — Coit Tower, then Pier 39 for the sea lions. Dinner at Frascati around 17:00–17:30 (a few minutes from Pier 33). Night Tour check-in at 18:30 — book the earliest sailing, since the return ferry is fixed at ~21:25 regardless of which sailing you take, so the earlier check-in means more time on the island. Back in Sunnyvale by ~22:15.</p>
+          <a class="day-flag" href="https://alcatrazcitycruises.com/tickets/alcatraz-night-tour" target="_blank" rel="noopener">Book the Alcatraz Night Tour now — 90-day window is open ↗</a>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Alcatraz%20Island%2C%20San%20Francisco%2C%20CA" target="_blank" rel="noopener">Alcatraz Island</a>
             <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Pier%2039%2C%20San%20Francisco%2C%20CA" target="_blank" rel="noopener">Pier 39</a>
@@ -321,7 +321,7 @@
       </div>
       <div class="note-card">
         <strong>Book these first</strong>
-        <a href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener" style="color:var(--amber);">Alcatraz</a> (90-day window) and
+        <a href="https://alcatrazcitycruises.com/tickets/alcatraz-night-tour" target="_blank" rel="noopener" style="color:var(--amber);">Alcatraz</a> (90-day window) and
         <a href="https://gomuirwoods.com/" target="_blank" rel="noopener" style="color:var(--amber);">Muir Woods parking</a> both sell out well ahead. Everything else on this route can be decided the night before.
       </div>
       <div class="note-card">
@@ -346,7 +346,7 @@
     <p class="section-sub">Tick things off as you lock them in — progress is saved in this browser.</p>
     <div class="checklist-items" id="checklist">
       <label class="check-item"><input type="checkbox" data-key="alcatraz">
-        <span class="check-text"><a href="https://www.cityexperiences.com/san-francisco/city-cruises/alcatraz/" target="_blank" rel="noopener">Book Alcatraz ferry</a> — Fri 18 Sep (day trip from the South Bay)<small>90-day window is open now; sells out weeks ahead</small></span>
+        <span class="check-text"><a href="https://alcatrazcitycruises.com/tickets/alcatraz-night-tour" target="_blank" rel="noopener">Book Alcatraz Night Tour</a> — Fri 18 Sep, 18:30 check-in (day trip from the South Bay)<small>90-day window open now; book the 18:30 sailing for max island time — fixed return ~21:25 regardless of sailing chosen</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="muirwoods">
         <span class="check-text"><a href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking</a> — Sat 19 Sep (day trip from the South Bay)<small>timed entry; book alongside Alcatraz</small></span>
@@ -435,7 +435,9 @@
     const fuel = (900/17) * gas * FX;
     const foodDays = selfPaidDays(svNights);
     const foodCost = food * foodDays;
-    const attractions = 350;
+    // 350 (CHM + Muir Woods) + Alcatraz Night Tour vs Day Tour delta:
+    // ($59.65-$47.95)/person x 2 people x 3.75 (fallback FX) = 87.75, rounded.
+    const attractions = 438;
     const tastingCost = tastings * 140;
 
     const total = carCost + svHotel + svParking + sfDayParking + fuel + foodCost + attractions + tastingCost;
