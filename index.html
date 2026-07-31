@@ -93,7 +93,7 @@
 
     <div class="timeline">
 
-      <div class="day thread-amber">
+      <div class="day thread-amber" data-trip-start="2026-09-13" data-trip-end="2026-09-13">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Sun · 13 Sep</span><span class="day-tag">Arrival</span></div>
@@ -106,7 +106,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber">
+      <div class="day thread-amber" data-trip-start="2026-09-14" data-trip-end="2026-09-14">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Mon · 14 Sep</span><span class="day-tag">Pilgrimage</span></div>
@@ -121,7 +121,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber">
+      <div class="day thread-amber" data-trip-start="2026-09-15" data-trip-end="2026-09-15">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Tue · 15 Sep</span><span class="day-tag">Coast</span></div>
@@ -134,7 +134,7 @@
         </div>
       </div>
 
-      <div class="day thread-green">
+      <div class="day thread-green" data-trip-start="2026-09-16" data-trip-end="2026-09-16">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Wed · 16 Sep</span><span class="day-tag">Wine Country</span></div>
@@ -147,7 +147,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber">
+      <div class="day thread-amber" data-trip-start="2026-09-17" data-trip-end="2026-09-17">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Thu · 17 Sep</span><span class="day-tag">Drive Day</span></div>
@@ -160,7 +160,7 @@
         </div>
       </div>
 
-      <div class="day thread-green">
+      <div class="day thread-green" data-trip-start="2026-09-18" data-trip-end="2026-09-18">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Fri · 18 Sep</span><span class="day-tag">City</span></div>
@@ -177,7 +177,7 @@
         </div>
       </div>
 
-      <div class="day thread-green">
+      <div class="day thread-green" data-trip-start="2026-09-19" data-trip-end="2026-09-19">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Sat · 19 Sep</span><span class="day-tag">Coast</span></div>
@@ -193,7 +193,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber">
+      <div class="day thread-amber" data-trip-start="2026-09-20" data-trip-end="2026-09-20">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Sun · 20 Sep</span><span class="day-tag">Transfer</span></div>
@@ -206,7 +206,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber">
+      <div class="day thread-amber" data-trip-start="2026-09-21" data-trip-end="2026-09-21">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Mon · 21 Sep</span><span class="day-tag">Spare Day</span></div>
@@ -215,7 +215,7 @@
         </div>
       </div>
 
-      <div class="day thread-grey">
+      <div class="day thread-grey" data-trip-start="2026-09-22" data-trip-end="2026-09-24">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Tue–Thu · 22–24 Sep</span><span class="day-tag">Reserved</span></div>
@@ -224,7 +224,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber">
+      <div class="day thread-amber" data-trip-start="2026-09-25" data-trip-end="2026-09-25">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Fri · 25 Sep</span><span class="day-tag">Departure</span></div>
@@ -390,6 +390,7 @@
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="assets/trip-state.js"></script>
 <script>
   const el = id => document.getElementById(id);
   const carDaysEl = el('car-days'), svNightsEl = el('sv-nights'),
@@ -403,13 +404,10 @@
   let state = {}; // latest computed PLN figures, refreshed by recalc()
   let FX = 3.75; // PLN per USD — updated live each recalc() from the fx-rate slider (auto-fetched or manual)
 
-  // Rate constants for the two booking-specific line items. Round estimates
-  // until a signed-in Private.refresh() replaces them with the confirmed
-  // figures — nothing here is ever guessed at, just deferred.
-  const RATES = {
-    carBase: 600, carPerDay: 75, carLabel: 'Car rental (estimate) + IDP',
-    lodgingRate: 340, lodgingLabel: 'South Bay hotel (estimate)'
-  };
+  // Booking-specific line items begin with public round estimates and are
+  // replaced only for a signed-in owner. Resetting them on refresh prevents
+  // confirmed values from surviving a later sign-out in the same browser.
+  const RATES = BayTripState.createPublicRates();
 
   // Self-paid meal days track the hotel stay: the 7-night default leaves 9 days
   // on your own (the reserved days and the second stay aside), so the offset is +2.
@@ -614,21 +612,22 @@
   loadChecklist();
 
   /* ---------- Today: jump to the current day while on the trip ---------- */
-  const TRIP_START = new Date(2026, 8, 13); // Sep 13 2026, local time
-  const TRIP_DAYS = 13;
   const todayBtn = document.getElementById('today-jump');
   const dayCards = [...document.querySelectorAll('.timeline .day')];
 
-  function tripDayIndex(){
+  function activeDayCardIndex(){
     const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const diff = Math.floor((today - TRIP_START) / 86400000);
-    return (diff >= 0 && diff < TRIP_DAYS) ? diff : -1;
+    const today = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+    const ranges = dayCards.map(card => ({
+      start: card.dataset.tripStart,
+      end: card.dataset.tripEnd
+    }));
+    return BayTripState.findActiveCardIndex(ranges, today);
   }
 
   function updateTodayButton(){
     if (!todayBtn) return;
-    const idx = tripDayIndex();
+    const idx = activeDayCardIndex();
     todayBtn.classList.toggle('visible', idx >= 0 && !!dayCards[idx]);
     todayBtn.onclick = (idx >= 0 && dayCards[idx]) ? () => {
       const card = dayCards[idx].querySelector('.day-card');
@@ -732,12 +731,13 @@
     }
 
     async function refresh(){
-      const sb = SB.get();
-      if (!sb){ paint(); return; }
-      let ses;
-      try{ ses = await sb.auth.getSession(); }catch(e){ paint(); return; }
-      email = ses?.data?.session?.user?.email || null;
       Object.keys(PRIV).forEach(k => delete PRIV[k]);
+      BayTripState.resetToPublicRates(RATES);
+      const sb = SB.get();
+      if (!sb){ email = null; applyToBudget(); paint(); return; }
+      let ses;
+      try{ ses = await sb.auth.getSession(); }catch(e){ email = null; applyToBudget(); paint(); return; }
+      email = ses?.data?.session?.user?.email || null;
       if (email){
         // With no session RLS returns an empty set rather than an error, so an
         // anonymous visitor simply gets nothing back — there is no failure
