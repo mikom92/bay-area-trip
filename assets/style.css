@@ -99,7 +99,7 @@
   .route-line-svg{width:min(160px, 30vw); height:20px;}
   .route-flights{
     font-family:var(--font-mono);
-    font-size:0.68rem;
+    font-size:0.69rem;
     color:var(--text-muted);
     display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;
   }
@@ -132,7 +132,7 @@
   }
   .stub-item dt{
     font-family:var(--font-mono);
-    font-size:0.66rem;
+    font-size:0.69rem;
     text-transform:uppercase;
     letter-spacing:0.1em;
     color:var(--text-faint);
@@ -171,6 +171,7 @@
     margin:0 0 0.3rem;
   }
   .section-sub{color:var(--text-muted); font-size:0.92rem; margin:0 0 1.6rem; max-width:52ch;}
+  .section-sub.tight{margin-bottom:0;}
 
   .timeline{position:relative; padding-left:2.1rem;}
   .day{
@@ -206,7 +207,7 @@
   .day-head{display:flex; align-items:baseline; justify-content:space-between; gap:0.8rem; flex-wrap:wrap; margin-bottom:0.45rem;}
   .day-date{font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint); letter-spacing:0.05em; text-transform:uppercase;}
   .day-tag{
-    font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.08em;
+    font-family:var(--font-mono); font-size:0.69rem; text-transform:uppercase; letter-spacing:0.08em;
     padding:0.18rem 0.55rem; border-radius:100px;
   }
   .thread-green .day-tag{background:var(--green-soft); color:var(--green);}
@@ -215,6 +216,8 @@
 
   .day-title{font-family:var(--font-display); font-weight:600; font-size:1.12rem; margin:0 0 0.4rem;}
   .day-body{font-size:0.9rem; color:var(--text-muted); margin:0;}
+  /* the flexible options are second and third paragraphs; margin:0 would run them together */
+  .day-body + .day-body{margin-top:0.6rem;}
 
   .day-flag{
     display:inline-flex; align-items:center; gap:0.4rem;
@@ -235,7 +238,7 @@
   .day-maps{display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.7rem;}
   .map-link{
     display:inline-flex; align-items:center; gap:0.35rem;
-    font-family:var(--font-mono); font-size:0.68rem;
+    font-family:var(--font-mono); font-size:0.69rem;
     color:var(--text-muted);
     border:1px solid var(--line);
     border-radius:100px;
@@ -262,11 +265,11 @@
     font-family:var(--font-mono);
     text-align:right;
   }
-  .readout-label{font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-faint);}
+  .readout-label{font-size:0.69rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-faint);}
   .readout-label-row{display:flex; align-items:center; justify-content:flex-end; gap:0.6rem; margin-bottom:0.3rem;}
   .currency-toggle{display:inline-flex; border:1px solid var(--line); border-radius:100px; padding:2px; gap:2px;}
   .currency-btn{
-    font-family:var(--font-mono); font-size:0.66rem; font-weight:600; letter-spacing:0.03em;
+    font-family:var(--font-mono); font-size:0.69rem; font-weight:600; letter-spacing:0.03em;
     color:var(--text-faint); background:transparent; border:none; border-radius:100px;
     padding:0.22rem 0.6rem; cursor:pointer;
     transition:background 0.15s ease, color 0.15s ease;
@@ -299,8 +302,16 @@
     transition:left 0.15s ease;
   }
   @media (prefers-reduced-motion:reduce){.gauge-marker{transition:none;}}
-  /* keep the axis labels attached to the bar, not floating above the sliders */
-  .gauge-labels{display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:0.64rem; color:var(--text-faint); margin:0.55rem 0 2rem;}
+  /* keep the axis labels attached to the bar, not floating above the sliders.
+     Each tick sits at its true position on the 8,000–15,000 axis, the same maths
+     the band above uses: even spacing (space-between) put 10,000 at 34% and
+     12,000 at 65%, while the band they name runs 28.57%–57.14%. */
+  .gauge-labels{position:relative; height:1.2em; font-family:var(--font-mono); font-size:0.69rem; color:var(--text-faint); margin:0.55rem 0 2rem;}
+  .gauge-labels span{position:absolute; white-space:nowrap;}
+  .gauge-labels span:nth-child(1){left:0;}
+  .gauge-labels span:nth-child(2){left:28.57%; transform:translateX(-50%);}
+  .gauge-labels span:nth-child(3){left:57.14%; transform:translateX(-50%);}
+  .gauge-labels span:nth-child(4){right:0;}
 
   .controls{display:grid; grid-template-columns:repeat(2, 1fr); gap:1.4rem 1.8rem; margin-bottom:2rem;}
   .control-label{
@@ -310,20 +321,30 @@
   .control-name{color:var(--text);}
   .control-value{font-family:var(--font-mono); color:var(--amber); font-size:0.82rem;}
 
-  .fx-status{font-family:var(--font-mono); font-size:0.66rem; color:var(--text-faint); margin-top:0.45rem;}
+  .fx-status{font-family:var(--font-mono); font-size:0.69rem; color:var(--text-faint); margin-top:0.45rem;}
   .fx-status.live{color:var(--green);}
   .fx-status.stale{color:var(--amber);}
 
+  /* The control used to be the height of its visible track — 4px. The hit area is
+     the element box, so on a phone the budget levers were a 4px strip to hit. The
+     track moves to the pseudo-element and the input itself becomes a 28px grab area. */
   input[type=range]{
     -webkit-appearance:none; appearance:none;
-    width:100%; height:4px;
-    background:var(--surface-2);
-    border-radius:100px;
+    width:100%; height:28px;
+    background:transparent;
     outline:none;
+    cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-runnable-track{
+    height:4px; background:var(--surface-2); border-radius:100px;
+  }
+  input[type=range]::-moz-range-track{
+    height:4px; background:var(--surface-2); border-radius:100px;
   }
   input[type=range]::-webkit-slider-thumb{
     -webkit-appearance:none;
     width:17px; height:17px;
+    margin-top:-6.5px; /* centre the 17px thumb on the 4px track */
     border-radius:50%;
     background:var(--amber);
     border:3px solid var(--bg);
@@ -354,7 +375,10 @@
     background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-md);
     padding:1rem 1.15rem; font-size:0.85rem; color:var(--text-muted);
   }
+  .note-card.wide{grid-column:1 / -1;}
   .note-card strong{display:block; color:var(--text); font-family:var(--font-display); font-weight:600; font-size:0.95rem; margin-bottom:0.3rem;}
+  /* inline links in prose: vertical padding grows the touch box without moving the line */
+  .note-link{color:var(--amber); padding:0.45rem 0; margin:-0.45rem 0;}
 
   .footprint{
     margin-top:2.5rem; padding-top:1.4rem; border-top:1px solid var(--line);
@@ -373,8 +397,6 @@
     transition:border-color 0.15s ease;
     user-select:none;
   }
-  /* keep confirmation numbers and rates selectable — they get copied out */
-  .check-text{user-select:text;}
   .check-item:hover{border-color:var(--text-faint);}
   .check-item input{
     appearance:none; -webkit-appearance:none;
@@ -391,8 +413,12 @@
   .check-item input:checked{background:var(--green); border-color:var(--green);}
   .check-item input:checked::before{transform:scale(1);}
   .check-item.done .check-text{color:var(--text-faint); text-decoration:line-through;}
-  .check-text{font-size:0.88rem; color:var(--text); line-height:1.45;}
-  .check-text a{color:var(--amber); text-decoration:none;}
+  /* user-select stays on: confirmation numbers and rates get copied out of here */
+  .check-text{font-size:0.88rem; color:var(--text); line-height:1.45; user-select:text;}
+  /* Same inline padding trick as .note-link, but smaller: this link sits inside a label
+     that ticks a checkbox, so its grown box is taking taps from a competing control.
+     0.35rem clears the 24px minimum without reaching far above the line. */
+  .check-text a{color:var(--amber); text-decoration:none; padding:0.35rem 0; margin:-0.35rem 0;}
   .check-text a:hover{text-decoration:underline;}
   .check-text small{display:block; color:var(--text-muted); font-size:0.76rem; margin-top:0.1rem;}
   .checklist-progress{
@@ -410,6 +436,9 @@
   [data-private].locked{
     cursor:pointer; color:var(--text-faint); letter-spacing:0.04em;
     border-radius:4px;
+    /* a 🔒 sits mid-sentence, so it cannot be a 44px block — but vertical padding on
+       an inline element grows the tap box without touching the line it sits in */
+    padding:0.45rem 0.25rem; margin:0 -0.25rem;
   }
   [data-private].locked:hover{color:var(--amber);}
 
@@ -488,6 +517,22 @@
     .check-item input{width:22px; height:22px;}
   }
 
+  /* ---------- TOUCH TARGETS ---------- */
+  /* Measured on a 390px phone: the map pills came out 37px, the currency toggle 19px
+     and the sign-in button 26px. These are the controls used one-handed at a trailhead,
+     so they go to 44px — the size a thumb actually hits. Keyed off the pointer rather
+     than the width, since a tablet in landscape is still a touch screen. */
+  @media (pointer:coarse){
+    .map-link, .day-flag{min-height:44px;}
+    .currency-btn{min-height:44px; padding-left:0.9rem; padding-right:0.9rem;}
+    .auth-btn{min-height:44px; padding:0.6rem 1rem;}
+    .auth-actions button{min-height:44px;}
+    .today-jump{min-height:48px;}
+    .check-item input{width:24px; height:24px;}
+    /* a slider is dragged rather than tapped, but 28px is still thin under a thumb */
+    input[type=range]{height:40px;}
+  }
+
   /* ---------- PRINT (backup for no-signal stretches of Hwy 1) ---------- */
   @media print{
     :root{
@@ -500,7 +545,14 @@
     body{background:#fff; padding:0;}
     .hero{background-image:none;}
     .controls, .gauge, .gauge-labels, .today-jump, .budget .section-sub, .auth-btn{display:none !important;}
-    .map-link{display:none;}
+    /* This sheet exists for the stretches of Hwy 1 with no signal, and the map pills
+       are the place names for that day — printing nothing where they were threw away
+       the itinerary's nouns. Keep the names, drop the pill and the pin. */
+    /* min-height:0 undoes the touch sizing — printing from a phone is still printing */
+    .map-link{border:none; padding:0; min-height:0; color:var(--text-muted); font-size:0.7rem;}
+    .map-link::before{content:'· ';}
+    .day-flag{min-height:0;}
+    .day-maps{gap:0.1rem 0.7rem; margin-top:0.4rem;}
     .day-flag{border-style:solid;}
     a.day-flag::after{content:' — ' attr(href); font-size:0.62rem; color:var(--text-muted);}
     .day-card, .note-card, .check-item{break-inside:avoid; page-break-inside:avoid;}

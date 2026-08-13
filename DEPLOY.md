@@ -84,6 +84,12 @@ Email magic link, no OAuth app to register and no password:
 Click **🔒 Private details** in the footer, or any locked `🔒` value on the
 page.
 
+If the footer button reads **⚠ your@address · details did not load**, the sign-in
+worked but the table did not answer: either `trip_private` is missing, or the
+owner policy names a different address than the one signed in. The console names
+which. Signed-in-with-nothing and signed-out look the same from the page, so they
+are deliberately labelled differently.
+
 ### Verify RLS is actually on
 
 If RLS is left disabled, the publishable key exposes **every** table in the
@@ -93,6 +99,42 @@ project, not just this one. Check it:
 select relname, relrowsecurity from pg_class where relname = 'trip_private';
 -- relrowsecurity must be true
 ```
+
+## The pinned Supabase build
+
+The sign-in library is loaded from jsDelivr, pinned to an exact version with an
+SRI digest:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3"
+        integrity="sha384-l8ah+VgaWtk1mvOe9VC+OirC6qHFF4yH7l7mKRidV9MSti3E9F463bMp6ZVN4kuC"
+        crossorigin="anonymous" defer></script>
+```
+
+This page holds an auth session, so an open `@2` range would hand whatever build
+the CDN serves next the keys to it. Bumping is two edits that must be made
+together — the version in `src` and the digest — and the digest has to be
+generated **from the exact URL in `src`**:
+
+```bash
+V=2.112.3   # replace with the version you want
+curl -sL "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@$V" \
+  | openssl dgst -sha384 -binary | openssl base64 -A
+```
+
+Do **not** substitute the npm tarball for that URL, however reasonable it looks:
+hashing `dist/umd/supabase.js` out of the package yields
+`sha384-qafw21c/…`, a different value, because what jsDelivr returns for a bare
+pinned package URL is not byte-identical to that file. The Costa Rica page shipped
+that mistake to production, where the browser refused the script and the failure
+surfaced as an "offline" label pointing at the wifi. If the CDN is unreachable from
+where you work, the digest cannot be verified there at all — do it from a machine
+that can reach it.
+
+A refused script is not a page-down. The itinerary, budget console and checklist
+have all initialised by then; only the private details stay locked. The page says
+which fault it hit rather than blaming the connection, and `SB.get()` logs the two
+possible causes to the console.
 
 ## Offline
 
@@ -107,7 +149,10 @@ get the new copy instead of the cached one.
 - **Budget console** — the `RATES` object and `recalc()` in the inline
   `<script>`. The two booking-specific rates (car, hotel) start at round
   estimates and are overridden by `Private.applyToBudget()` once the private
-  values load.
+  values load. Everything paid in dollars is stored in dollars
+  (`SF_DAY_PARKING_USD`, `ATTRACTIONS_USD`, `TASTING_USD`, and the car rates) and
+  multiplied by the live rate, so the whole breakdown moves together; the food
+  slider is the one figure set in złoty, because it is a złoty-a-day allowance.
 - **Checklist** — the `.checklist-items` block; `data-key` values are the
   `localStorage` keys, so reordering items is safe, but changing a `data-key`
   resets that one tick.

@@ -3,7 +3,7 @@
    live data (Supabase, the FX rate) out of the cache entirely, and never let
    a stale snapshot mask an updated page. */
 
-const VERSION = 'ba26-v8';
+const VERSION = 'ba26-v9';
 const CORE = [
   './',
   './index.html',
@@ -45,8 +45,13 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(req)
         .then(res => {
-          const copy = res.clone();
-          caches.open(VERSION).then(c => c.put('./index.html', copy));
+          // Only a good page may become the offline copy. A 404 or a 503 from Pages
+          // used to be stored as ./index.html, and from then on the offline trip was
+          // an error page — cached over a working itinerary that had been there.
+          if (res.ok){
+            const copy = res.clone();
+            caches.open(VERSION).then(c => c.put('./index.html', copy));
+          }
           return res;
         })
         .catch(() => caches.match('./index.html').then(r => r || caches.match('./')))
