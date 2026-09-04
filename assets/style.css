@@ -247,6 +247,46 @@
   .map-link:hover{border-color:var(--text-faint); color:var(--text);}
   @media (prefers-reduced-motion:reduce){.map-link{transition:none;}}
 
+  /* ---------- VARIANT SWITCH (15–17 Sep, still undecided) ---------- */
+  .day[hidden]{display:none;}
+  .variant-switch{
+    /* 1.6rem of .day padding + 0.6rem of .day-card margin — lines up with the cards */
+    margin:0 0 2.1rem 2.2rem;
+    background:var(--surface-2);
+    border:1px dashed var(--line);
+    border-radius:var(--radius-md);
+    padding:1rem 1.15rem;
+  }
+  .variant-switch-head{display:flex; align-items:center; justify-content:space-between; gap:0.8rem; flex-wrap:wrap;}
+  .variant-eyebrow{
+    font-family:var(--font-mono); font-size:0.66rem;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faint);
+  }
+  .variant-toggle{
+    display:inline-flex; background:var(--surface);
+    border:1px solid var(--line); border-radius:100px; padding:2px; gap:2px;
+  }
+  .variant-btn{
+    font-family:var(--font-mono); font-size:0.68rem; font-weight:600; letter-spacing:0.03em;
+    color:var(--text-faint); background:transparent; border:none; border-radius:100px;
+    padding:0.3rem 0.7rem; cursor:pointer;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .variant-btn.active{background:var(--amber); color:var(--bg);}
+  .variant-btn:not(.active):hover{color:var(--text);}
+  @media (prefers-reduced-motion:reduce){.variant-btn{transition:none;}}
+  .variant-note{font-size:0.85rem; color:var(--text-muted); margin:0.75rem 0 0;}
+  .variant-delta-list{
+    list-style:none; margin:0.75rem 0 0; padding:0.7rem 0 0;
+    border-top:1px solid var(--line);
+    font-family:var(--font-mono); font-size:0.74rem;
+  }
+  .variant-delta-list li{display:flex; justify-content:space-between; gap:1rem; padding:0.22rem 0; color:var(--text-muted);}
+  /* the figure must not break across lines when the label wraps on a phone */
+  .variant-delta-list li span:last-child{flex:none; white-space:nowrap;}
+  .variant-delta-list li.net{margin-top:0.3rem; padding-top:0.45rem; border-top:1px dashed var(--line); color:var(--text);}
+  .variant-delta-list li.net span:last-child{color:var(--amber);}
+
   /* ---------- BUDGET CONSOLE ---------- */
   .budget{
     margin-top:3.2rem;
@@ -345,6 +385,9 @@
   }
   .breakdown-row span:first-child{color:var(--text);}
   .breakdown-row.fixed span:last-child{color:var(--text-faint);}
+  .breakdown-row.variant-delta{border-bottom:none; border-top:1px dashed var(--amber-line); margin-top:0.5rem;}
+  .breakdown-row.variant-delta span:first-child{color:var(--text-muted);}
+  .breakdown-row.variant-delta span:last-child{color:var(--amber); flex:none; white-space:nowrap;}
   .breakdown-foot{font-size:0.72rem; color:var(--text-faint); margin-top:0.9rem;}
 
   /* ---------- NOTES / FOOTER ---------- */
@@ -475,6 +518,8 @@
     .timeline{padding-left:1rem;}
     .day{padding-left:0.95rem;}
     .day-card{margin-left:0.3rem; padding:1rem 1.05rem;}
+    .variant-switch{margin-left:1.25rem; padding:0.9rem 1rem;}
+    .variant-btn{padding:0.45rem 0.8rem; font-size:0.72rem;}
     .budget{padding:1.4rem 1.1rem;}
     .controls{grid-template-columns:1fr;}
     .notes-grid{grid-template-columns:1fr;}
@@ -500,6 +545,9 @@
     body{background:#fff; padding:0;}
     .hero{background-image:none;}
     .controls, .gauge, .gauge-labels, .today-jump, .budget .section-sub, .auth-btn{display:none !important;}
+    /* the note still names the printed variant, so only the buttons go */
+    .variant-toggle{display:none !important;}
+    .variant-switch{border-style:solid; break-inside:avoid; page-break-inside:avoid;}
     .map-link{display:none;}
     .day-flag{border-style:solid;}
     a.day-flag::after{content:' — ' attr(href); font-size:0.62rem; color:var(--text-muted);}
