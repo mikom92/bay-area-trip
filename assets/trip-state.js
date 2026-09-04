@@ -19,9 +19,17 @@
     return cards.findIndex(card => card.start <= date && date <= card.end);
   }
 
+  // 15-17 Sep runs in two variants. Anything but an explicit "b" — a stale
+  // localStorage value, a hand-edited ?v=, nothing at all — falls back to A,
+  // so the page never renders a day range with no cards at all.
+  function normalizeVariant(value){
+    return String(value == null ? '' : value).trim().toLowerCase() === 'b' ? 'b' : 'a';
+  }
+
   global.BayTripState = Object.freeze({
     createPublicRates,
     resetToPublicRates,
-    findActiveCardIndex
+    findActiveCardIndex,
+    normalizeVariant
   });
 })(globalThis);

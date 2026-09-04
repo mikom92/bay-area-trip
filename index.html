@@ -84,6 +84,7 @@
     <div class="legend-item"><span class="legend-swatch amber" aria-hidden="true"></span>Self-paid — South Bay, Peninsula &amp; Pacific coast</div>
     <div class="legend-item"><span class="legend-swatch green" aria-hidden="true"></span>Self-paid — San Francisco, Marin &amp; wine country</div>
     <div class="legend-item"><span class="legend-swatch grey" aria-hidden="true"></span>Company-covered — Snowflake bootcamp</div>
+    <div class="legend-item" data-variant="b" hidden><span class="legend-swatch violet" aria-hidden="true"></span>Self-paid — Los Angeles detour (Variant B)</div>
   </div>
 
   <!-- TIMELINE -->
@@ -121,12 +122,29 @@
         </div>
       </div>
 
-      <div class="day thread-amber" data-trip-start="2026-09-15" data-trip-end="2026-09-15">
+      <div class="variant-switch" id="variant-switch">
+        <div class="variant-switch-head">
+          <span class="variant-eyebrow">Tue–Thu · 15–17 Sep · not decided yet</span>
+          <div class="variant-toggle" role="group" aria-label="Plan variant for 15–17 September">
+            <button type="button" class="variant-btn active" data-variant="a" aria-pressed="true">A · Bay Area</button>
+            <button type="button" class="variant-btn" data-variant="b" aria-pressed="false">B · LA</button>
+          </div>
+        </div>
+        <p class="variant-note" id="variant-note">Showing Variant A — Bay Area: Santa Cruz, Napa and the Monterey coast, all from the South Bay base. Costs exactly what the budget console below already shows.</p>
+        <ul class="variant-delta-list" id="variant-delta-list" hidden>
+          <li><span>Fuel — ~1,300 km more in the Tahoe</span><span data-delta="fuel">—</span></li>
+          <li><span>Food on the road and in LA</span><span data-delta="food">—</span></li>
+          <li><span>Napa tastings not taken</span><span data-delta="tastings">—</span></li>
+          <li class="net"><span>Net extra over Variant A</span><span data-delta="net">—</span></li>
+        </ul>
+      </div>
+
+      <div class="day thread-amber" data-variant="a" data-trip-start="2026-09-15" data-trip-end="2026-09-15">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Tue · 15 Sep</span><span class="day-tag">Coast</span></div>
           <h3 class="day-title">Santa Cruz</h3>
-          <p class="day-body">Boardwalk and Natural Bridges, 40 minutes down the coast. Worth checking whether a large conference is running in San Francisco this week — Dreamforce fills the city every September — and saving the city for a quieter day if so.</p>
+          <p class="day-body">Boardwalk and Natural Bridges, 40 minutes down the coast. Dreamforce fills San Francisco Sep 15–17, which is exactly why this week stays in the South Bay.</p>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Santa%20Cruz%20Beach%20Boardwalk%2C%20Santa%20Cruz%2C%20CA" target="_blank" rel="noopener">Santa Cruz Beach Boardwalk</a>
             <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Natural%20Bridges%20State%20Beach%2C%20Santa%20Cruz%2C%20CA" target="_blank" rel="noopener">Natural Bridges</a>
@@ -134,7 +152,7 @@
         </div>
       </div>
 
-      <div class="day thread-green" data-trip-start="2026-09-16" data-trip-end="2026-09-16">
+      <div class="day thread-green" data-variant="a" data-trip-start="2026-09-16" data-trip-end="2026-09-16">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Wed · 16 Sep</span><span class="day-tag">Wine Country</span></div>
@@ -147,15 +165,55 @@
         </div>
       </div>
 
-      <div class="day thread-amber" data-trip-start="2026-09-17" data-trip-end="2026-09-17">
+      <div class="day thread-amber" data-variant="a" data-trip-start="2026-09-17" data-trip-end="2026-09-17">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
-          <div class="day-head"><span class="day-date">Thu · 17 Sep</span><span class="day-tag">Drive Day</span></div>
+          <div class="day-head"><span class="day-date">Thu · 17 Sep</span><span class="day-tag">Coast (shortened)</span></div>
           <h3 class="day-title">Monterey &amp; Big Sur</h3>
-          <p class="day-body">Highway 1 south to Bixby Bridge and the cliffs — the big drive of the week, done as an out-and-back from the South Bay.</p>
+          <p class="day-body">Highway 1 north of the village is open — Bixby Bridge, Point Lobos, the Monterey coastline. South of Big Sur stays closed for the Timber and Plaskett fires, so this is a shorter drive than planned. No roadside parking at Bixby (year-round ban since Aug 6) and a 24/7 one-way signal at Rocky Creek Bridge just north of it — budget extra time there.</p>
+          <p class="day-body" style="margin-top:0.6rem;">Fill the rest of the day on the water instead of the road: whale watching out of Monterey (peak season for humpbacks in September, boats leave from the harbor) or Elkhorn Slough in Moss Landing, right on the way — the biggest sea otter population on the coast, reachable by guided kayak or pontoon boat. Pick one.</p>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Monterey%2C%20CA" target="_blank" rel="noopener">Monterey</a>
             <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Bixby%20Creek%20Bridge%2C%20Big%20Sur%2C%20CA" target="_blank" rel="noopener">Bixby Creek Bridge</a>
+            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Elkhorn%20Slough%2C%20Moss%20Landing%2C%20CA" target="_blank" rel="noopener">Elkhorn Slough</a>
+            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Monterey%20Bay%20Whale%20Watch%2C%2084%20Fishermans%20Wharf%2C%20Monterey%2C%20CA" target="_blank" rel="noopener">Monterey Bay Whale Watch</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-violet" data-variant="b" data-trip-start="2026-09-15" data-trip-end="2026-09-15" hidden>
+        <span class="day-node" aria-hidden="true"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Tue · 15 Sep</span><span class="day-tag">Drive Day</span></div>
+          <h3 class="day-title">Drive to LA</h3>
+          <p class="day-body">Departure 06:00, I-5 via Pacheco Pass and the Grapevine — the ugly route, but it's ~5.5–6h and gets you there before the afternoon crunch. In LA by ~12:00. Staying with Dorota, who's covering the hotel — she's at the same Snowflake bootcamp the following week. Evening is open.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Los%20Angeles%2C%20CA" target="_blank" rel="noopener">Los Angeles</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-violet" data-variant="b" data-trip-start="2026-09-16" data-trip-end="2026-09-16" hidden>
+        <span class="day-node" aria-hidden="true"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Wed · 16 Sep</span><span class="day-tag">City</span></div>
+          <h3 class="day-title">Los Angeles</h3>
+          <p class="day-body">Full day in the city, plan shaped by Dorota and her friends who are already there. First time in LA — worth leaving the day loose rather than overbooking it.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Los%20Angeles%2C%20CA" target="_blank" rel="noopener">Los Angeles</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="day thread-violet" data-variant="b" data-trip-start="2026-09-17" data-trip-end="2026-09-17" hidden>
+        <span class="day-node" aria-hidden="true"></span>
+        <div class="day-card">
+          <div class="day-head"><span class="day-date">Thu · 17 Sep</span><span class="day-tag">Drive Day</span></div>
+          <h3 class="day-title">Return north</h3>
+          <p class="day-body">Highway 101 up the coast — Santa Barbara, then inland to Sunnyvale. Departure time depends on how the day before goes; budget ~6h door to door. Napa/Sonoma is skipped this week in this variant — it's a ~90 min drive from Sunnyvale on any future Bay Area trip, so it isn't lost, just postponed.</p>
+          <div class="day-maps">
+            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Santa%20Barbara%2C%20CA" target="_blank" rel="noopener">Santa Barbara</a>
+            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Sunnyvale%2C%20CA" target="_blank" rel="noopener">Sunnyvale</a>
           </div>
         </div>
       </div>
@@ -322,6 +380,7 @@
       <div class="breakdown-row"><span id="out-food-label">Food — self-paid days</span><span id="out-food">—</span></div>
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">—</span></div>
       <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">—</span></div>
+      <div class="breakdown-row variant-delta" id="variant-delta-row" hidden><span>Variant B — LA detour, net extra (outside this total)</span><span id="out-variant-delta">—</span></div>
       <p class="breakdown-foot">Car and hotel are shown as round estimates until you sign in — the actual booked figures are confirmed, not guessed. No buffer night needed — the Friday flight home eliminates it entirely. The second stay (Sun 20 – Sun 25) is covered separately and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
     </div>
   </section>
@@ -420,6 +479,13 @@
   const CURRENCY_KEY = 'bayarea-trip-currency';
   let currency = 'PLN';
   try{ currency = localStorage.getItem(CURRENCY_KEY) === 'USD' ? 'USD' : 'PLN'; }catch(e){}
+
+  // 15–17 Sep is still undecided: 'a' = Bay Area (Napa), 'b' = LA. Saved in this
+  // browser like the checklist, overridable by ?v= so a link can pin a variant.
+  const VARIANT_KEY = 'bayarea-trip-variant';
+  let variant = 'a';
+  try{ variant = BayTripState.normalizeVariant(localStorage.getItem(VARIANT_KEY)); }catch(e){}
+
   let state = {}; // latest computed PLN figures, refreshed by recalc()
   let FX = 3.75; // PLN per USD — updated live each recalc() from the fx-rate slider (auto-fetched or manual)
 
@@ -487,6 +553,7 @@
   }
 
   function renderCurrency(){
+    renderVariantMoney(); // delta figures are USD-based, so they move with FX too
     const { carCost, svHotel, svParking, sfDayParking, fuel, foodCost, attractions, tastingCost, total } = state;
     if (total === undefined) return;
 
@@ -551,6 +618,7 @@
   function loadFromURL(){
     try{
       const params = new URLSearchParams(location.search);
+      if (params.has('v')) variant = BayTripState.normalizeVariant(params.get('v'));
       urlMap.forEach(([key, input]) => {
         if (!params.has(key)) return;
         const v = parseFloat(params.get(key));
@@ -570,6 +638,7 @@
         // only include values that differ from defaults, keeps URLs clean
         if (input.value !== input.defaultValue) params.set(key, input.value);
       });
+      if (variant !== 'a') params.set('v', variant);
       const qs = params.toString();
       history.replaceState(null, '', qs ? '?' + qs : location.pathname);
     }catch(e){
@@ -591,6 +660,66 @@
   });
 
   loadFromURL();
+
+  /* ---------- Variant switch: 15–17 Sep, Bay Area vs LA ----------
+     Variant B costs more, but not in a way the sliders model: the seven
+     Sunnyvale nights are paid either way and Dorota covers the LA hotel, so
+     only fuel, food and the skipped Napa tastings differ. Those show next to
+     the toggle and as one line in the console — never folded into the total,
+     because no variant has been chosen yet. */
+  const VARIANT_DELTA_USD = { fuel: 185, food: 140, tastings: -110 };
+  const variantNetUSD = VARIANT_DELTA_USD.fuel + VARIANT_DELTA_USD.food + VARIANT_DELTA_USD.tastings;
+  const VARIANT_NOTE = {
+    a: 'Showing Variant A — Bay Area: Santa Cruz, Napa and the Monterey coast, all from the South Bay base. Costs exactly what the budget console below already shows.',
+    b: 'Showing Variant B — Los Angeles with Dorota, who covers the hotel there. The seven Sunnyvale nights are paid either way, so only three lines actually move:'
+  };
+
+  // day cards plus the legend row that explains their thread colour
+  const variantDays = [...document.querySelectorAll('.timeline .day[data-variant], .legend .legend-item[data-variant]')];
+  const variantBtns = [...document.querySelectorAll('.variant-btn')];
+  const variantNoteEl = el('variant-note');
+  const variantListEl = el('variant-delta-list');
+  const variantRowEl = el('variant-delta-row');
+
+  const signedMoney = usd => (usd < 0 ? '−' : '+') + money(Math.abs(usd) * FX);
+
+  function renderVariantMoney(){
+    if (!variantListEl || !variantRowEl) return;
+    const onB = variant === 'b';
+    variantListEl.hidden = !onB;
+    variantRowEl.hidden = !onB;
+    if (!onB) return;
+    Object.entries(VARIANT_DELTA_USD).forEach(([key, usd]) => {
+      const cell = variantListEl.querySelector('[data-delta="' + key + '"]');
+      if (cell) cell.textContent = signedMoney(usd);
+    });
+    const net = variantListEl.querySelector('[data-delta="net"]');
+    if (net) net.textContent = signedMoney(variantNetUSD);
+    el('out-variant-delta').textContent = signedMoney(variantNetUSD);
+  }
+
+  function renderVariant(){
+    variantDays.forEach(day => { day.hidden = day.dataset.variant !== variant; });
+    variantBtns.forEach(btn => {
+      const on = btn.dataset.variant === variant;
+      btn.classList.toggle('active', on);
+      btn.setAttribute('aria-pressed', String(on));
+    });
+    if (variantNoteEl) variantNoteEl.textContent = VARIANT_NOTE[variant];
+    renderVariantMoney();
+  }
+
+  variantBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      variant = BayTripState.normalizeVariant(btn.dataset.variant);
+      try{ localStorage.setItem(VARIANT_KEY, variant); }catch(e){}
+      renderVariant();
+      saveToURL();
+      updateTodayButton(); // the hidden variant's cards must not catch "Today"
+    });
+  });
+
+  renderVariant();
 
   /* ---------- Booking checklist: saved in this browser ---------- */
   const CHECK_KEY = 'bayarea-trip-checklist';
@@ -634,22 +763,25 @@
   const todayBtn = document.getElementById('today-jump');
   const dayCards = [...document.querySelectorAll('.timeline .day')];
 
-  function activeDayCardIndex(){
+  function activeDayCard(){
     const now = new Date();
     const today = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
-    const ranges = dayCards.map(card => ({
+    // both variants carry 15–17 Sep, so the hidden one would otherwise win the match
+    const shown = dayCards.filter(card => !card.hidden);
+    const ranges = shown.map(card => ({
       start: card.dataset.tripStart,
       end: card.dataset.tripEnd
     }));
-    return BayTripState.findActiveCardIndex(ranges, today);
+    const idx = BayTripState.findActiveCardIndex(ranges, today);
+    return idx >= 0 ? shown[idx] : null;
   }
 
   function updateTodayButton(){
     if (!todayBtn) return;
-    const idx = activeDayCardIndex();
-    todayBtn.classList.toggle('visible', idx >= 0 && !!dayCards[idx]);
-    todayBtn.onclick = (idx >= 0 && dayCards[idx]) ? () => {
-      const card = dayCards[idx].querySelector('.day-card');
+    const day = activeDayCard();
+    todayBtn.classList.toggle('visible', !!day);
+    todayBtn.onclick = day ? () => {
+      const card = day.querySelector('.day-card');
       card.scrollIntoView({behavior:'smooth', block:'center'});
       card.classList.add('today-highlight');
       setTimeout(() => card.classList.remove('today-highlight'), 2600);

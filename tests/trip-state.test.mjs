@@ -52,3 +52,17 @@ test('keeps all dates in a grouped itinerary card eligible for Today', () => {
   assert.equal(tripState.findActiveCardIndex(cards, '2026-09-25'), 2);
   assert.equal(tripState.findActiveCardIndex(cards, '2026-09-26'), -1);
 });
+
+test('falls back to the Bay Area variant unless B is asked for explicitly', () => {
+  const tripState = loadTripState();
+
+  assert.equal(tripState.normalizeVariant('b'), 'b');
+  assert.equal(tripState.normalizeVariant('B'), 'b');
+  assert.equal(tripState.normalizeVariant(' b '), 'b');
+
+  assert.equal(tripState.normalizeVariant('a'), 'a');
+  assert.equal(tripState.normalizeVariant(null), 'a');
+  assert.equal(tripState.normalizeVariant(undefined), 'a');
+  assert.equal(tripState.normalizeVariant(''), 'a');
+  assert.equal(tripState.normalizeVariant('napa'), 'a');
+});
