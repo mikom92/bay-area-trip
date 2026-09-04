@@ -60,9 +60,18 @@ insert into public.trip_private (key, value) values
   ('bay.budget.carLabel',      '<car — confirmed cost and details>'),
   ('bay.budget.carBase',       '<confirmed base rate, USD>'),
   ('bay.budget.carPerDay',     '<confirmed per-extra-day rate, USD>'),
-  ('bay.stay2.detail',         '<second-stay booking sentence: who via, property, distance, rewards>')
+  ('bay.stay2.detail',         '<second-stay booking sentence: who via, property, distance, rewards>'),
+  ('bay.la.host',              '<who you are staying with in LA, and why they are there that week>'),
+  ('bay.la.hotel',             '<candidate LA hotel — name, address, review read>')
 on conflict (key) do update set value = excluded.value;
 ```
+
+The two `bay.la.*` rows belong to the undecided Variant B (15–17 Sep) and are
+the odd ones out here: they gate a *candidate*, not a booking. `bay.la.host`
+is behind sign-in for a third party's privacy rather than to protect a
+confirmation code — the public page says only that a friend is covering the
+hotel. Until these rows exist, that day renders a 🔒 even for a signed-in
+owner, which is the correct empty state, not a fault.
 
 `bay.budget.lodgingTotal` / `lodgingNights` are stored as the confirmed total
 and its night count rather than a pre-divided rate, so the source figures stay
