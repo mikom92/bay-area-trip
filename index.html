@@ -84,6 +84,7 @@
     <div class="legend-item"><span class="legend-swatch amber" aria-hidden="true"></span>Self-paid — South Bay, Peninsula &amp; Pacific coast</div>
     <div class="legend-item"><span class="legend-swatch green" aria-hidden="true"></span>Self-paid — San Francisco, Marin &amp; wine country</div>
     <div class="legend-item"><span class="legend-swatch grey" aria-hidden="true"></span>Company-covered — Snowflake bootcamp</div>
+    <div class="legend-item" data-variant="b" hidden><span class="legend-swatch violet" aria-hidden="true"></span>Self-paid — Los Angeles detour (Variant B)</div>
   </div>
 
   <!-- TIMELINE -->
@@ -180,7 +181,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber" data-variant="b" data-trip-start="2026-09-15" data-trip-end="2026-09-15" hidden>
+      <div class="day thread-violet" data-variant="b" data-trip-start="2026-09-15" data-trip-end="2026-09-15" hidden>
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Tue · 15 Sep</span><span class="day-tag">Drive Day</span></div>
@@ -192,7 +193,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber" data-variant="b" data-trip-start="2026-09-16" data-trip-end="2026-09-16" hidden>
+      <div class="day thread-violet" data-variant="b" data-trip-start="2026-09-16" data-trip-end="2026-09-16" hidden>
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Wed · 16 Sep</span><span class="day-tag">City</span></div>
@@ -204,7 +205,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber" data-variant="b" data-trip-start="2026-09-17" data-trip-end="2026-09-17" hidden>
+      <div class="day thread-violet" data-variant="b" data-trip-start="2026-09-17" data-trip-end="2026-09-17" hidden>
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Thu · 17 Sep</span><span class="day-tag">Drive Day</span></div>
@@ -673,7 +674,8 @@
     b: 'Showing Variant B — Los Angeles with Dorota, who covers the hotel there. The seven Sunnyvale nights are paid either way, so only three lines actually move:'
   };
 
-  const variantDays = [...document.querySelectorAll('.timeline .day[data-variant]')];
+  // day cards plus the legend row that explains their thread colour
+  const variantDays = [...document.querySelectorAll('.timeline .day[data-variant], .legend .legend-item[data-variant]')];
   const variantBtns = [...document.querySelectorAll('.variant-btn')];
   const variantNoteEl = el('variant-note');
   const variantListEl = el('variant-delta-list');

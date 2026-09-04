@@ -15,6 +15,10 @@
     --grey:#828FA8;
     --grey-soft:rgba(130,143,168,0.16);
     --grey-line:rgba(130,143,168,0.5);
+    /* the LA detour: far enough in hue from amber, green and grey to survive an 11px node */
+    --violet:#A98CDD;
+    --violet-soft:rgba(169,140,221,0.16);
+    --violet-line:rgba(169,140,221,0.55);
     --radius-lg:20px;
     --radius-md:14px;
     --radius-sm:8px;
@@ -158,10 +162,13 @@
     padding:0 0.2rem;
   }
   .legend-item{display:flex; align-items:center; gap:0.55rem; font-size:0.82rem; color:var(--text-muted);}
+  /* display:flex above would otherwise beat the browser's [hidden] rule */
+  .legend-item[hidden]{display:none;}
   .legend-swatch{width:11px; height:11px; flex:none;}
   .legend-swatch.green{background:var(--green); border-radius:50%;}
   .legend-swatch.amber{background:var(--amber); transform:rotate(45deg);}
   .legend-swatch.grey{background:var(--grey); border-radius:3px;}
+  .legend-swatch.violet{background:var(--violet); clip-path:polygon(50% 0, 100% 100%, 0 100%);}
 
   /* ---------- TIMELINE ---------- */
   .section-heading{
@@ -182,6 +189,7 @@
   .day.thread-green{border-left:2px solid var(--green-line);}
   .day.thread-amber{border-left-width:0; background-image:repeating-linear-gradient(var(--amber-line) 0 6px, transparent 6px 12px); background-size:2px 100%; background-repeat:no-repeat;}
   .day.thread-grey{border-left:2px dotted var(--grey-line);}
+  .day.thread-violet{border-left-width:0; background-image:repeating-linear-gradient(var(--violet-line) 0 12px, transparent 12px 18px); background-size:2px 100%; background-repeat:no-repeat;}
 
   .day-node{
     position:absolute; left:-6px; top:2px;
@@ -191,6 +199,7 @@
   .thread-green .day-node{background:var(--green); border-radius:50%; box-shadow:0 0 0 3px var(--bg);}
   .thread-amber .day-node{background:var(--amber); transform:rotate(45deg); box-shadow:0 0 0 3px var(--bg); left:-6.5px;}
   .thread-grey .day-node{background:var(--grey); border-radius:3px; box-shadow:0 0 0 3px var(--bg);}
+  .thread-violet .day-node{background:var(--violet); clip-path:polygon(50% 0, 100% 100%, 0 100%); box-shadow:0 0 0 3px var(--bg);}
 
   .day-card{
     background:var(--surface);
@@ -212,6 +221,7 @@
   .thread-green .day-tag{background:var(--green-soft); color:var(--green);}
   .thread-amber .day-tag{background:var(--amber-soft); color:var(--amber);}
   .thread-grey .day-tag{background:var(--grey-soft); color:var(--grey);}
+  .thread-violet .day-tag{background:var(--violet-soft); color:var(--violet);}
 
   .day-title{font-family:var(--font-display); font-weight:600; font-size:1.12rem; margin:0 0 0.4rem;}
   .day-body{font-size:0.9rem; color:var(--text-muted); margin:0;}
@@ -273,6 +283,7 @@
     transition:background 0.15s ease, color 0.15s ease;
   }
   .variant-btn.active{background:var(--amber); color:var(--bg);}
+  .variant-btn.active[data-variant="b"]{background:var(--violet);}
   .variant-btn:not(.active):hover{color:var(--text);}
   @media (prefers-reduced-motion:reduce){.variant-btn{transition:none;}}
   .variant-note{font-size:0.85rem; color:var(--text-muted); margin:0.75rem 0 0;}
@@ -541,6 +552,7 @@
       --green:#2f6b4f; --green-soft:#eef4f0; --green-line:#2f6b4f;
       --amber:#8a5a00; --amber-soft:#f7f0e2; --amber-line:#8a5a00;
       --grey:#555555; --grey-soft:#efefef; --grey-line:#777777;
+      --violet:#5b3f8a; --violet-soft:#f1ecf9; --violet-line:#5b3f8a;
     }
     body{background:#fff; padding:0;}
     .hero{background-image:none;}
