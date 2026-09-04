@@ -186,7 +186,8 @@
         <div class="day-card">
           <div class="day-head"><span class="day-date">Tue · 15 Sep</span><span class="day-tag">Drive Day</span></div>
           <h3 class="day-title">Drive to LA</h3>
-          <p class="day-body">Departure 06:00, I-5 via Pacheco Pass and the Grapevine — the ugly route, but it's ~5.5–6h and gets you there before the afternoon crunch. In LA by ~12:00. Staying with Dorota, who's covering the hotel — she's at the same Snowflake bootcamp the following week. Evening is open.</p>
+          <p class="day-body">Departure 06:00, I-5 via Pacheco Pass and the Grapevine — the ugly route, but it's ~5.5–6h and gets you there before the afternoon crunch. In LA by ~12:00. Staying with a friend who's covering the hotel, so lodging costs nothing in this variant. Evening is open. <span data-private="bay.la.host" role="button" tabindex="0" title="Sign in to see who you are staying with">🔒</span></p>
+          <p class="day-body" style="margin-top:0.6rem;">Tentative hotel, nothing confirmed with the group yet. Whatever it turns out to be, confirm the garage clearance before booking — the Tahoe is a full-size SUV. <span data-private="bay.la.hotel" role="button" tabindex="0" title="Sign in to see the candidate hotel">🔒</span></p>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Los%20Angeles%2C%20CA" target="_blank" rel="noopener">Los Angeles</a>
           </div>
@@ -198,7 +199,7 @@
         <div class="day-card">
           <div class="day-head"><span class="day-date">Wed · 16 Sep</span><span class="day-tag">City</span></div>
           <h3 class="day-title">Los Angeles</h3>
-          <p class="day-body">Full day in the city, plan shaped by Dorota and her friends who are already there. First time in LA — worth leaving the day loose rather than overbooking it.</p>
+          <p class="day-body">Full day in the city, plan shaped by the friends already there. First time in LA — worth leaving the day loose rather than overbooking it.</p>
           <div class="day-maps">
             <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Los%20Angeles%2C%20CA" target="_blank" rel="noopener">Los Angeles</a>
           </div>
@@ -663,7 +664,7 @@
 
   /* ---------- Variant switch: 15–17 Sep, Bay Area vs LA ----------
      Variant B costs more, but not in a way the sliders model: the seven
-     Sunnyvale nights are paid either way and Dorota covers the LA hotel, so
+     Sunnyvale nights are paid either way and the host covers the LA hotel, so
      only fuel, food and the skipped Napa tastings differ. Those show next to
      the toggle and as one line in the console — never folded into the total,
      because no variant has been chosen yet. */
@@ -671,7 +672,7 @@
   const variantNetUSD = VARIANT_DELTA_USD.fuel + VARIANT_DELTA_USD.food + VARIANT_DELTA_USD.tastings;
   const VARIANT_NOTE = {
     a: 'Showing Variant A — Bay Area: Santa Cruz, Napa and the Monterey coast, all from the South Bay base. Costs exactly what the budget console below already shows.',
-    b: 'Showing Variant B — Los Angeles with Dorota, who covers the hotel there. The seven Sunnyvale nights are paid either way, so only three lines actually move:'
+    b: 'Showing Variant B — Los Angeles, staying with a friend who covers the hotel there. The seven Sunnyvale nights are paid either way, so only three lines actually move:'
   };
 
   // day cards plus the legend row that explains their thread colour
