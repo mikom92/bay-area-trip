@@ -225,6 +225,11 @@
 
   .day-title{font-family:var(--font-display); font-weight:600; font-size:1.12rem; margin:0 0 0.4rem;}
   .day-body{font-size:0.9rem; color:var(--text-muted); margin:0;}
+  /* in-card heading for the Wed 16 options — same idiom as .note-card strong */
+  .day-option{
+    font-family:var(--font-display); font-weight:600; font-size:0.95rem;
+    color:var(--text); margin:1rem 0 0.3rem;
+  }
 
   .day-flag{
     display:inline-flex; align-items:center; gap:0.4rem;
