@@ -134,6 +134,7 @@
         <ul class="variant-delta-list" id="variant-delta-list" hidden>
           <li><span>Fuel — ~1,300 km more in the Tahoe</span><span data-delta="fuel">—</span></li>
           <li><span>Food on the road and in LA</span><span data-delta="food">—</span></li>
+          <li><span>Warner Bros Studio Tour — 2 tickets + parking</span><span data-delta="studio">—</span></li>
           <li><span>Napa tastings not taken</span><span data-delta="tastings">—</span></li>
           <li class="net"><span>Net extra over Variant A</span><span data-delta="net">—</span></li>
         </ul>
@@ -709,11 +710,15 @@
      only fuel, food and the skipped Napa tastings differ. Those show next to
      the toggle and as one line in the console — never folded into the total,
      because no variant has been chosen yet. */
-  const VARIANT_DELTA_USD = { fuel: 185, food: 140, tastings: -110 };
-  const variantNetUSD = VARIANT_DELTA_USD.fuel + VARIANT_DELTA_USD.food + VARIANT_DELTA_USD.tastings;
+  // studio: 2 x $76 admission + $15 parking. Proposed, not booked — but it is
+  // the largest single line in the variant, so leaving it out understated it.
+  const VARIANT_DELTA_USD = { fuel: 185, food: 140, studio: 167, tastings: -110 };
+  // sum the object, never a hand-written list of keys — adding a line above must
+  // move the net, and spelling the keys out is how that silently stops happening
+  const variantNetUSD = Object.values(VARIANT_DELTA_USD).reduce((a, b) => a + b, 0);
   const VARIANT_NOTE = {
     a: 'Showing Variant A — Bay Area: Santa Cruz, Napa and the Monterey coast, all from the South Bay base. Costs exactly what the budget console below already shows.',
-    b: 'Showing Variant B — Los Angeles, staying with a friend who covers the hotel there. The seven Sunnyvale nights are paid either way, so only three lines actually move:'
+    b: 'Showing Variant B — Los Angeles, staying with a friend who covers the hotel there. The seven Sunnyvale nights are paid either way, so only these four lines actually move:'
   };
 
   // day cards, the legend row explaining their thread colour, and the LA-only notes
