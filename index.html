@@ -90,7 +90,7 @@
   <!-- TIMELINE -->
   <section>
     <h2 class="section-heading">Route, day by day</h2>
-    <p class="section-sub">Seven nights in one South Bay base — San Francisco, wine country and the coast all reached as day trips, so there is only one packing day in the whole first week.</p>
+    <p class="section-sub"><span data-variant="a">Seven nights in one South Bay base — San Francisco, wine country and the coast all reached as day trips, so there is only one packing day in the whole first week.</span><span data-variant="b" hidden>Seven nights paid in one South Bay base, but this variant spends the middle of the week in Los Angeles — two nights away, one extra round of packing, and wine country left for another trip.</span></p>
 
     <div class="timeline">
 
@@ -405,7 +405,7 @@
       <div class="breakdown-row"><span>Wine tastings</span><span id="out-tastings">—</span></div>
       <div class="breakdown-row fixed"><span>Alcatraz + CHM + Muir Woods</span><span id="out-attractions">—</span></div>
       <div class="breakdown-row variant-delta" id="variant-delta-row" hidden><span>Variant B — LA detour, net extra (outside this total)</span><span id="out-variant-delta">—</span></div>
-      <p class="breakdown-foot">Car and hotel are shown as round estimates until you sign in — the actual booked figures are confirmed, not guessed. No buffer night needed — the Friday flight home eliminates it entirely. The second stay (Sun 20 – Sun 25) is covered separately and excluded from this total. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
+      <p class="breakdown-foot">Car and hotel are shown as round estimates until you sign in — the actual booked figures are confirmed, not guessed. No buffer night needed — the Friday flight home eliminates it entirely. The second stay (Sun 20 – Sun 25) is covered separately and excluded from this total. The hotel and the food slider are złoty figures; every other line is a dollar cost and moves with the rate. USD→PLN rate fetches live on load (ECB via Frankfurter.app); drag the slider to override.</p>
     </div>
   </section>
 
@@ -414,8 +414,8 @@
     <h2 class="section-heading">What shapes this route</h2>
     <div class="notes-grid">
       <div class="note-card" style="grid-column:1 / -1;">
-        <strong>One base, zero relocations</strong>
-        Every day of the first week is a round trip from the same South Bay hotel — the city, wine country and the coast all work as day trips. You unpack once. The trade-off is real though: three of those seven days run 2.5–3.5h of driving each way, and never booking a San Francisco night means never paying San Francisco rates.
+        <strong><span data-variant="a">One base, zero relocations</span><span data-variant="b" hidden>One base, one detour</span></strong>
+        <span data-variant="a">Every day of the first week is a round trip from the same South Bay hotel — the city, wine country and the coast all work as day trips. You unpack once. The trade-off is real though: three of those seven days run 2.5–3.5h of driving each way, and never booking a San Francisco night means never paying San Francisco rates.</span><span data-variant="b" hidden>Most of the first week is still a round trip from the same South Bay hotel — the city and the coast work as day trips — but this variant breaks that once, for two nights in Los Angeles. The Sunnyvale room is paid either way, so those nights cost nothing extra. The trade-off holds regardless: several of these days run 2.5–3.5h of driving each way, and never booking a San Francisco night means never paying San Francisco rates.</span>
       </div>
       <div class="note-card">
         <strong>Book these first</strong>
@@ -557,14 +557,17 @@
     const carCost = (RATES.carBase + Math.max(0, carDays-7)*RATES.carPerDay) * FX;
     const svHotel = svNights * RATES.lodgingRate;
     const svParking = svNights * 10 * FX; // confirmed by the hotel: $10/night, charged at check-in
-    const sfDayParking = 120; // one city day trip (Alcatraz + North Beach), no SF nights booked
+    // Everything below is a dollar cost, so it is held in USD and converted here.
+    // Held in złoty it would sit still while the rate slider moved, which is what
+    // it used to do: ~838 zł of the total was frozen at the 3.75 fallback.
+    const sfDayParking = 32 * FX; // one city day trip (Alcatraz + North Beach), no SF nights booked
     const fuel = (900/17) * gas * FX;
     const foodDays = selfPaidDays(svNights);
-    const foodCost = food * foodDays;
-    // 350 (CHM + Muir Woods) + Alcatraz Night Tour vs Day Tour delta:
-    // ($59.65-$47.95)/person x 2 people x 3.75 (fallback FX) = 87.75, rounded.
-    const attractions = 438;
-    const tastingCost = tastings * 140;
+    const foodCost = food * foodDays; // the slider is złoty per day, so no conversion
+    // CHM + Muir Woods (~$93.40) plus the Alcatraz Night vs Day Tour delta
+    // ($59.65-$47.95 x 2 people = $23.40).
+    const attractions = 116.8 * FX;
+    const tastingCost = tastings * 37 * FX;
 
     const total = carCost + svHotel + svParking + sfDayParking + fuel + foodCost + attractions + tastingCost;
 
@@ -653,6 +656,11 @@
   });
 
   /* ---------- URL state: shareable budget scenarios ---------- */
+  // The FX slider is set by the live fetch, not only by hand. Without this flag
+  // any unrelated drag would serialise x= and silence the fetch on every later
+  // visit, freezing the rate at whatever it was that day.
+  let fxPinned = false;
+
   const urlMap = [
     ['c', carDaysEl], ['sv', svNightsEl],
     ['f', foodEl], ['g', gasEl], ['t', tastingsEl], ['x', fxRateEl]
@@ -662,6 +670,7 @@
     try{
       const params = new URLSearchParams(location.search);
       if (params.has('v')) variant = BayTripState.normalizeVariant(params.get('v'));
+      fxPinned = params.has('x'); // a shared link that pins a rate keeps it pinned
       urlMap.forEach(([key, input]) => {
         if (!params.has(key)) return;
         const v = parseFloat(params.get(key));
@@ -679,6 +688,7 @@
       const params = new URLSearchParams();
       urlMap.forEach(([key, input]) => {
         // only include values that differ from defaults, keeps URLs clean
+        if (key === 'x' && !fxPinned) return;
         if (input.value !== input.defaultValue) params.set(key, input.value);
       });
       if (variant !== 'a') params.set('v', variant);
@@ -693,12 +703,13 @@
 
   [carDaysEl, svNightsEl, foodEl, gasEl, tastingsEl, fxRateEl].forEach(input => {
     input.addEventListener('input', () => {
-      recalc(); saveToURL();
       if (input === fxRateEl){
+        fxPinned = true; // set before saveToURL, or the first drag would not be recorded
         const s = el('fx-status');
         s.textContent = 'Manual override — live fetch not reapplied';
         s.className = 'fx-status stale';
       }
+      recalc(); saveToURL();
     });
   });
 
@@ -721,8 +732,10 @@
     b: 'Showing Variant B — Los Angeles, staying with a friend who covers the hotel there. The seven Sunnyvale nights are paid either way, so only these four lines actually move:'
   };
 
-  // day cards, the legend row explaining their thread colour, and the LA-only notes
-  const variantDays = [...document.querySelectorAll('.timeline .day[data-variant], .legend .legend-item[data-variant], .notes [data-variant], #checklist .check-item[data-variant]')];
+  // Anything anywhere can be scoped to a variant — day cards, a legend row, a note
+  // card, a checklist entry, a clause inside a shared sentence. The toggle buttons
+  // are the one thing that carries data-variant without being scoped by it.
+  const variantDays = [...document.querySelectorAll('[data-variant]:not(.variant-btn)')];
   const variantBtns = [...document.querySelectorAll('.variant-btn')];
   const variantNoteEl = el('variant-note');
   const variantListEl = el('variant-delta-list');
@@ -879,9 +892,7 @@
   });
 
   // Skip auto-fetch if a shared link already pins a specific rate — respect that choice
-  let pinnedRate = false;
-  try{ pinnedRate = new URLSearchParams(location.search).has('x'); }catch(e){}
-  if (!pinnedRate){
+  if (!fxPinned){
     fetchLiveFX();
   } else {
     const s = el('fx-status');
