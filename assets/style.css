@@ -436,6 +436,7 @@
   /* ---------- BOOKING CHECKLIST ---------- */
   .checklist{margin-top:3rem;}
   .checklist-items{display:flex; flex-direction:column; gap:0.55rem; margin-top:1.2rem;}
+  .check-item[hidden]{display:none;}
   .check-item{
     display:flex; align-items:flex-start; gap:0.8rem;
     background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-md);
