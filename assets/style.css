@@ -247,6 +247,18 @@
   a.day-flag:hover{background:var(--amber-soft); border-color:var(--amber);}
   @media (prefers-reduced-motion:reduce){.day-flag{transition:none;}}
 
+  /* Los Santos names for places already in the LA plan. Violet like the
+     Variant B thread, non-interactive, and inline in the prose rather than in
+     the pin row — the pins are hidden in print, these are content and stay. */
+  .gta{
+    display:inline-flex; align-items:center; gap:0.3rem;
+    font-family:var(--font-mono); font-size:0.64rem; white-space:nowrap;
+    color:var(--violet); background:var(--violet-soft);
+    border:1px dashed var(--violet-line); border-radius:100px;
+    padding:0.1rem 0.5rem; margin:0 0.1rem;
+  }
+  .gta::before{content:'🎮'; font-size:0.7rem;}
+
   .day-maps{display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.7rem;}
   .map-link{
     display:inline-flex; align-items:center; gap:0.35rem;
