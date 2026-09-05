@@ -420,7 +420,7 @@
       <div class="note-card">
         <strong>Book these first</strong>
         <a href="https://alcatrazcitycruises.com/tickets/alcatraz-night-tour" target="_blank" rel="noopener" style="color:var(--amber);">Alcatraz</a> (90-day window) and
-        <a href="https://gomuirwoods.com/" target="_blank" rel="noopener" style="color:var(--amber);">Muir Woods parking</a> both sell out well ahead. Everything else on this route can be decided the night before.
+        <a href="https://gomuirwoods.com/" target="_blank" rel="noopener" style="color:var(--amber);">Muir Woods parking</a> both sell out well ahead.<span data-variant="b" hidden> The <a href="https://www.wbstudiotour.com/" target="_blank" rel="noopener" style="color:var(--amber);">Warner Bros Studio Tour</a> is the third in Variant B — limited availability and irregular closure days, so not a night-before call either.</span> Everything else on this route can be decided the night before.
       </div>
       <div class="note-card">
         <strong>September in the Bay</strong>
@@ -722,7 +722,7 @@
   };
 
   // day cards, the legend row explaining their thread colour, and the LA-only notes
-  const variantDays = [...document.querySelectorAll('.timeline .day[data-variant], .legend .legend-item[data-variant], .notes .note-card[data-variant], #checklist .check-item[data-variant]')];
+  const variantDays = [...document.querySelectorAll('.timeline .day[data-variant], .legend .legend-item[data-variant], .notes [data-variant], #checklist .check-item[data-variant]')];
   const variantBtns = [...document.querySelectorAll('.variant-btn')];
   const variantNoteEl = el('variant-note');
   const variantListEl = el('variant-delta-list');
