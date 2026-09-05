@@ -17,6 +17,22 @@ Costa Rica trip page — one sign-in works for both, and adding this trip's rows
 needed no new policy, since the existing owner-only policy covers every row in
 the table regardless of key prefix.
 
+## Tests
+
+```
+node --test
+```
+
+Run it from the repository root, with no path argument — `node --test tests/`
+looks for a *module* called `tests` and fails with `Cannot find module`.
+
+The suite covers `assets/trip-state.js`, which holds the page's pure logic: the
+budget arithmetic, the target band and gauge, which controls belong in a
+shareable link, checklist progress, the variant delta and money formatting.
+Anything with a number in it belongs there rather than inline in `index.html`,
+where it cannot be tested — three of the bugs found so far lived in exactly
+that gap.
+
 ## GitHub Pages
 
 1. Repo → **Settings → General** → make sure visibility is **Public**. There
