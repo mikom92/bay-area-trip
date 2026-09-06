@@ -517,7 +517,7 @@
   const carDaysEl = el('car-days'), svNightsEl = el('sv-nights'),
         foodEl = el('food-rate'), gasEl = el('gas-price'), tastingsEl = el('tastings'), fxRateEl = el('fx-rate');
 
-  const fmt = n => Math.round(n).toLocaleString('en-US') + ' zł';
+  const money = pln => BayTripState.formatMoney(pln, currency, FX);
 
   const CURRENCY_KEY = 'bayarea-trip-currency';
   let currency = 'PLN';
@@ -537,15 +537,6 @@
   // confirmed values from surviving a later sign-out in the same browser.
   const RATES = BayTripState.createPublicRates();
 
-  // Self-paid meal days track the hotel stay: the 7-night default leaves 9 days
-  // on your own (the reserved days and the second stay aside), so the offset is +2.
-  const selfPaidDays = svNights => svNights + 2;
-
-  function money(pln){
-    if (currency === 'PLN') return fmt(pln);
-    return '$' + Math.round(pln / FX).toLocaleString('en-US');
-  }
-
   function recalc(){
     const carDays = +carDaysEl.value;
     const svNights = +svNightsEl.value;
@@ -554,24 +545,9 @@
     const tastings = +tastingsEl.value;
     FX = +fxRateEl.value;
 
-    const carCost = (RATES.carBase + Math.max(0, carDays-7)*RATES.carPerDay) * FX;
-    const svHotel = svNights * RATES.lodgingRate;
-    const svParking = svNights * 10 * FX; // confirmed by the hotel: $10/night, charged at check-in
-    // Everything below is a dollar cost, so it is held in USD and converted here.
-    // Held in złoty it would sit still while the rate slider moved, which is what
-    // it used to do: ~838 zł of the total was frozen at the 3.75 fallback.
-    const sfDayParking = 32 * FX; // one city day trip (Alcatraz + North Beach), no SF nights booked
-    const fuel = (900/17) * gas * FX;
-    const foodDays = selfPaidDays(svNights);
-    const foodCost = food * foodDays; // the slider is złoty per day, so no conversion
-    // CHM + Muir Woods (~$93.40) plus the Alcatraz Night vs Day Tour delta
-    // ($59.65-$47.95 x 2 people = $23.40).
-    const attractions = 116.8 * FX;
-    const tastingCost = tastings * 37 * FX;
-
-    const total = carCost + svHotel + svParking + sfDayParking + fuel + foodCost + attractions + tastingCost;
-
-    state = { carCost, svHotel, svParking, sfDayParking, fuel, foodCost, attractions, tastingCost, total };
+    state = BayTripState.budgetTotals(
+      { carDays, svNights, foodRate: food, gasPrice: gas, tastings, fx: FX }, RATES);
+    const { foodDays } = state;
 
     el('car-days-out').textContent = carDays + ' days';
     el('sv-nights-out').textContent = svNights + ' nights';
@@ -591,9 +567,7 @@
     tastingsEl.setAttribute('aria-valuetext', tastings + (tastings === 1 ? ' tasting' : ' tastings'));
     fxRateEl.setAttribute('aria-valuetext', FX.toFixed(2) + ' złoty per dollar');
 
-    const min = 8000, max = 15000;
-    const pct = Math.min(100, Math.max(0, (total - min) / (max - min) * 100));
-    el('gauge-marker').style.left = pct + '%';
+    el('gauge-marker').style.left = BayTripState.gaugePercent(state.total) + '%';
 
     renderCurrency();
   }
@@ -616,17 +590,12 @@
     const totalStatusEl = el('total-status');
     totalValueEl.textContent = money(total);
 
-    let status, statusText;
-    if (total < 10000){
-      status = 'under';
-      statusText = money(10000 - total) + ' under target';
-    } else if (total <= 12000){
-      status = 'good';
-      statusText = 'inside ' + money(10000).replace(/ zł$/, '') + '–' + money(12000) + ' target';
-    } else {
-      status = 'over';
-      statusText = money(total - 12000) + ' over target';
-    }
+    const { low, high } = BayTripState.TARGET;
+    const status = BayTripState.budgetStatus(total);
+    const statusText =
+      status === 'under' ? money(low - total) + ' under target' :
+      status === 'over'  ? money(total - high) + ' over target' :
+      'inside ' + money(low).replace(/ zł$/, '') + '–' + money(high) + ' target';
     totalValueEl.dataset.status = status;
     totalStatusEl.textContent = statusText;
 
@@ -675,8 +644,7 @@
         if (!params.has(key)) return;
         const v = parseFloat(params.get(key));
         if (isNaN(v)) return;
-        const clamped = Math.min(+input.max, Math.max(+input.min, v));
-        input.value = clamped;
+        input.value = BayTripState.clampToRange(v, +input.min, +input.max);
       });
     }catch(e){
       // sandboxed preview (about:srcdoc) has no real location — safe to skip
@@ -685,14 +653,10 @@
 
   function saveToURL(){
     try{
-      const params = new URLSearchParams();
-      urlMap.forEach(([key, input]) => {
-        // only include values that differ from defaults, keeps URLs clean
-        if (key === 'x' && !fxPinned) return;
-        if (input.value !== input.defaultValue) params.set(key, input.value);
-      });
-      if (variant !== 'a') params.set('v', variant);
-      const qs = params.toString();
+      const share = BayTripState.shareableParams(
+        urlMap.map(([key, input]) => ({ key, value: input.value, defaultValue: input.defaultValue })),
+        { variant, fxPinned });
+      const qs = new URLSearchParams(share).toString();
       history.replaceState(null, '', qs ? '?' + qs : location.pathname);
     }catch(e){
       // history.replaceState is blocked inside sandboxed previews (e.g. Claude's
@@ -724,9 +688,7 @@
   // studio: 2 x $76 admission + $15 parking. Proposed, not booked — but it is
   // the largest single line in the variant, so leaving it out understated it.
   const VARIANT_DELTA_USD = { fuel: 185, food: 140, studio: 167, tastings: -110 };
-  // sum the object, never a hand-written list of keys — adding a line above must
-  // move the net, and spelling the keys out is how that silently stops happening
-  const variantNetUSD = Object.values(VARIANT_DELTA_USD).reduce((a, b) => a + b, 0);
+  const variantNetUSD = BayTripState.sumDelta(VARIANT_DELTA_USD);
   const VARIANT_NOTE = {
     a: 'Showing Variant A — Bay Area: Santa Cruz, Napa and the Monterey coast, all from the South Bay base. Costs exactly what the budget console below already shows.',
     b: 'Showing Variant B — Los Angeles, staying with a friend who covers the hotel there. The seven Sunnyvale nights are paid either way, so only these four lines actually move:'
@@ -741,7 +703,7 @@
   const variantListEl = el('variant-delta-list');
   const variantRowEl = el('variant-delta-row');
 
-  const signedMoney = usd => (usd < 0 ? '−' : '+') + money(Math.abs(usd) * FX);
+  const signedMoney = usd => BayTripState.formatSignedUSD(usd, currency, FX);
 
   function renderVariantMoney(){
     if (!variantListEl || !variantRowEl) return;
@@ -806,10 +768,8 @@
 
   function updateProgress(){
     if (!progressEl) return;
-    // the other variant's rows are hidden — counting them would show 2 / 7 next to six visible items
-    const shown = boxes.filter(b => !b.closest('.check-item').hidden);
-    const done = shown.filter(b => b.checked).length;
-    progressEl.textContent = done + ' / ' + shown.length + ' done' + (done === shown.length ? ' — all set ✈' : '');
+    progressEl.textContent = BayTripState.checklistProgress(
+      boxes.map(b => ({ checked: b.checked, hidden: b.closest('.check-item').hidden }))).text;
   }
 
   boxes.forEach(box => {
