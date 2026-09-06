@@ -230,6 +230,12 @@
 
   .day-title{font-family:var(--font-display); font-weight:600; font-size:1.12rem; margin:0 0 0.4rem;}
   .day-body{font-size:0.9rem; color:var(--text-muted); margin:0;}
+  /* Two options for one afternoon, side by side so the choice reads as a choice
+     rather than as two more paragraphs. Collapses to one column on a phone, the
+     same as .controls and .notes-grid. */
+  .day-choice{display:grid; grid-template-columns:repeat(2,1fr); gap:0.4rem 1.6rem; margin-top:1rem;}
+  .day-choice .day-option{margin-top:0;} /* no longer following a paragraph */
+
   /* in-card heading for the Wed 16 options — same idiom as .note-card strong */
   .day-option{
     font-family:var(--font-display); font-weight:600; font-size:0.95rem;
@@ -552,6 +558,8 @@
     .timeline{padding-left:1rem;}
     .day{padding-left:0.95rem;}
     .day-card{margin-left:0.3rem; padding:1rem 1.05rem;}
+    .day-choice{grid-template-columns:1fr; gap:0;}
+    .day-choice .day-option{margin-top:1rem;}
     .variant-switch{margin-left:1.25rem; padding:0.9rem 1rem;}
     .variant-btn{padding:0.45rem 0.8rem; font-size:0.72rem;}
     .budget{padding:1.4rem 1.1rem;}
