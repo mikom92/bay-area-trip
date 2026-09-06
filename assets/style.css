@@ -15,6 +15,11 @@
     --grey:#828FA8;
     --grey-soft:rgba(130,143,168,0.16);
     --grey-line:rgba(130,143,168,0.5);
+    /* Small uppercase text on a tinted pill needs more than the line colours do.
+       On their own soft backgrounds the base hues land at 3.92 and 4.18, under
+       the 4.5 AA floor; these clear it at ~5.0 without shifting the palette. */
+    --green-text:#6FA98D;
+    --grey-text:#94A0B6;
     /* the LA detour: far enough in hue from amber, green and grey to survive an 11px node */
     --violet:#A98CDD;
     --violet-soft:rgba(169,140,221,0.16);
@@ -218,9 +223,9 @@
     font-family:var(--font-mono); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.08em;
     padding:0.18rem 0.55rem; border-radius:100px;
   }
-  .thread-green .day-tag{background:var(--green-soft); color:var(--green);}
+  .thread-green .day-tag{background:var(--green-soft); color:var(--green-text);}
   .thread-amber .day-tag{background:var(--amber-soft); color:var(--amber);}
-  .thread-grey .day-tag{background:var(--grey-soft); color:var(--grey);}
+  .thread-grey .day-tag{background:var(--grey-soft); color:var(--grey-text);}
   .thread-violet .day-tag{background:var(--violet-soft); color:var(--violet);}
 
   .day-title{font-family:var(--font-display); font-weight:600; font-size:1.12rem; margin:0 0 0.4rem;}
@@ -571,6 +576,7 @@
       --amber:#8a5a00; --amber-soft:#f7f0e2; --amber-line:#8a5a00;
       --grey:#555555; --grey-soft:#efefef; --grey-line:#777777;
       --violet:#5b3f8a; --violet-soft:#f1ecf9; --violet-line:#5b3f8a;
+      --green-text:#2f6b4f; --grey-text:#555555;
     }
     body{background:#fff; padding:0;}
     .hero{background-image:none;}
