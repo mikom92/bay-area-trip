@@ -121,7 +121,43 @@
     return sign + formatMoney(Math.abs(usd) * fx, currency, fx);
   }
 
+  const TRIP = Object.freeze({ start: '2026-09-13', end: '2026-09-25' });
+
+  // Where the trip is relative to a given day. Dates are ISO strings so the
+  // comparison is lexical and timezone-free, the same trick findActiveCardIndex
+  // already uses.
+  function tripPhase(today, start, end){
+    start = start || TRIP.start; end = end || TRIP.end;
+    const days = (a, b) => Math.round((Date.parse(b + 'T00:00:00Z') - Date.parse(a + 'T00:00:00Z')) / 86400000);
+    const total = days(start, end) + 1;
+    if (today < start){
+      const n = days(today, start);
+      return { phase: 'before', days: n, label: n === 1 ? 'Tomorrow' : n + ' days to departure' };
+    }
+    if (today <= end){
+      const n = days(start, today) + 1;
+      return { phase: 'during', days: n, label: 'Day ' + n + ' of ' + total };
+    }
+    return { phase: 'after', days: days(end, today), label: '' };
+  }
+
+  // What the page still has open, counted rather than restated. Entries come
+  // from markers on the elements themselves, so this cannot drift from them.
+  function openSummary(items){
+    const decisions = items.filter(i => i.kind === 'decision').length;
+    const bookings = items.filter(i => i.kind === 'booking').length;
+    const part = (n, one) => n + ' ' + (n === 1 ? one : one + 's');
+    const bits = [];
+    if (decisions) bits.push(part(decisions, 'decision'));
+    if (bookings) bits.push(part(bookings, 'booking'));
+    return {
+      decisions, bookings, total: decisions + bookings,
+      text: bits.length ? bits.join(' and ') + ' still open' : 'nothing left open'
+    };
+  }
+
   global.BayTripState = Object.freeze({
+    TRIP, tripPhase, openSummary,
     USD, TARGET,
     createPublicRates,
     resetToPublicRates,

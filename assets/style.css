@@ -160,6 +160,33 @@
   }
   .target-chip::before{content:'●'; font-size:0.55rem;}
 
+  /* ---------- PREFLIGHT ---------- */
+  .preflight{
+    background:var(--surface); border:1px solid var(--line);
+    border-left:2px solid var(--amber-line);
+    border-radius:var(--radius-md);
+    padding:1rem 1.15rem; margin:2.4rem 0 0;
+  }
+  .preflight[hidden]{display:none;}
+  .preflight-head{display:flex; align-items:baseline; justify-content:space-between; gap:0.8rem; flex-wrap:wrap;}
+  .preflight-when{
+    font-family:var(--font-display); font-weight:700; font-size:1.05rem; color:var(--text);
+  }
+  .preflight-status{font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted);}
+  .preflight-list{list-style:none; margin:0.7rem 0 0; padding:0; display:flex; flex-wrap:wrap; gap:0.4rem 0.5rem;}
+  .preflight-list li{margin:0;}
+  .preflight-list a{
+    display:inline-flex; align-items:center; gap:0.35rem;
+    font-family:var(--font-mono); font-size:0.68rem; color:var(--text-muted);
+    border:1px solid var(--line); border-radius:100px;
+    padding:0.3rem 0.65rem; text-decoration:none;
+    transition:border-color 0.15s ease, color 0.15s ease;
+  }
+  .preflight-list a::before{content:'○'; font-size:0.6rem; color:var(--amber);}
+  .preflight-list li.booking a::before{content:'●';}
+  .preflight-list a:hover{border-color:var(--text-faint); color:var(--text);}
+  @media (prefers-reduced-motion:reduce){.preflight-list a{transition:none;}}
+
   /* ---------- LEGEND ---------- */
   .legend{
     display:flex; flex-wrap:wrap; gap:1.6rem;
@@ -560,6 +587,8 @@
     .day-card{margin-left:0.3rem; padding:1rem 1.05rem;}
     .day-choice{grid-template-columns:1fr; gap:0;}
     .day-choice .day-option{margin-top:1rem;}
+    .preflight{padding:0.9rem 1rem;}
+    .preflight-list a{padding:0.5rem 0.8rem; font-size:0.72rem;}
     .variant-switch{margin-left:1.25rem; padding:0.9rem 1rem;}
     .variant-btn{padding:0.45rem 0.8rem; font-size:0.72rem;}
     .budget{padding:1.4rem 1.1rem;}
@@ -591,6 +620,8 @@
     .controls, .gauge, .gauge-labels, .today-jump, .budget .section-sub, .auth-btn{display:none !important;}
     /* the note still names the printed variant, so only the buttons go */
     .variant-toggle{display:none !important;}
+    .preflight{border-left-width:1px; break-inside:avoid; page-break-inside:avoid;}
+    .preflight-list a{border-style:solid;}
     .variant-switch{border-style:solid; break-inside:avoid; page-break-inside:avoid;}
     .map-link{display:none;}
     .day-flag{border-style:solid;}

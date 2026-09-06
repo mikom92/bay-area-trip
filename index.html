@@ -79,6 +79,15 @@
     <div class="target-chip"><span id="target-chip-text">Budget target · 10,000–12,000 PLN</span></div>
   </header>
 
+  <!-- PREFLIGHT: how long is left, and what is still open -->
+  <section class="preflight" id="preflight" hidden aria-labelledby="preflight-when">
+    <div class="preflight-head">
+      <strong class="preflight-when" id="preflight-when"></strong>
+      <span class="preflight-status" id="preflight-status"></span>
+    </div>
+    <ul class="preflight-list" id="preflight-list"></ul>
+  </section>
+
   <!-- LEGEND -->
   <div class="legend">
     <div class="legend-item"><span class="legend-swatch amber" aria-hidden="true"></span>Self-paid — South Bay, Peninsula &amp; Pacific coast</div>
@@ -122,7 +131,7 @@
         </div>
       </div>
 
-      <div class="variant-switch" id="variant-switch">
+      <div class="variant-switch" id="variant-switch" data-open="Variant A or B for 15–17 Sep">
         <div class="variant-switch-head">
           <span class="variant-eyebrow">Tue–Thu · 15–17 Sep · not decided yet</span>
           <div class="variant-toggle" role="group" aria-label="Plan variant for 15–17 September">
@@ -188,7 +197,7 @@
           <div class="day-head"><span class="day-date">Tue · 15 Sep</span><span class="day-tag">Drive Day</span></div>
           <h3 class="day-title">Drive to LA</h3>
           <p class="day-body">Departure 06:00, I-5 via Pacheco Pass and the Grapevine — the ugly route, but it's ~5.5–6h and gets you there before the afternoon crunch. In LA by ~12:00. Staying with a friend who's covering the hotel, so lodging costs nothing in this variant. Evening is open. <span data-private="bay.la.host" role="button" tabindex="0" title="Sign in to see who you are staying with">🔒</span></p>
-          <p class="day-body" style="margin-top:0.6rem;">Tentative hotel, nothing confirmed with the group yet. Whatever it turns out to be, confirm the garage clearance before booking — the Tahoe is a full-size SUV. <span data-private="bay.la.hotel" role="button" tabindex="0" title="Sign in to see the candidate hotel">🔒</span></p>
+          <p class="day-body" id="open-la-hotel" data-open="LA hotel — not confirmed with the group" style="margin-top:0.6rem;">Tentative hotel, nothing confirmed with the group yet. Whatever it turns out to be, confirm the garage clearance before booking — the Tahoe is a full-size SUV. <span data-private="bay.la.hotel" role="button" tabindex="0" title="Sign in to see the candidate hotel">🔒</span></p>
           <p class="day-body" style="margin-top:0.6rem;">Afternoon and evening: check in and leave the car parked. Griffith Observatory at sunset <span class="gta" title="GTA V: Galileo Observatory"><span class="sr-only">GTA V: </span>Galileo Observatory</span> — open Tue–Fri 12:00–22:00, sunset around 19:00, so arriving ~17:30 gets the city in daylight, dusk and lights in one visit. Free entry. Los Santos in GTA V is built on this city, so these tags give the in-game name wherever there is one — the Hollywood sign on the ridge opposite <span class="gta" title="GTA V: Vinewood Sign"><span class="sr-only">GTA V: </span>Vinewood Sign</span> included. Parking at the top is the known problem: park at the Greek Theatre lot and take the 50-cent shuttle up, or Metro B to Vermont/Sunset and the DASH Observatory bus from there. Optional on the way up, a few minutes off the route: Hollywood Blvd and the TCL Chinese Theatre <span class="gta" title="GTA V: Vinewood Blvd and the Oriental Theater"><span class="sr-only">GTA V: </span>Vinewood Blvd</span>. Dinner afterwards is Korean BBQ in Koreatown <span class="gta" title="GTA V: Little Seoul"><span class="sr-only">GTA V: </span>Little Seoul</span> — the base sits in the middle of the largest concentration of Korean food outside Seoul, so it is walkable and needs no driving after six hours on the road.</p>
           <p class="day-body" style="margin-top:0.6rem;">Coming down from Griffith after dark, take Mulholland Drive back instead of the freeway <span class="gta" title="GTA V: Vinewood Hills"><span class="sr-only">GTA V: </span>Vinewood Hills</span> — a ridge road with the city glittering below, and the Jerome C. Daniel Overlook on the way for a view of the Hollywood sign. Free, no booking, adds maybe 30 minutes.</p>
           <div class="day-maps">
@@ -210,7 +219,7 @@
           <p class="day-body">3400 Warner Blvd, Burbank. $76 per adult, $15 parking. Tours leave every 30 minutes between 08:30 and 15:30 and run about three hours — roughly an hour guided, then two hours self-guided. Take an early slot: the earlier the tour, the more of the day survives it.</p>
           <p class="day-body" style="margin-top:0.6rem;">It is a working studio with filming going on around you, so no two tours are the same. On the backlot: Courthouse Square from Back to the Future, the New York Street set, the Friends fountain and Central Perk. Inside: Sheldon's spot from The Big Bang Theory, the Wizarding World rooms, and the DC Universe exhibit with the actual Batmobiles — the 1966 TV car, the Tumbler from the Nolan trilogy, the Batpod.</p>
           <a class="day-flag" href="https://www.wbstudiotour.com/" target="_blank" rel="noopener">Tickets not booked — availability is limited and closure days are irregular, so confirm the date before buying ↗</a>
-          <div class="day-choice">
+          <div class="day-choice" id="open-wed-afternoon" data-open="Wednesday afternoon — west side or Hollywood Blvd">
             <div><h4 class="day-option">Afternoon, option A — the west side</h4>
           <p class="day-body">About 25 minutes from Burbank. Getty Center <span class="gta" title="GTA V: Kortz Center"><span class="sr-only">GTA V: </span>Kortz Center</span> first: free entry, $25 parking, open until 18:30. Then Santa Monica Pier <span class="gta" title="GTA V: Del Perro Pier"><span class="sr-only">GTA V: </span>Del Perro Pier</span> and Venice — the boardwalk <span class="gta" title="GTA V: Vespucci Beach"><span class="sr-only">GTA V: </span>Vespucci Beach</span> with Muscle Beach <span class="gta" title="GTA V: Muscle Sands"><span class="sr-only">GTA V: </span>Muscle Sands</span> at its south end, and the Venice Canals <span class="gta" title="GTA V: Vespucci Canals"><span class="sr-only">GTA V: </span>Vespucci Canals</span> ten minutes off the main drag: real residential waterways, quiet and largely missed by tourists, no ticket and no booking.</p></div>
             <div><h4 class="day-option">Afternoon, option B — Hollywood Boulevard</h4>
@@ -296,7 +305,7 @@
         </div>
       </div>
 
-      <div class="day thread-amber" data-trip-start="2026-09-21" data-trip-end="2026-09-21">
+      <div class="day thread-amber" id="open-monday" data-open="Monday 21 — outlets or the Wunderlich hike" data-trip-start="2026-09-21" data-trip-end="2026-09-21">
         <span class="day-node" aria-hidden="true"></span>
         <div class="day-card">
           <div class="day-head"><span class="day-date">Mon · 21 Sep</span><span class="day-tag">Outlets</span></div>
@@ -445,6 +454,12 @@
         <strong>Driving and parking in LA</strong>
         Avoid driving 15:00–19:00, and 07:00–10:00 where you can. Parking signs stack four contradictory rules on one pole and missing one costs $70–90 or a tow. Leave nothing visible in the car, especially at beach and trailhead lots. Metro B/D out of Koreatown works well for Downtown — 15 minutes to Pershing Square, no parking, no traffic.
       </div>
+      <div class="note-card" style="grid-column:1 / -1;">
+        <strong>Check these before you go</strong>
+        Everything here is true as written and none of it is guaranteed to stay that way.
+        <span data-variant="a"> Highway 1 south of Big Sur is closed for the Timber and Plaskett fires and the roadside parking ban at Bixby is in force — both are live conditions, so read <a href="https://quickmap.dot.ca.gov/" target="_blank" rel="noopener" style="color:var(--amber);">Caltrans QuickMap</a> the night before Thursday.</span><span data-variant="b" hidden> Warner Bros has irregular closure days, so confirm the date on <a href="https://www.wbstudiotour.com/" target="_blank" rel="noopener" style="color:var(--amber);">wbstudiotour.com</a> before buying. Griffith’s hours and the Spire 73 bar are both worth a look at the venue’s own page — the bar’s hours were never verified here.</span>
+        Alcatraz sails to a fixed time printed on the ticket, not the one you remember.
+      </div>
       <div class="note-card" data-variant="b" style="grid-column:1 / -1;" hidden>
         <strong>Why Warner Bros and not Universal</strong>
         Universal Studios Hollywood was the other candidate. It is a theme park with a backlot tram tour inside it — realistically eight to ten hours, which would have taken the whole day. Warner Bros is three hours and a genuine working lot, which leaves the afternoon open. That was the whole argument.
@@ -471,7 +486,7 @@
       <label class="check-item"><input type="checkbox" data-key="muirwoods">
         <span class="check-text"><a href="https://gomuirwoods.com/" target="_blank" rel="noopener">Reserve Muir Woods parking</a> — Sat 19 Sep (day trip from the South Bay)<small>timed entry; book alongside Alcatraz</small></span>
       </label>
-      <label class="check-item" data-variant="b" hidden><input type="checkbox" data-key="wbtour">
+      <label class="check-item" id="open-wbtour" data-variant="b" data-open="Warner Bros tickets" data-open-kind="booking" hidden><input type="checkbox" data-key="wbtour">
         <span class="check-text"><a href="https://www.wbstudiotour.com/" target="_blank" rel="noopener">Book Warner Bros Studio Tour</a> — Wed 16 Sep, morning slot (Variant B only)<small>not booked yet; availability is limited, so book as early as you can. Closure days are irregular — confirm the date on wbstudiotour.com before buying, and go through the official site or another channel with free cancellation: some resellers sell final-sale tickets that cannot be changed or refunded</small></span>
       </label>
       <label class="check-item"><input type="checkbox" data-key="sv-hotel">
@@ -741,6 +756,7 @@
       saveToURL();
       updateTodayButton(); // the hidden variant's cards must not catch "Today"
       updateProgress();    // and the checklist denominator follows the visible rows
+      renderPreflight();
     });
   });
 
@@ -766,6 +782,53 @@
     const done = {};
     boxes.forEach(box => { done[box.dataset.key] = box.checked; });
     try{ localStorage.setItem(CHECK_KEY, JSON.stringify(done)); }catch(e){}
+    pushChecklist();
+  }
+
+  /* Syncing the list between devices. Signed out this whole block is inert and
+     the checklist is exactly what it was: localStorage only. Signed in, ticks
+     go to trip_checklist — a separate table from trip_private, which stays
+     read-only to the page, and which holds booleans keyed by slug and nothing
+     else. One person on two devices, so last write wins is the right rule. */
+  let checklistSynced = false;
+
+  function pushChecklist(){
+    if (!checklistSynced) return;
+    const sb = SB.get();
+    if (!sb) return;
+    const rows = boxes.map(box => ({
+      key: box.dataset.key, done: box.checked, updated_at: new Date().toISOString()
+    }));
+    sb.from('trip_checklist').upsert(rows, { onConflict: 'key' }).then(res => {
+      if (res && res.error) checklistSynced = false; // stop trying; local still holds
+    });
+  }
+
+  async function pullChecklist(sb){
+    const res = await sb.from('trip_checklist').select('key,done');
+    if (res.error) return;
+    const remote = {};
+    (res.data || []).forEach(row => { remote[row.key] = !!row.done; });
+
+    // the stored set wins for keys it knows; local ticks fill the gaps and get
+    // pushed, so a first sign-in on a second device does not lose anything
+    let moved = false;
+    boxes.forEach(box => {
+      const key = box.dataset.key;
+      if (key in remote && remote[key] !== box.checked){ box.checked = remote[key]; moved = true; }
+    });
+    if (moved){
+      boxes.forEach(box => box.closest('.check-item').classList.toggle('done', box.checked));
+      try{
+        const done = {};
+        boxes.forEach(box => { done[box.dataset.key] = box.checked; });
+        localStorage.setItem(CHECK_KEY, JSON.stringify(done));
+      }catch(e){}
+      updateProgress();
+      renderPreflight();
+    }
+    checklistSynced = true;
+    if (boxes.some(box => !(box.dataset.key in remote))) pushChecklist();
   }
 
   function updateProgress(){
@@ -779,10 +842,63 @@
       box.closest('.check-item').classList.toggle('done', box.checked);
       saveChecklist();
       updateProgress();
+      renderPreflight();
     });
   });
 
   loadChecklist();
+
+  /* ---------- Preflight: how long is left, and what is still open ----------
+     Every item is read off a data-open marker on the element that already
+     states it, so this panel cannot drift from the page. Anything inside a
+     hidden variant is skipped, which makes the list follow the A/B switch with
+     no extra wiring. */
+  const preflightEl = el('preflight');
+
+  function isoToday(){
+    const n = new Date();
+    return [n.getFullYear(), String(n.getMonth() + 1).padStart(2, '0'), String(n.getDate()).padStart(2, '0')].join('-');
+  }
+
+  function renderPreflight(){
+    if (!preflightEl) return;
+    const phase = BayTripState.tripPhase(isoToday());
+    if (phase.phase === 'after'){ preflightEl.hidden = true; return; }
+
+    const items = [...document.querySelectorAll('[data-open]')]
+      .filter(node => !node.closest('[hidden]'))
+      .filter(node => { const box = node.querySelector('input[type=checkbox]'); return !(box && box.checked); })
+      .map(node => ({ kind: node.dataset.openKind || 'decision', label: node.dataset.open, id: node.id }));
+
+    const summary = BayTripState.openSummary(items);
+    const checklist = BayTripState.checklistProgress(
+      boxes.map(b => ({ checked: b.checked, hidden: !!b.closest('.check-item').hidden })));
+
+    el('preflight-when').textContent = phase.label;
+    el('preflight-status').textContent = summary.text + ' · checklist ' + checklist.done + ' / ' + checklist.total;
+
+    const list = el('preflight-list');
+    list.textContent = '';
+    items.forEach(item => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + item.id;
+      a.textContent = item.label;
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.getElementById(item.id);
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const card = target.closest('.day-card') || target;
+        card.classList.add('today-highlight');
+        setTimeout(() => card.classList.remove('today-highlight'), 2600);
+      });
+      li.appendChild(a);
+      if (item.kind === 'booking') li.className = 'booking';
+      list.appendChild(li);
+    });
+    preflightEl.hidden = false;
+  }
 
   /* ---------- Today: jump to the current day while on the trip ---------- */
   const todayBtn = document.getElementById('today-jump');
@@ -847,8 +963,9 @@
 
   recalc();
   updateTodayButton();
+  renderPreflight();
   // a tab left open overnight would otherwise keep pointing at yesterday
-  setInterval(updateTodayButton, 60000);
+  setInterval(() => { updateTodayButton(); renderPreflight(); }, 60000);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) updateTodayButton();
   });
@@ -918,6 +1035,9 @@
         // state to leak.
         const res = await sb.from('trip_private').select('key,value');
         if (!res.error) (res.data || []).forEach(r => { PRIV[r.key] = r.value; });
+        await pullChecklist(sb);
+      } else {
+        checklistSynced = false; // signed out: back to this browser only
       }
       applyToBudget();
       paint();
