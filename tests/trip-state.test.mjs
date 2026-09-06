@@ -184,3 +184,30 @@ test('money renders in the selected currency, signed where it is a delta', () =>
   assert.equal(tripState.formatSignedUSD(-110, 'USD', 3.75), '−$110');
   assert.equal(tripState.formatSignedUSD(-110, 'PLN', 3.75), '−413 zł');
 });
+
+test('trip phase reads the same way before, during and after', () => {
+  const tripState = loadTripState();
+  const { start, end } = tripState.TRIP;
+
+  assert.deepEqual({ ...tripState.tripPhase('2026-09-06', start, end) },
+    { phase: 'before', days: 7, label: '7 days to departure' });
+  assert.equal(tripState.tripPhase('2026-09-12', start, end).label, 'Tomorrow');
+
+  assert.equal(tripState.tripPhase(start, start, end).label, 'Day 1 of 13');
+  assert.equal(tripState.tripPhase('2026-09-19', start, end).label, 'Day 7 of 13');
+  assert.equal(tripState.tripPhase(end, start, end).label, 'Day 13 of 13');   // last day still counts
+
+  assert.equal(tripState.tripPhase('2026-09-26', start, end).phase, 'after');
+  assert.equal(tripState.tripPhase('2026-09-26', start, end).label, '');      // nothing to show
+});
+
+test('open summary counts decisions and bookings separately', () => {
+  const tripState = loadTripState();
+  const d = { kind: 'decision' }, b = { kind: 'booking' };
+
+  assert.equal(tripState.openSummary([d, d, b]).text, '2 decisions and 1 booking still open');
+  assert.equal(tripState.openSummary([d]).text, '1 decision still open');     // singular
+  assert.equal(tripState.openSummary([b, b]).text, '2 bookings still open');
+  assert.equal(tripState.openSummary([]).text, 'nothing left open');
+  assert.equal(tripState.openSummary([d, b]).total, 2);
+});
