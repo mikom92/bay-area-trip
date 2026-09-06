@@ -782,6 +782,53 @@
     const done = {};
     boxes.forEach(box => { done[box.dataset.key] = box.checked; });
     try{ localStorage.setItem(CHECK_KEY, JSON.stringify(done)); }catch(e){}
+    pushChecklist();
+  }
+
+  /* Syncing the list between devices. Signed out this whole block is inert and
+     the checklist is exactly what it was: localStorage only. Signed in, ticks
+     go to trip_checklist — a separate table from trip_private, which stays
+     read-only to the page, and which holds booleans keyed by slug and nothing
+     else. One person on two devices, so last write wins is the right rule. */
+  let checklistSynced = false;
+
+  function pushChecklist(){
+    if (!checklistSynced) return;
+    const sb = SB.get();
+    if (!sb) return;
+    const rows = boxes.map(box => ({
+      key: box.dataset.key, done: box.checked, updated_at: new Date().toISOString()
+    }));
+    sb.from('trip_checklist').upsert(rows, { onConflict: 'key' }).then(res => {
+      if (res && res.error) checklistSynced = false; // stop trying; local still holds
+    });
+  }
+
+  async function pullChecklist(sb){
+    const res = await sb.from('trip_checklist').select('key,done');
+    if (res.error) return;
+    const remote = {};
+    (res.data || []).forEach(row => { remote[row.key] = !!row.done; });
+
+    // the stored set wins for keys it knows; local ticks fill the gaps and get
+    // pushed, so a first sign-in on a second device does not lose anything
+    let moved = false;
+    boxes.forEach(box => {
+      const key = box.dataset.key;
+      if (key in remote && remote[key] !== box.checked){ box.checked = remote[key]; moved = true; }
+    });
+    if (moved){
+      boxes.forEach(box => box.closest('.check-item').classList.toggle('done', box.checked));
+      try{
+        const done = {};
+        boxes.forEach(box => { done[box.dataset.key] = box.checked; });
+        localStorage.setItem(CHECK_KEY, JSON.stringify(done));
+      }catch(e){}
+      updateProgress();
+      renderPreflight();
+    }
+    checklistSynced = true;
+    if (boxes.some(box => !(box.dataset.key in remote))) pushChecklist();
   }
 
   function updateProgress(){
@@ -988,6 +1035,9 @@
         // state to leak.
         const res = await sb.from('trip_private').select('key,value');
         if (!res.error) (res.data || []).forEach(r => { PRIV[r.key] = r.value; });
+        await pullChecklist(sb);
+      } else {
+        checklistSynced = false; // signed out: back to this browser only
       }
       applyToBudget();
       paint();

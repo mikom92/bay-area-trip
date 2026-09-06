@@ -96,6 +96,40 @@ auditable against the actual confirmation. `bay.budget.carBase` /
 week, then a per-day rate beyond it) — signed out, the budget console shows
 round estimates for both instead.
 
+### Checklist sync — the one table the page may write
+
+`trip_private` is read-only to the page and stays that way. The booking
+checklist is a different problem: without somewhere to put it, ticking on a
+laptop leaves the phone blank. It lives in its own table, so the read-only
+property above survives intact.
+
+```sql
+create table if not exists public.trip_checklist (
+  key        text primary key,
+  done       boolean not null default false,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.trip_checklist enable row level security;
+
+create policy "owner reads checklist" on public.trip_checklist
+  for select to authenticated using (auth.email() = '<your email>');
+
+create policy "owner inserts checklist" on public.trip_checklist
+  for insert to authenticated with check (auth.email() = '<your email>');
+
+create policy "owner updates checklist" on public.trip_checklist
+  for update to authenticated
+  using (auth.email() = '<your email>') with check (auth.email() = '<your email>');
+```
+
+No delete policy, and nothing sensitive in the table: booleans keyed by slug,
+so a compromised session reaches nothing private. Signed out, the page never
+touches it and the checklist is `localStorage` exactly as before. Signed in,
+the stored set wins for keys it knows, local ticks fill the gaps and get
+pushed, and every later change is written back — last write wins, which is the
+right rule for one person on two devices.
+
 ### Sign-in
 
 Email magic link, no OAuth app to register and no password:
