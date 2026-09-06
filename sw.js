@@ -3,14 +3,21 @@
    live data (Supabase, the FX rate) out of the cache entirely, and never let
    a stale snapshot mask an updated page. */
 
-const VERSION = 'ba26-v16';
+const VERSION = 'ba26-v17';
 const CORE = [
   './',
   './index.html',
   './assets/style.css',
   './assets/trip-state.js',
   './manifest.webmanifest',
-  './icon.svg'
+  './icon.svg',
+  // The font stylesheet, so a first offline load has the @font-face rules. The
+  // woff2 files it points at live on fonts.gstatic.com behind URLs Google
+  // rotates, so they cannot be pinned here — they are cached opportunistically
+  // after any online visit. Offline on a device that has never been online, the
+  // page falls back to Arial Narrow and the system stack, which is why those
+  // fallbacks are spelled out in the stylesheet rather than left to chance.
+  'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap'
 ];
 
 // Live data must never be served from cache. Match on a dot boundary: a bare
