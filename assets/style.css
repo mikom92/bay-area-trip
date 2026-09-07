@@ -257,6 +257,27 @@
 
   .day-title{font-family:var(--font-display); font-weight:600; font-size:1.12rem; margin:0 0 0.4rem;}
   .day-body{font-size:0.9rem; color:var(--text-muted); margin:0;}
+  /* A driving day with timed stops: numbered, because the order is the point and
+     the mile markers only make sense read in sequence. */
+  .day-route{list-style:none; margin:0.9rem 0 0; padding:0; counter-reset:stop;}
+  .day-route li{
+    position:relative; padding:0 0 0.65rem 1.8rem;
+    font-size:0.9rem; color:var(--text-muted);
+  }
+  .day-route li:last-child{padding-bottom:0;}
+  .day-route li::before{
+    counter-increment:stop; content:counter(stop);
+    position:absolute; left:0; top:0.1rem;
+    width:1.2rem; height:1.2rem; display:grid; place-items:center;
+    font-family:var(--font-mono); font-size:0.62rem; color:var(--violet);
+    border:1px solid var(--violet-line); border-radius:50%;
+  }
+  .day-route strong{color:var(--text); font-weight:600;}
+  .day-route .leg{
+    font-family:var(--font-mono); font-size:0.64rem; color:var(--text-faint);
+    white-space:nowrap; margin-left:0.3rem;
+  }
+
   /* Two options for one afternoon, side by side so the choice reads as a choice
      rather than as two more paragraphs. Collapses to one column on a phone, the
      same as .controls and .notes-grid. */
