@@ -63,6 +63,32 @@ There is deliberately **no insert/update/delete policy**: rows are managed in
 the Supabase table editor, so the page can never write to this table even if
 someone signs in.
 
+#### Letting a travelling companion in
+
+This table is shared with the Costa Rica trip, so a second reader is a
+*second policy*, never a wider first one. Permissive policies are OR'd, so the
+owner's access is untouched and the guest's stands or falls on its own — and
+the key prefix keeps the other trip's rows out of reach:
+
+```sql
+create policy "bay guest reads" on public.trip_private
+  for select to authenticated
+  using (auth.email() = '<their email>' and key like 'bay.%');
+```
+
+Worth checking with the actual identities rather than reading the policy and
+assuming. Set `request.jwt.claims` inside a transaction and count what each one
+sees:
+
+| signed in as | `bay.*` | other trip | `trip_checklist` |
+|---|---|---|---|
+| owner | 11 | 6 | 8 |
+| guest | 11 | **0** | **0** |
+| anyone else | 0 | 0 | 0 |
+
+The checklist stays the owner's: it is a different table with owner-only
+policies, so a guest signing in simply keeps using their own browser's copy.
+
 Seed the Bay Area rows (placeholders here — fill in the real values in the
 Supabase editor, not in this file, since this repository is public):
 
