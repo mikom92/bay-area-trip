@@ -2,7 +2,7 @@
   const PUBLIC_RATES = Object.freeze({
     carBase: 600,
     carPerDay: 75,
-    carLabel: 'Car rental (estimate) + IDP',
+    carLabel: 'Car rental (estimate)',
     lodgingRate: 340,
     lodgingLabel: 'South Bay hotel (estimate)'
   });

@@ -32,7 +32,7 @@ test('restores public budget rates after private overrides are cleared', () => {
   assert.deepEqual({ ...rates }, {
     carBase: 600,
     carPerDay: 75,
-    carLabel: 'Car rental (estimate) + IDP',
+    carLabel: 'Car rental (estimate)',
     lodgingRate: 340,
     lodgingLabel: 'South Bay hotel (estimate)'
   });
