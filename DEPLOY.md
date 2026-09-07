@@ -135,10 +135,22 @@ right rule for one person on two devices.
 Email magic link, no OAuth app to register and no password:
 
 1. Supabase dashboard → **Authentication → Providers → Email**, enable it.
-2. **Authentication → URL Configuration** → add this page's deployed URL to
-   the redirect allow-list (alongside the Costa Rica page's URL, if not
-   already there). Without this the link in the email will refuse to come
-   back.
+2. **Authentication → URL Configuration**, and set *both* fields:
+   - **Site URL** → `https://<user>.github.io/<repo>/`
+   - **Redirect URLs** → add `https://<user>.github.io/<repo>/**`
+     (alongside the Costa Rica page's URL, if not already there)
+
+   Getting this wrong does not produce an error. Supabase silently falls back
+   to the Site URL for any redirect target that is not in the allow-list, and
+   an unset Site URL defaults to `http://localhost:3000` — so the magic link
+   arrives, opens, and dies on a dead localhost tab with the access token
+   sitting in the address bar. If that is what you are seeing, this is the
+   setting, not the page.
+
+   The page asks to come back to `location.origin + location.pathname` rather
+   than the URL you were on, so the target stays the same whatever `?v=` or
+   budget parameters are in the address bar. That is one URL to allow-list
+   instead of a family of them.
 
 Click **🔒 Private details** in the footer, or any locked `🔒` value on the
 page.

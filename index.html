@@ -1066,7 +1066,13 @@
     async function signIn(addr){
       const sb = SB.get();
       if (!sb){ flash('Offline — cannot sign in right now'); return; }
-      const res = await sb.auth.signInWithOtp({ email: addr, options: { emailRedirectTo: location.href.split('#')[0] } });
+      // Canonical page URL, not location.href: with ?v=b or budget sliders in the
+      // query string every visit asks for a different redirect target, and Supabase
+      // silently falls back to the project's Site URL for any target that is not in
+      // the allow-list — which is how a magic link ends up on localhost:3000.
+      const res = await sb.auth.signInWithOtp({
+        email: addr, options: { emailRedirectTo: location.origin + location.pathname }
+      });
       flash(res.error ? ('Failed: ' + res.error.message) : 'Check your inbox for the sign-in link.');
     }
 
