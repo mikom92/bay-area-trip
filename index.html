@@ -446,8 +446,148 @@
     <p class="checklist-progress" id="checklist-progress" aria-live="polite">0 / 6 done</p>
   </section>
 
+  <!-- PACKING (private) -->
+  <section class="packing locked" id="packing">
+    <h2 class="section-heading">🎒 Packing</h2>
+    <p class="section-sub" id="packing-sub">Private — sign in to see the list.</p>
+
+    <div class="packing-lock" id="packing-lock">
+      <div>
+        <strong>🔒 Sign in to open the packing list</strong>
+        <small>The same magic link as the rest of the private details — it goes to your inbox, no password.</small>
+      </div>
+      <button type="button" class="auth-btn" id="packing-signin">Send a magic link</button>
+    </div>
+
+    <div class="packing-body" id="packing-body" hidden>
+      <div class="packing-head">
+        <p class="checklist-progress" id="packing-progress" aria-live="polite">0 / 0 packed</p>
+        <button type="button" class="packing-reset" id="packing-reset">Reset packing list</button>
+      </div>
+
+      <div class="packing-cat">
+        <div class="packing-cat-head">
+          <h3 class="packing-cat-name">Documents &amp; money</h3>
+          <span class="packing-cat-count" data-cat-count>0 / 0</span>
+        </div>
+        <div class="packing-cat-bar"><span data-cat-bar style="width:0%"></span></div>
+        <div class="checklist-items">
+          <label class="check-item"><input type="checkbox" data-key="packing:passport"><span class="check-text">Passport</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:esta"><span class="check-text">ESTA confirmation<small>saved as an offline PDF, not just an inbox search</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:licence"><span class="check-text">Driving licence<small>the Polish photocard; no IDP needed for California</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:cards"><span class="check-text">Revolut Metal, with ING as the backup</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:cash"><span class="check-text">~$100 cash<small>for tips and for parking machines that still refuse cards</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:pdfs"><span class="check-text">Offline PDF folder on the phone — every confirmation in one place<small><span data-private="mm.packing.refs" role="button" tabindex="0" title="Sign in to see the confirmation numbers">🔒</span></small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:xcover"><span class="check-text">XCover Assist number saved offline<small>+44 23 8144 9963 — the assistance line works from a US number too</small></span></label>
+        </div>
+      </div>
+
+      <div class="packing-cat">
+        <div class="packing-cat-head">
+          <h3 class="packing-cat-name">Electronics</h3>
+          <span class="packing-cat-count" data-cat-count>0 / 0</span>
+        </div>
+        <div class="packing-cat-bar"><span data-cat-bar style="width:0%"></span></div>
+        <div class="checklist-items">
+          <label class="check-item"><input type="checkbox" data-key="packing:laptop"><span class="check-text">Work laptop + charger</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:skross"><span class="check-text">SKROSS 1.103145 world adapter<small>grounded — this is the one the laptop needs</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:deltaco"><span class="check-text">DELTACO GT-400 EU→US adapter<small>the second socket, and the backup if the SKROSS goes missing</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:gan"><span class="check-text">Multi-port GaN charger</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:powerbank"><span class="check-text">Power bank<small>cabin bag only — never in the checked case</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:carphone"><span class="check-text">Long USB-C cable + vent phone mount for the Tahoe</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:headphones"><span class="check-text">ANC headphones</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:esim"><span class="check-text">US eSIM activated before departure<small>activate at home, while there is still a network to fix it on</small></span></label>
+        </div>
+      </div>
+
+      <div class="packing-cat">
+        <div class="packing-cat-head">
+          <h3 class="packing-cat-name">Bootcamp — 20–25 Sep</h3>
+          <span class="packing-cat-count" data-cat-count>0 / 0</span>
+        </div>
+        <div class="packing-cat-bar"><span data-cat-bar style="width:0%"></span></div>
+        <div class="checklist-items">
+          <label class="check-item"><input type="checkbox" data-key="packing:shirts"><span class="check-text">4–5 shirts and polos<small>XL, classic fit</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:chinos"><span class="check-text">2 pairs of chinos<small>36×30</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:blazer"><span class="check-text">Unstructured blazer<small>for the networking evening</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:workshoes"><span class="check-text">One pair of shoes that survives a full day</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:notebook"><span class="check-text">Notebook, pen, business cards</span></label>
+        </div>
+      </div>
+
+      <div class="packing-cat">
+        <div class="packing-cat-head">
+          <h3 class="packing-cat-name">Sightseeing &amp; road trip</h3>
+          <span class="packing-cat-count" data-cat-count>0 / 0</span>
+        </div>
+        <div class="packing-cat-bar"><span data-cat-bar style="width:0%"></span></div>
+        <div class="checklist-items">
+          <label class="check-item"><input type="checkbox" data-key="packing:tshirts"><span class="check-text">6–7 t-shirts</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:layers"><span class="check-text">Hoodie + windproof jacket<small>the 18:30 Alcatraz ferry and the Muir Woods morning are a different climate from LA at noon</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:hats"><span class="check-text">Beanie, cap, sunglasses</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:jeans"><span class="check-text">Jeans, and one pair of shorts for LA</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:swim"><span class="check-text">Swim shorts</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:walking"><span class="check-text">Walking shoes, flip-flops, daypack</span></label>
+        </div>
+      </div>
+
+      <div class="packing-cat">
+        <div class="packing-cat-head">
+          <h3 class="packing-cat-name">Gym</h3>
+          <span class="packing-cat-count" data-cat-count>0 / 0</span>
+        </div>
+        <div class="packing-cat-bar"><span data-cat-bar style="width:0%"></span></div>
+        <div class="checklist-items">
+          <label class="check-item"><input type="checkbox" data-key="packing:gym"><span class="check-text">Training kit + trainers<small>the second stay has a gym, and the bootcamp is six days of sitting down</small></span></label>
+        </div>
+      </div>
+
+      <div class="packing-cat">
+        <div class="packing-cat-head">
+          <h3 class="packing-cat-name">Toiletries &amp; meds</h3>
+          <span class="packing-cat-count" data-cat-count>0 / 0</span>
+        </div>
+        <div class="packing-cat-bar"><span data-cat-bar style="width:0%"></span></div>
+        <div class="checklist-items">
+          <label class="check-item"><input type="checkbox" data-key="packing:rx"><span class="check-text">Personal medication, in its original packaging</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:otc"><span class="check-text">Ibuprofen, and something for the stomach</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:melatonin"><span class="check-text">Melatonin<small>a 9-hour shift, and the return leg is the harder one</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:spf"><span class="check-text">SPF 50 and an SPF lip balm</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:compeed"><span class="check-text">Compeed blister plasters</span></label>
+        </div>
+      </div>
+
+      <div class="packing-cat">
+        <div class="packing-cat-head">
+          <h3 class="packing-cat-name">Return &amp; outlets — 21 Sep</h3>
+          <span class="packing-cat-count" data-cat-count>0 / 0</span>
+        </div>
+        <div class="packing-cat-bar"><span data-cat-bar style="width:0%"></span></div>
+        <div class="checklist-items">
+          <label class="check-item"><input type="checkbox" data-key="packing:cases"><span class="check-text">Fly out with one case full and the second folded inside it</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:scale"><span class="check-text">Luggage scale<small>23 kg is a hard limit, not a guideline</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:weight"><span class="check-text">Shopping weight budget: 8–10 kg<small>the realistic figure, not the hopeful one</small></span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:af1"><span class="check-text">Air Force 1 in the box is the heaviest single item<small>decide at the till, not at the check-in desk</small></span></label>
+        </div>
+      </div>
+
+      <div class="packing-cat">
+        <div class="packing-cat-head">
+          <h3 class="packing-cat-name">Cabin bag</h3>
+          <span class="packing-cat-count" data-cat-count>0 / 0</span>
+        </div>
+        <div class="packing-cat-bar"><span data-cat-bar style="width:0%"></span></div>
+        <div class="checklist-items">
+          <label class="check-item"><input type="checkbox" data-key="packing:cabin-core"><span class="check-text">Power bank, medication, documents, laptop</span></label>
+          <label class="check-item"><input type="checkbox" data-key="packing:cabin-spare"><span class="check-text">One change of clothes and a shirt<small>if the checked bag is late, the bootcamp starts anyway</small></span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="footprint">
     <span>Bay Area · 13–25 Sep 2026</span>
+    <a class="auth-btn" href="#packing">🎒 Packing</a>
     <button class="auth-btn" id="authBtn" type="button">🔒 Private details</button>
   </div>
 
@@ -715,6 +855,105 @@
 
   loadChecklist();
 
+  /* ---------- Packing list: behind sign-in, ticked in this browser ----------
+     Its own storage key, so it can never collide with the booking checklist,
+     and item keys carry a packing: prefix for the same reason. Deliberately
+     not synced to trip_checklist: this list gets used at home the night
+     before, offline as often as not, and last-write-wins across two devices
+     is a bad trade for something you tick while holding a suitcase. */
+  const PACK_KEY = 'bayarea-trip-packing';
+  const packSection = el('packing');
+  const packBody = el('packing-body');
+  const packLock = el('packing-lock');
+  const packBoxes = packBody ? [...packBody.querySelectorAll('input[type=checkbox]')] : [];
+  const packCats = [...document.querySelectorAll('.packing-cat')];
+
+  function savePacking(){
+    const done = {};
+    packBoxes.forEach(box => { done[box.dataset.key] = box.checked; });
+    try{ localStorage.setItem(PACK_KEY, JSON.stringify(done)); }catch(e){}
+  }
+
+  function updatePacking(){
+    const count = list => BayTripState.checklistProgress(
+      list.map(b => ({ checked: b.checked, hidden: false })));
+
+    packCats.forEach(cat => {
+      const p = count([...cat.querySelectorAll('input[type=checkbox]')]);
+      cat.querySelector('[data-cat-count]').textContent = p.done + ' / ' + p.total;
+      cat.querySelector('[data-cat-bar]').style.width =
+        (p.total ? Math.round(p.done / p.total * 100) : 0) + '%';
+    });
+
+    const all = count(packBoxes);
+    el('packing-progress').textContent = all.done + ' / ' + all.total + ' packed'
+      + (all.total && all.done === all.total ? ' — nothing left ✈' : '');
+    disarmReset();
+  }
+
+  function loadPacking(){
+    let saved = {};
+    try{ saved = JSON.parse(localStorage.getItem(PACK_KEY) || '{}'); }catch(e){}
+    packBoxes.forEach(box => {
+      box.checked = !!saved[box.dataset.key];
+      box.closest('.check-item').classList.toggle('done', box.checked);
+    });
+    updatePacking();
+  }
+
+  packBoxes.forEach(box => {
+    box.addEventListener('change', () => {
+      box.closest('.check-item').classList.toggle('done', box.checked);
+      savePacking();
+      updatePacking();
+    });
+  });
+
+  /* Reset clears every tick with no undo, and the button sits right beside the
+     counter. So it arms first and only clears on a second press. */
+  const packResetBtn = el('packing-reset');
+  let resetArmed = false, resetTimer = null;
+
+  function disarmReset(){
+    if (!packResetBtn) return;
+    resetArmed = false;
+    clearTimeout(resetTimer);
+    packResetBtn.textContent = 'Reset packing list';
+    packResetBtn.classList.remove('armed');
+  }
+
+  if (packResetBtn) packResetBtn.addEventListener('click', () => {
+    const ticked = packBoxes.filter(b => b.checked).length;
+    if (!ticked){ disarmReset(); return; }
+    if (!resetArmed){
+      resetArmed = true;
+      packResetBtn.textContent = 'Press again to clear ' + ticked + (ticked === 1 ? ' tick' : ' ticks');
+      packResetBtn.classList.add('armed');
+      resetTimer = setTimeout(disarmReset, 4000);
+      return;
+    }
+    packBoxes.forEach(box => {
+      box.checked = false;
+      box.closest('.check-item').classList.remove('done');
+    });
+    savePacking();
+    updatePacking();
+  });
+
+  // The gate is cosmetic on its own — anything genuinely private in this list
+  // is a data-private span fetched from Supabase, not markup hidden with CSS.
+  function renderPacking(signedIn){
+    if (!packSection) return;
+    packSection.classList.toggle('locked', !signedIn);
+    packBody.hidden = !signedIn;
+    packLock.hidden = !!signedIn;
+    el('packing-sub').textContent = signedIn
+      ? 'Ticked in this browser, not synced — the confirmation numbers come from your account.'
+      : 'Private — sign in to see the list.';
+  }
+
+  loadPacking();
+
   /* ---------- Preflight: how long is left, and what is still open ----------
      Every item is read off a data-open marker on the element that already
      states it, so this panel cannot drift from the page. Anything inside a
@@ -885,6 +1124,7 @@
         }
       });
       btn.textContent = email ? '🔓 ' + email + ' · sign out' : '🔒 Private details';
+      renderPacking(!!email);
     }
 
     async function refresh(){
@@ -957,6 +1197,8 @@
         if (a) signIn(a);
       });
       el('authCancel').onclick = () => adlg.close();
+      const packBtn = el('packing-signin');
+      if (packBtn) packBtn.onclick = () => { flash(''); adlg.showModal(); el('fEmail').focus(); };
       // Any locked value is itself the way in.
       document.addEventListener('click', e => {
         const node = e.target.closest('[data-private].locked');
