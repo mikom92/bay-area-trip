@@ -53,24 +53,10 @@ test('keeps all dates in a grouped itinerary card eligible for Today', () => {
   assert.equal(tripState.findActiveCardIndex(cards, '2026-09-26'), -1);
 });
 
-test('falls back to the Bay Area variant unless B is asked for explicitly', () => {
-  const tripState = loadTripState();
-
-  assert.equal(tripState.normalizeVariant('b'), 'b');
-  assert.equal(tripState.normalizeVariant('B'), 'b');
-  assert.equal(tripState.normalizeVariant(' b '), 'b');
-
-  assert.equal(tripState.normalizeVariant('a'), 'a');
-  assert.equal(tripState.normalizeVariant(null), 'a');
-  assert.equal(tripState.normalizeVariant(undefined), 'a');
-  assert.equal(tripState.normalizeVariant(''), 'a');
-  assert.equal(tripState.normalizeVariant('napa'), 'a');
-});
-
 test('budget: every dollar line follows the rate, złoty lines do not', () => {
   const tripState = loadTripState();
   const rates = tripState.createPublicRates();
-  const input = { carDays: 12, svNights: 7, foodRate: 190, gasPrice: 5.75, tastings: 2 };
+  const input = { carDays: 12, svNights: 7, foodRate: 190, gasPrice: 5.75 };
 
   const at = fx => tripState.budgetTotals({ ...input, fx }, rates);
   const lo = at(3.20), base = at(3.75), hi = at(4.80);
@@ -81,19 +67,23 @@ test('budget: every dollar line follows the rate, złoty lines do not', () => {
 
   // everything else is a dollar cost — this is the regression that let ~838 zł
   // of the total sit frozen at the 3.75 fallback
-  for (const line of ['carCost', 'svParking', 'sfDayParking', 'fuel', 'attractions', 'tastingCost']) {
+  for (const line of ['carCost', 'svParking', 'sfDayParking', 'fuel', 'attractions', 'warnerBros', 'laGarage']) {
     assert.ok(hi[line] > lo[line], `${line} should rise with the rate`);
     assert.equal(Math.round(hi[line] / lo[line] * 100) / 100, Math.round(4.80 / 3.20 * 100) / 100);
   }
 
-  assert.equal(Math.round(base.total), 9986);
+  // 9,986 before LA became the plan: ~400 more miles of fuel, the Warner Bros
+  // tickets and the Burbank garage in, the Napa tastings out. Still inside the
+  // 10,000–12,000 band, which is the number the gauge and the chip promise.
+  assert.equal(Math.round(base.total), 10992);
+  assert.equal(tripState.budgetStatus(base.total), 'good');
   assert.equal(base.foodDays, 9);
 });
 
 test('budget: signed-in rates replace the public estimates', () => {
   const tripState = loadTripState();
   const rates = tripState.createPublicRates();
-  const input = { carDays: 12, svNights: 7, foodRate: 190, gasPrice: 5.75, tastings: 2, fx: 3.75 };
+  const input = { carDays: 12, svNights: 7, foodRate: 190, gasPrice: 5.75, fx: 3.75 };
   const before = tripState.budgetTotals(input, rates).total;
 
   Object.assign(rates, { carBase: 900, carPerDay: 95, lodgingRate: 500 });
@@ -132,14 +122,6 @@ test('shareable link omits the auto-fetched rate until it is dragged', () => {
   assert.deepEqual({ ...tripState.shareableParams(entries, { fxPinned: true }) }, { f: '200', x: '3.91' });
 });
 
-test('shareable link carries the variant only when it is not the default', () => {
-  const tripState = loadTripState();
-  const untouched = [{ key: 'f', value: '190', defaultValue: '190' }];
-
-  assert.deepEqual({ ...tripState.shareableParams(untouched, { variant: 'a' }) }, {});
-  assert.deepEqual({ ...tripState.shareableParams(untouched, { variant: 'b' }) }, { v: 'b' });
-});
-
 test('slider values from a link are clamped into range', () => {
   const tripState = loadTripState();
   assert.equal(tripState.clampToRange(99, 3.2, 4.8), 4.8);
@@ -164,25 +146,11 @@ test('checklist progress counts only the rows on screen', () => {
   assert.equal(tripState.checklistProgress([{ checked: true, hidden: false }]).text, '1 / 1 done — all set ✈');
 });
 
-test('variant delta net follows every line, including ones added later', () => {
-  const tripState = loadTripState();
-
-  // the bug: the net summed three named keys, so a fourth line rendered while
-  // the total silently stayed behind
-  assert.equal(tripState.sumDelta({ fuel: 185, food: 140, tastings: -110 }), 215);
-  assert.equal(tripState.sumDelta({ fuel: 185, food: 140, studio: 167, tastings: -110 }), 382);
-  assert.equal(tripState.sumDelta({}), 0);
-});
-
-test('money renders in the selected currency, signed where it is a delta', () => {
+test('money renders in the selected currency', () => {
   const tripState = loadTripState();
 
   assert.equal(tripState.formatMoney(1432.5, 'PLN', 3.75), '1,433 zł');
   assert.equal(tripState.formatMoney(1432.5, 'USD', 3.75), '$382');
-
-  assert.equal(tripState.formatSignedUSD(167, 'USD', 3.75), '+$167');
-  assert.equal(tripState.formatSignedUSD(-110, 'USD', 3.75), '−$110');
-  assert.equal(tripState.formatSignedUSD(-110, 'PLN', 3.75), '−413 zł');
 });
 
 test('trip phase reads the same way before, during and after', () => {
