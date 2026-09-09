@@ -13,8 +13,12 @@
     hotelParkingPerNight: 10,
     sfDayParking: 32,      // one city day trip (Alcatraz + North Beach), no SF nights booked
     attractions: 116.8,    // CHM + Muir Woods (~$93.40) + Alcatraz night-vs-day delta ($23.40)
-    tastingEach: 37,
-    fuelMiles: 900,
+    warnerBros: 167,       // 2 tickets (~$147, estimated — the e-ticket carries no price) + $20 Burbank parking
+    laGarage: 40,          // the LA room is covered by the host, the building garage is not: 2 nights at $20
+    // Sunnyvale transfer 30 + Valley circuit 40 + down the PCH 400 + the LA day
+    // itself 70 + back up the 101 380 + Alcatraz 90 + Muir Woods 130 + the
+    // Peninsula move 20 + Livermore 80 + bootcamp week 60 + SFO drop 25.
+    fuelMiles: 1300,
     fuelMpg: 17
   });
 
@@ -32,13 +36,6 @@
     return cards.findIndex(card => card.start <= date && date <= card.end);
   }
 
-  // 15-17 Sep runs in two variants. Anything but an explicit "b" — a stale
-  // localStorage value, a hand-edited ?v=, nothing at all — falls back to A,
-  // so the page never renders a day range with no cards at all.
-  function normalizeVariant(value){
-    return String(value == null ? '' : value).trim().toLowerCase() === 'b' ? 'b' : 'a';
-  }
-
   // Self-paid meal days track the hotel stay: the 7-night default leaves 9 days
   // on your own (the reserved days and the second stay aside), so the offset is +2.
   function selfPaidDays(svNights){
@@ -47,7 +44,7 @@
 
   // Every figure comes back in złoty. `fx` is złoty per dollar.
   function budgetTotals(input, rates){
-    const { carDays, svNights, foodRate, gasPrice, tastings, fx } = input;
+    const { carDays, svNights, foodRate, gasPrice, fx } = input;
 
     const carCost = (rates.carBase + Math.max(0, carDays - 7) * rates.carPerDay) * fx;
     const svHotel = svNights * rates.lodgingRate;          // confirmed złoty booking
@@ -57,12 +54,14 @@
     const foodDays = selfPaidDays(svNights);
     const foodCost = foodRate * foodDays;                  // the slider is złoty per day
     const attractions = USD.attractions * fx;
-    const tastingCost = tastings * USD.tastingEach * fx;
+    const warnerBros = USD.warnerBros * fx;
+    const laGarage = USD.laGarage * fx;
 
     const total = carCost + svHotel + svParking + sfDayParking
-                + fuel + foodCost + attractions + tastingCost;
+                + fuel + foodCost + attractions + warnerBros + laGarage;
 
-    return { carCost, svHotel, svParking, sfDayParking, fuel, foodDays, foodCost, attractions, tastingCost, total };
+    return { carCost, svHotel, svParking, sfDayParking, fuel, foodDays, foodCost,
+             attractions, warnerBros, laGarage, total };
   }
 
   function budgetStatus(total){
@@ -85,18 +84,17 @@
   // dragged it — otherwise an unrelated drag would pin that day's rate and
   // silence the fetch on every later visit.
   function shareableParams(entries, opts){
-    const { variant = 'a', fxPinned = false } = opts || {};
+    const { fxPinned = false } = opts || {};
     const out = {};
     entries.forEach(({ key, value, defaultValue }) => {
       if (key === 'x' && !fxPinned) return;
       if (String(value) !== String(defaultValue)) out[key] = String(value);
     });
-    if (variant !== 'a') out.v = variant;
     return out;
   }
 
-  // Rows of the hidden variant are still in the DOM. Counting them would show
-  // "1 / 7 done" beside six visible items.
+  // Hidden rows are still in the DOM — a category collapsed, or a list not yet
+  // unlocked. Counting them would show "1 / 7 done" beside six visible items.
   function checklistProgress(rows){
     const shown = rows.filter(row => !row.hidden);
     const done = shown.filter(row => row.checked).length;
@@ -104,21 +102,9 @@
     return { done, total: shown.length, text };
   }
 
-  // Sum the object, never a hand-written list of keys: adding a line to the
-  // variant delta must move the net, and spelling the keys out is how that
-  // silently stops happening.
-  function sumDelta(delta){
-    return Object.values(delta).reduce((a, b) => a + b, 0);
-  }
-
   function formatMoney(pln, currency, fx){
     if (currency !== 'USD') return Math.round(pln).toLocaleString('en-US') + ' zł';
     return '$' + Math.round(pln / fx).toLocaleString('en-US');
-  }
-
-  function formatSignedUSD(usd, currency, fx){
-    const sign = usd < 0 ? '−' : '+';
-    return sign + formatMoney(Math.abs(usd) * fx, currency, fx);
   }
 
   const TRIP = Object.freeze({ start: '2026-09-13', end: '2026-09-25' });
@@ -162,7 +148,6 @@
     createPublicRates,
     resetToPublicRates,
     findActiveCardIndex,
-    normalizeVariant,
     selfPaidDays,
     budgetTotals,
     budgetStatus,
@@ -170,8 +155,6 @@
     clampToRange,
     shareableParams,
     checklistProgress,
-    sumDelta,
-    formatMoney,
-    formatSignedUSD
+    formatMoney
   });
 })(globalThis);

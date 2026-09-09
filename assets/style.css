@@ -281,8 +281,6 @@
   /* Two options for one afternoon, side by side so the choice reads as a choice
      rather than as two more paragraphs. Collapses to one column on a phone, the
      same as .controls and .notes-grid. */
-  .day-choice{display:grid; grid-template-columns:repeat(2,1fr); gap:0.4rem 1.6rem; margin-top:1rem;}
-  .day-choice .day-option{margin-top:0;} /* no longer following a paragraph */
 
   /* in-card heading for the Wed 16 options — same idiom as .note-card strong */
   .day-option{
@@ -335,44 +333,6 @@
 
   /* ---------- VARIANT SWITCH (15–17 Sep, still undecided) ---------- */
   .day[hidden]{display:none;}
-  .variant-switch{
-    /* 1.6rem of .day padding + 0.6rem of .day-card margin — lines up with the cards */
-    margin:0 0 2.1rem 2.2rem;
-    background:var(--surface-2);
-    border:1px dashed var(--line);
-    border-radius:var(--radius-md);
-    padding:1rem 1.15rem;
-  }
-  .variant-switch-head{display:flex; align-items:center; justify-content:space-between; gap:0.8rem; flex-wrap:wrap;}
-  .variant-eyebrow{
-    font-family:var(--font-mono); font-size:0.66rem;
-    letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faint);
-  }
-  .variant-toggle{
-    display:inline-flex; background:var(--surface);
-    border:1px solid var(--line); border-radius:100px; padding:2px; gap:2px;
-  }
-  .variant-btn{
-    font-family:var(--font-mono); font-size:0.68rem; font-weight:600; letter-spacing:0.03em;
-    color:var(--text-faint); background:transparent; border:none; border-radius:100px;
-    padding:0.3rem 0.7rem; cursor:pointer;
-    transition:background 0.15s ease, color 0.15s ease;
-  }
-  .variant-btn.active{background:var(--amber); color:var(--bg);}
-  .variant-btn.active[data-variant="b"]{background:var(--violet);}
-  .variant-btn:not(.active):hover{color:var(--text);}
-  @media (prefers-reduced-motion:reduce){.variant-btn{transition:none;}}
-  .variant-note{font-size:0.85rem; color:var(--text-muted); margin:0.75rem 0 0;}
-  .variant-delta-list{
-    list-style:none; margin:0.75rem 0 0; padding:0.7rem 0 0;
-    border-top:1px solid var(--line);
-    font-family:var(--font-mono); font-size:0.74rem;
-  }
-  .variant-delta-list li{display:flex; justify-content:space-between; gap:1rem; padding:0.22rem 0; color:var(--text-muted);}
-  /* the figure must not break across lines when the label wraps on a phone */
-  .variant-delta-list li span:last-child{flex:none; white-space:nowrap;}
-  .variant-delta-list li.net{margin-top:0.3rem; padding-top:0.45rem; border-top:1px dashed var(--line); color:var(--text);}
-  .variant-delta-list li.net span:last-child{color:var(--amber);}
 
   /* ---------- BUDGET CONSOLE ---------- */
   .budget{
@@ -472,9 +432,6 @@
   }
   .breakdown-row span:first-child{color:var(--text);}
   .breakdown-row.fixed span:last-child{color:var(--text-faint);}
-  .breakdown-row.variant-delta{border-bottom:none; border-top:1px dashed var(--amber-line); margin-top:0.5rem;}
-  .breakdown-row.variant-delta span:first-child{color:var(--text-muted);}
-  .breakdown-row.variant-delta span:last-child{color:var(--amber); flex:none; white-space:nowrap;}
   .breakdown-foot{font-size:0.72rem; color:var(--text-faint); margin-top:0.9rem;}
 
   /* ---------- NOTES / FOOTER ---------- */
@@ -534,6 +491,53 @@
     .check-item, .check-item input, .check-item input::before{transition:none;}
   }
 
+  /* ---------- PACKING (private) ---------- */
+  .packing{margin-top:3rem;}
+  .packing-lock{
+    display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+    background:var(--surface); border:1px dashed var(--line); border-radius:var(--radius-md);
+    padding:1.1rem 1.2rem;
+  }
+  .packing-lock strong{display:block; font-size:0.9rem; color:var(--text); font-weight:600;}
+  .packing-lock small{display:block; color:var(--text-muted); font-size:0.76rem; margin-top:0.2rem;}
+
+  .packing-head{
+    display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+    margin-bottom:1.4rem;
+  }
+  .packing-head .checklist-progress{margin-top:0;}
+  .packing-reset{
+    font-family:var(--font-mono); font-size:0.68rem;
+    background:transparent; color:var(--text-faint);
+    border:1px solid var(--line); border-radius:100px;
+    padding:0.35rem 0.8rem; cursor:pointer;
+    transition:border-color 0.15s ease, color 0.15s ease;
+  }
+  .packing-reset:hover{border-color:var(--text-faint); color:var(--text);}
+  .packing-reset.armed{color:var(--amber); border-color:var(--amber-line);}
+  @media (prefers-reduced-motion:reduce){.packing-reset{transition:none;}}
+
+  .packing-cat{margin-bottom:1.8rem;}
+  .packing-cat-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:1rem;
+  }
+  .packing-cat-name{
+    font-family:var(--font-display); font-size:0.95rem; font-weight:600;
+    color:var(--text); margin:0;
+  }
+  .packing-cat-count{
+    font-family:var(--font-mono); font-size:0.68rem; color:var(--text-faint); flex:none;
+  }
+  .packing-cat-bar{
+    height:2px; background:var(--line); border-radius:2px;
+    margin:0.5rem 0 0.9rem; overflow:hidden;
+  }
+  .packing-cat-bar span{
+    display:block; height:100%; width:0; background:var(--green);
+    transition:width 0.2s ease;
+  }
+  @media (prefers-reduced-motion:reduce){.packing-cat-bar span{transition:none;}}
+
   /* ---------- PRIVATE DETAILS ---------- */
   [data-private]{
     font-family:var(--font-mono);
@@ -552,6 +556,7 @@
     padding:0.35rem 0.75rem; cursor:pointer;
     transition:border-color 0.15s ease, color 0.15s ease;
   }
+  a.auth-btn{text-decoration:none;}
   .auth-btn:hover{border-color:var(--text-faint); color:var(--text);}
   @media (prefers-reduced-motion:reduce){.auth-btn{transition:none;}}
 
@@ -606,12 +611,8 @@
     .timeline{padding-left:1rem;}
     .day{padding-left:0.95rem;}
     .day-card{margin-left:0.3rem; padding:1rem 1.05rem;}
-    .day-choice{grid-template-columns:1fr; gap:0;}
-    .day-choice .day-option{margin-top:1rem;}
     .preflight{padding:0.9rem 1rem;}
     .preflight-list a{padding:0.5rem 0.8rem; font-size:0.72rem;}
-    .variant-switch{margin-left:1.25rem; padding:0.9rem 1rem;}
-    .variant-btn{padding:0.45rem 0.8rem; font-size:0.72rem;}
     .budget{padding:1.4rem 1.1rem;}
     .controls{grid-template-columns:1fr;}
     .notes-grid{grid-template-columns:1fr;}
@@ -623,6 +624,7 @@
     .day-flag{padding:0.55rem 0.8rem; font-size:0.74rem;}
     .check-item{padding:1rem 1.1rem;}
     .check-item input{width:22px; height:22px;}
+    .packing-lock, .packing-head{flex-direction:column; align-items:flex-start;}
   }
 
   /* ---------- PRINT (backup for no-signal stretches of Hwy 1) ---------- */
@@ -639,15 +641,17 @@
     body{background:#fff; padding:0;}
     .hero{background-image:none;}
     .controls, .gauge, .gauge-labels, .today-jump, .budget .section-sub, .auth-btn{display:none !important;}
-    /* the note still names the printed variant, so only the buttons go */
-    .variant-toggle{display:none !important;}
     .preflight{border-left-width:1px; break-inside:avoid; page-break-inside:avoid;}
     .preflight-list a{border-style:solid;}
-    .variant-switch{border-style:solid; break-inside:avoid; page-break-inside:avoid;}
     .map-link{display:none;}
     .day-flag{border-style:solid;}
     a.day-flag::after{content:' — ' attr(href); font-size:0.62rem; color:var(--text-muted);}
     .day-card, .note-card, .check-item{break-inside:avoid; page-break-inside:avoid;}
     .budget{break-before:page;}
     .day-card:hover{transform:none;}
+    /* signed out there is nothing to print but a heading and a sign-in prompt */
+    .packing.locked, .packing-lock, .packing-reset{display:none !important;}
+    .packing{break-before:page;}
+    .packing-cat{break-inside:avoid; page-break-inside:avoid;}
+    .packing-cat-bar{display:none;}
   }

@@ -108,6 +108,32 @@ insert into public.trip_private (key, value) values
 on conflict (key) do update set value = excluded.value;
 ```
 
+#### Keys the companion must not see
+
+The guest policy is `key like 'bay.%'`, so the prefix is the access control.
+A row that only the owner should read simply does not use it:
+
+```sql
+insert into public.trip_private (key, value) values
+  ('mm.packing.refs', '<every booking reference, one line>')
+on conflict (key) do update set value = excluded.value;
+```
+
+`mm.packing.refs` backs the one line of the packing list that carries booking
+numbers. No new policy was needed — `bay guest reads` cannot match the key, and
+`owner reads` matches every row regardless of prefix. Verified per identity:
+
+| signed in as | `mm.packing.refs` | `bay.*` | all rows |
+|---|---|---|---|
+| owner | **1** | 12 | 19 |
+| guest | **0** | 12 | 12 |
+
+Worth knowing how *not* to test this: wrapping `set_config('request.jwt.claims',…)`
+in a CTE and selecting alongside it returns every row, because the MCP/SQL-editor
+connection runs as a privileged role that bypasses RLS and the CTE's timing
+relative to the scan is undefined. It reads like a leak and is not one. Use a
+transaction with `set local role authenticated` and one identity per statement.
+
 The two `bay.la.*` rows belong to the undecided Variant B (15–17 Sep) and are
 the odd ones out here: they gate a *candidate*, not a booking. `bay.la.host`
 is behind sign-in for a third party's privacy rather than to protect a
@@ -208,3 +234,17 @@ get the new copy instead of the cached one.
 - **Checklist** — the `.checklist-items` block; `data-key` values are the
   `localStorage` keys, so reordering items is safe, but changing a `data-key`
   resets that one tick.
+- **Packing list** — the `.packing-cat` blocks. Add a category by copying one:
+  the counter and bar are driven by `[data-cat-count]` / `[data-cat-bar]`
+  inside it, so nothing needs registering anywhere. Keys are prefixed
+  `packing:` and live under their own `bayarea-trip-packing` storage key,
+  separate from the booking checklist and deliberately **not** synced to
+  Supabase — the list is used at home the night before, often offline, and
+  last-write-wins across two devices is a poor trade there.
+
+  The section is shown only to a signed-in visitor, but that gate is
+  presentation, not protection: the markup ships to everyone. Anything that
+  must not be public — the booking numbers, and the names behind them — is a
+  `data-private` span fetched from `trip_private`, exactly like the rest of
+  the page. The rule of thumb when adding an item: if it would be a problem
+  in a public repository, it does not go in `index.html`.

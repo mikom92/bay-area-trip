@@ -3,7 +3,7 @@
    live data (Supabase, the FX rate) out of the cache entirely, and never let
    a stale snapshot mask an updated page. */
 
-const VERSION = 'ba26-v18';
+const VERSION = 'ba26-v19';
 const CORE = [
   './',
   './index.html',
