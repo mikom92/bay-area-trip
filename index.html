@@ -445,6 +445,7 @@
       </label>
     </div>
     <p class="checklist-progress" id="checklist-progress" aria-live="polite">0 / 6 done</p>
+    <p class="sync-note" id="sync-note" data-state="local" aria-live="polite">Saved in this browser. Sign in to carry it across devices.</p>
   </section>
 
   <!-- PACKING (private) -->
@@ -776,20 +777,56 @@
   const progressEl = document.getElementById('checklist-progress');
   const boxes = checklistEl ? [...checklistEl.querySelectorAll('input[type=checkbox]')] : [];
 
-  function loadChecklist(){
-    let saved = {};
-    try{ saved = JSON.parse(localStorage.getItem(CHECK_KEY) || '{}'); }catch(e){}
+  /* Every tick carries the moment it was made. Without that the merge below
+     has no way to tell a deliberate un-tick from a row nobody has written
+     yet, which is what let a stale table wipe a freshly ticked list. */
+  let localState = {};
+
+  function readLocal(){
+    let raw = {};
+    try{ raw = JSON.parse(localStorage.getItem(CHECK_KEY) || '{}'); }catch(e){}
+    const stamp = new Date().toISOString();
+    const out = {};
+    Object.entries(raw).forEach(([key, value]) => {
+      // migrate the old {key: bool} shape; stamping it as current is the safe
+      // direction — a tick already made must not lose to an older stored row
+      out[key] = (value && typeof value === 'object')
+        ? { done: !!value.done, at: value.at || stamp }
+        : { done: !!value, at: stamp };
+    });
+    return out;
+  }
+
+  function writeLocal(){
+    try{ localStorage.setItem(CHECK_KEY, JSON.stringify(localState)); }catch(e){}
+  }
+
+  function paintBoxes(){
     boxes.forEach(box => {
-      box.checked = !!saved[box.dataset.key];
+      const entry = localState[box.dataset.key];
+      box.checked = !!(entry && entry.done);
       box.closest('.check-item').classList.toggle('done', box.checked);
     });
+  }
+
+  function loadChecklist(){
+    localState = readLocal();
+    boxes.forEach(box => {
+      if (!localState[box.dataset.key]) localState[box.dataset.key] = { done: false, at: null };
+    });
+    paintBoxes();
+    writeLocal();   // settle the migrated shape immediately
     updateProgress();
   }
 
   function saveChecklist(){
-    const done = {};
-    boxes.forEach(box => { done[box.dataset.key] = box.checked; });
-    try{ localStorage.setItem(CHECK_KEY, JSON.stringify(done)); }catch(e){}
+    const now = new Date().toISOString();
+    boxes.forEach(box => {
+      const key = box.dataset.key, was = localState[key];
+      // only the keys that actually moved get a new timestamp
+      if (!was || was.done !== box.checked) localState[key] = { done: box.checked, at: now };
+    });
+    writeLocal();
     pushChecklist();
   }
 
@@ -797,46 +834,67 @@
      the checklist is exactly what it was: localStorage only. Signed in, ticks
      go to trip_checklist — a separate table from trip_private, which stays
      read-only to the page, and which holds booleans keyed by slug and nothing
-     else. One person on two devices, so last write wins is the right rule. */
+     else. One person on two devices, so last write wins — decided by the
+     timestamps on both sides rather than by which one happened to be fetched. */
   let checklistSynced = false;
+  let pendingPush = false;
+  let syncFailed = false;
+
+  function setSyncNote(state){
+    const note = el('sync-note');
+    if (!note) return;
+    note.textContent =
+      state === 'synced'  ? 'Synced to your account.' :
+      state === 'saving'  ? 'Saving…' :
+      state === 'error'   ? 'Not syncing — saved in this browser only.' :
+                            'Saved in this browser. Sign in to carry it across devices.';
+    note.dataset.state = state;
+  }
 
   function pushChecklist(){
-    if (!checklistSynced) return;
     const sb = SB.get();
-    if (!sb) return;
-    const rows = boxes.map(box => ({
-      key: box.dataset.key, done: box.checked, updated_at: new Date().toISOString()
-    }));
+    // A tick made before the first fetch comes back used to be dropped here
+    // and never retried. Now it waits for the pull to arm sync, and goes then.
+    // Queued, not dropped — but "Saving…" would be a lie once a push has
+    // already failed, so a known failure keeps saying so.
+    if (!checklistSynced || !sb){
+      pendingPush = true;
+      setSyncNote(!sb ? 'local' : (syncFailed ? 'error' : 'saving'));
+      return;
+    }
+    pendingPush = false;
+    setSyncNote('saving');
+    const rows = boxes.map(box => {
+      const entry = localState[box.dataset.key];
+      return { key: box.dataset.key, done: box.checked, updated_at: (entry && entry.at) || new Date().toISOString() };
+    });
     sb.from('trip_checklist').upsert(rows, { onConflict: 'key' }).then(res => {
-      if (res && res.error) checklistSynced = false; // stop trying; local still holds
+      if (res && res.error){ checklistSynced = false; pendingPush = true; syncFailed = true; setSyncNote('error'); }
+      else { syncFailed = false; setSyncNote('synced'); }
     });
   }
 
   async function pullChecklist(sb){
-    const res = await sb.from('trip_checklist').select('key,done');
-    if (res.error) return;
-    const remote = {};
-    (res.data || []).forEach(row => { remote[row.key] = !!row.done; });
+    const res = await sb.from('trip_checklist').select('key,done,updated_at');
+    if (res.error){ syncFailed = true; setSyncNote('error'); return; }
 
-    // the stored set wins for keys it knows; local ticks fill the gaps and get
-    // pushed, so a first sign-in on a second device does not lose anything
-    let moved = false;
+    const remote = {};
+    (res.data || []).forEach(row => { remote[row.key] = { done: !!row.done, at: row.updated_at }; });
+
+    const { merged, toPush } = BayTripState.mergeChecklist(localState, remote);
+    localState = merged;
     boxes.forEach(box => {
-      const key = box.dataset.key;
-      if (key in remote && remote[key] !== box.checked){ box.checked = remote[key]; moved = true; }
+      if (!localState[box.dataset.key]) localState[box.dataset.key] = { done: false, at: null };
     });
-    if (moved){
-      boxes.forEach(box => box.closest('.check-item').classList.toggle('done', box.checked));
-      try{
-        const done = {};
-        boxes.forEach(box => { done[box.dataset.key] = box.checked; });
-        localStorage.setItem(CHECK_KEY, JSON.stringify(done));
-      }catch(e){}
-      updateProgress();
-      renderPreflight();
-    }
+
+    paintBoxes();
+    writeLocal();
+    updateProgress();
+    renderPreflight();
+
     checklistSynced = true;
-    if (boxes.some(box => !(box.dataset.key in remote))) pushChecklist();
+    setSyncNote('synced');
+    if (toPush.length || pendingPush) pushChecklist();
   }
 
   function updateProgress(){
@@ -1145,6 +1203,8 @@
         await pullChecklist(sb);
       } else {
         checklistSynced = false; // signed out: back to this browser only
+        pendingPush = false;
+        setSyncNote('local');
       }
       applyToBudget();
       paint();
