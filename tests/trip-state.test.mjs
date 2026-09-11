@@ -179,3 +179,63 @@ test('open summary counts decisions and bookings separately', () => {
   assert.equal(tripState.openSummary([]).text, 'nothing left open');
   assert.equal(tripState.openSummary([d, b]).total, 2);
 });
+
+test('checklist merge: a tick that never reached the server is not wiped by it', () => {
+  const tripState = loadTripState();
+
+  // exactly the shape that lost the ticks: the table holds every key at false
+  // from an earlier push, and the browser has just ticked two of them
+  const remote = {
+    alcatraz:  { done: false, at: '2026-09-07T21:36:36Z' },
+    muirwoods: { done: false, at: '2026-09-07T21:36:36Z' },
+    car:       { done: false, at: '2026-09-07T21:36:36Z' }
+  };
+  const local = {
+    alcatraz:  { done: true,  at: '2026-09-09T12:00:00Z' },
+    muirwoods: { done: true,  at: '2026-09-09T12:00:00Z' },
+    car:       { done: false, at: '2026-09-07T21:36:36Z' }
+  };
+
+  const { merged, toPush } = tripState.mergeChecklist(local, remote);
+  assert.equal(merged.alcatraz.done, true);
+  assert.equal(merged.muirwoods.done, true);
+  assert.deepEqual([...toPush].sort(), ['alcatraz', 'muirwoods']);
+});
+
+test('checklist merge: the newer edit wins in both directions', () => {
+  const tripState = loadTripState();
+  const old = '2026-09-01T00:00:00Z', recent = '2026-09-09T00:00:00Z';
+
+  // un-ticking on the other device propagates, because it is genuinely newer
+  const a = tripState.mergeChecklist(
+    { k: { done: true,  at: old } },
+    { k: { done: false, at: recent } });
+  assert.equal(a.merged.k.done, false);
+  assert.deepEqual([...a.toPush], []);
+
+  // and the reverse
+  const b = tripState.mergeChecklist(
+    { k: { done: true,  at: recent } },
+    { k: { done: false, at: old } });
+  assert.equal(b.merged.k.done, true);
+  assert.deepEqual([...b.toPush], ['k']);
+});
+
+test('checklist merge: keys only one side has, and ties', () => {
+  const tripState = loadTripState();
+
+  // a key the server has never seen survives and is queued to push
+  const fresh = tripState.mergeChecklist({ k: { done: true, at: '2026-09-09T00:00:00Z' } }, {});
+  assert.equal(fresh.merged.k.done, true);
+  assert.deepEqual([...fresh.toPush], ['k']);
+
+  // a key only the server has is adopted as-is
+  const adopted = tripState.mergeChecklist({}, { k: { done: true, at: '2026-09-09T00:00:00Z' } });
+  assert.equal(adopted.merged.k.done, true);
+  assert.deepEqual([...adopted.toPush], []);
+
+  // no timestamps anywhere: never resolve a tie by un-ticking
+  const tie = tripState.mergeChecklist({ k: { done: true, at: null } }, { k: { done: false, at: null } });
+  assert.equal(tie.merged.k.done, true);
+  assert.deepEqual([...tie.toPush], ['k']);
+});

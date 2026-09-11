@@ -487,6 +487,13 @@
     font-family:var(--font-mono); font-size:0.72rem; color:var(--text-muted);
     margin-top:0.9rem;
   }
+  /* Sync used to fail silently, which is how ticks went missing unnoticed. */
+  .sync-note{
+    font-family:var(--font-mono); font-size:0.68rem; color:var(--text-faint);
+    margin:0.35rem 0 0;
+  }
+  .sync-note[data-state="synced"]{color:var(--green-text);}
+  .sync-note[data-state="error"]{color:var(--amber);}
   @media (prefers-reduced-motion:reduce){
     .check-item, .check-item input, .check-item input::before{transition:none;}
   }

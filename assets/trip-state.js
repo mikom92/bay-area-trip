@@ -102,6 +102,40 @@
     return { done, total: shown.length, text };
   }
 
+  /* Reconcile this browser's ticks with the stored copy.
+
+     The rule this replaces was "the stored set wins for keys it knows", which
+     has no notion of *when*. Every key exists in the table from the first
+     push, so a tick that never reached the server — made while the page was
+     still fetching, or while offline — met a stale `false` on the next load
+     and was cleared on both sides. Ticks disappeared and nothing said so.
+
+     Whichever side edited a key last wins, using the updated_at the table
+     already carries. Two safeguards on top: a key the server has never seen
+     cannot lose to a timestamp that does not exist, and a tie never resolves
+     to un-ticked. Un-ticking still propagates — but only as the newer edit,
+     never as the default value of a row nobody has written. */
+  function mergeChecklist(local, remote){
+    const at = entry => (entry && Date.parse(entry.at)) || 0;
+    const merged = {}, toPush = [];
+
+    new Set([...Object.keys(local), ...Object.keys(remote)]).forEach(key => {
+      const mine = local[key], theirs = remote[key];
+
+      if (!theirs){ if (mine){ merged[key] = mine; toPush.push(key); } return; }
+      if (!mine){ merged[key] = theirs; return; }
+
+      if (at(mine) > at(theirs)){ merged[key] = mine; toPush.push(key); return; }
+      if (at(theirs) > at(mine)){ merged[key] = theirs; return; }
+
+      // Same instant, or neither side timestamped: keep the tick.
+      merged[key] = mine.done ? mine : theirs;
+      if (merged[key].done !== theirs.done) toPush.push(key);
+    });
+
+    return { merged, toPush };
+  }
+
   function formatMoney(pln, currency, fx){
     if (currency !== 'USD') return Math.round(pln).toLocaleString('en-US') + ' zł';
     return '$' + Math.round(pln / fx).toLocaleString('en-US');
@@ -155,6 +189,7 @@
     clampToRange,
     shareableParams,
     checklistProgress,
+    mergeChecklist,
     formatMoney
   });
 })(globalThis);
