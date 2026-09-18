@@ -259,6 +259,20 @@
   .day-body{font-size:0.9rem; color:var(--text-muted); margin:0;}
   /* A driving day with timed stops: numbered, because the order is the point and
      the mile markers only make sense read in sequence. */
+  /* Alternatives rather than a sequence, so no numbering — .day-route is the
+     one for ordered stops. */
+  .day-picks{list-style:none; margin:0.7rem 0 0; padding:0;}
+  .day-picks li{
+    position:relative; padding:0 0 0.55rem 1rem;
+    font-size:0.9rem; color:var(--text-muted); line-height:1.5;
+  }
+  .day-picks li:last-child{padding-bottom:0;}
+  .day-picks li::before{
+    content:''; position:absolute; left:0; top:0.62em;
+    width:4px; height:4px; border-radius:50%; background:var(--green);
+  }
+  .day-picks strong{color:var(--text); font-weight:600;}
+
   .day-route{list-style:none; margin:0.9rem 0 0; padding:0; counter-reset:stop;}
   .day-route li{
     position:relative; padding:0 0 0.65rem 1.8rem;
